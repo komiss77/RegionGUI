@@ -1,0 +1,38 @@
+name: RegionGUI
+version: 4.1.8
+description: User can create their own protected region using a simple Interface
+author: crysis992
+main: net.crytec.RegionGUI.RegionGUI
+depend: [PhoenixProject, WorldGuard, ProtocolLib]
+api-version: 1.14
+
+# permissions
+permissions:
+  region.player:
+    default: false
+    description: Allows use of all RegionGUI player Commands.
+    children:
+      region.manage.open: true
+      region.manage.members: true
+      region.manage.delregion: true
+      region.manage.flagmenu: true
+  region.mod:
+    description: Allows opening of the management interface from other players.
+    default: op
+    children:
+      region.list.others: true
+  region.claim:
+    description: Allows claiming of regions
+    default: true
+  region.manage.open:
+    description: Allows opening of the management interface.
+    default: true
+  region.manage.members:
+    description: Allows adding members to own regions.
+    default: true
+  region.manage.delregion:
+    description: Allows deleting own regions.
+    default: false
+  region.manage.flagmenu:
+    description: Allows the use of the flag menu.
+    default: true

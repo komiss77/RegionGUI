@@ -1,0 +1,16 @@
+
+
+
+
+права
+region.limit.total.4 - сколько всего регионов можно создать
+region.limit.заготовка.2 - сколько регионов данной заготовки можно поставить
+region.admin работа с заготовками
+
+region.claim создание регионов - выключил, доступно всем
+region.manage.members - выключил, доступно всем
+region.manage.delregion - выключил, доступно всем
+region.manage.flagmenu - выключил, доступно всем
+
+region.flagmenu.all все флаги
+region.flagmenu. перм на флаг

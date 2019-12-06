@@ -1,0 +1,19 @@
+############################################################
+# +------------------------------------------------------+ #
+# |                 RegionGUI                            | #
+# +------------------------------------------------------+ #
+############################################################
+
+#
+# The plugin is enabled for all worlds in this list
+enabled_worlds:
+- world
+#- creative
+
+
+# This settings prevent players from purchasing regions that would overlap an unowned region.
+# Disabling this setting will allow players to claim land that overlaps other players regions.
+preventRegionOverlap: true
+
+regenOnDelete: false
+
