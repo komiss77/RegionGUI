@@ -5,22 +5,23 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.utils.inventory.InventoryProvider;
+import ru.komiss77.utils.inventory.Pagination;
+import ru.komiss77.utils.inventory.SlotIterator;
+import ru.komiss77.utils.inventory.SlotPos;
 import net.crytec.RegionGUI.Language;
 import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
-import net.crytec.phoenix.api.inventory.content.Pagination;
-import net.crytec.phoenix.api.inventory.content.SlotIterator;
-import net.crytec.phoenix.api.item.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.ItemUtils;
 
 
@@ -40,7 +41,7 @@ public class LandHomeMenu implements InventoryProvider
     
     
     @Override
-        public void init(Player player, InventoryContents inventoryContents) {
+        public void init(Player player, InventoryContent inventoryContents) {
             
         player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
         
@@ -112,14 +113,15 @@ public class LandHomeMenu implements InventoryProvider
         
         if (!pagination.isLast()) {
             inventoryContents.set( 4, 6, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_NEXT_PAGE.toString()).build(), inventoryClickEvent 
-                    -> inventoryContents.inventory().open(player, pagination.next().getPage())));
+                    -> inventoryContents.getHost().open(player, pagination.next().getPage())));
         }
         if (!pagination.isFirst()) {
             inventoryContents.set( 4, 2, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_PREVIOUS_PAGE.toString()).build(), inventoryClickEvent 
-                    -> inventoryContents.inventory().open(player, pagination.previous().getPage())));
+                    -> inventoryContents.getHost().open(player, pagination.previous().getPage())));
         }
         
-        SlotIterator slotIterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 1);
+        //SlotIterator slotIterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 1);
+        SlotIterator slotIterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL,new SlotPos(1, 1));
         slotIterator = slotIterator.allowOverride(false);
         pagination.addToIterator(slotIterator);
     }

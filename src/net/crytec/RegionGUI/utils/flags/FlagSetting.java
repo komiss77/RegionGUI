@@ -1,7 +1,6 @@
 package net.crytec.RegionGUI.utils.flags;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldguard.protection.flags.BooleanFlag;
 import com.sk89q.worldguard.protection.flags.DoubleFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -12,13 +11,12 @@ import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import java.util.Set;
+import java.util.stream.Collectors;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
 import net.crytec.RegionGUI.RegionGUI;
-import net.crytec.phoenix.api.PhoenixAPI;
-import net.crytec.phoenix.api.implementation.AnvilGUI;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import net.crytec.phoenix.api.item.ItemBuilder;
-import net.crytec.phoenix.api.utils.F;
+import ru.komiss77.utils.PlayerChatInput;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -31,6 +29,8 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 import ru.komiss77.ApiOstrov;
 import ru.komiss77.utils.ColorUtils;
+import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.version.AnvilGUI;
 
 
 
@@ -83,7 +83,7 @@ public class FlagSetting implements Comparable<FlagSetting>
     
     
     
-    public ClickableItem getButton(final Player player, final ProtectedRegion region, final InventoryContents contents) {
+    public ClickableItem getButton(final Player player, final ProtectedRegion region, final InventoryContent contents) {
         
         //String menuEntryname = "";
         
@@ -134,12 +134,12 @@ public class FlagSetting implements Comparable<FlagSetting>
             if (inventoryClickEvent.getClick() == ClickType.RIGHT && region.getFlags().containsKey(this.getFlag())) {
                 
                 region.setFlag((Flag)this.getFlag(), (Object)null);
-                contents.inventory().getProvider().reOpen(player, contents);
+                contents.getHost().getProvider().reopen(player, contents);
                 
             } else if (this.inputType == FlagInputType.STATE || this.inputType == FlagInputType.BOOLEAN) {
                 
                 this.switchState(region);
-                contents.inventory().getProvider().reOpen(player, contents);
+                contents.getHost().getProvider().reopen(player, contents);
                 
             } else {
                 
@@ -150,16 +150,9 @@ public class FlagSetting implements Comparable<FlagSetting>
                     case DOUBLE:
                     case INTEGER:
                     case STRING:
-                        AnvilGUI agui = new AnvilGUI( player, this.suggestValue(region), (player2, value) -> {
-
-                            if(!value.isEmpty() ) {
-                                try {
-                                    setFlag(region, this.flag, (Actor)BukkitAdapter.adapt(player), value);
-                                    Bukkit.getScheduler().runTaskLater((Plugin)RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
-                                } catch (InvalidFlagFormat ex) {
-                                    player.sendMessage("§cНедопустимое значение : "+ex.getMessage());
-                                }
-                            }
+                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, this.suggestValue(region), (player2, value) -> {
+                            setFlag(player, region, this.flag, value);
+                            Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.getHost().getProvider().reopen(player, contents), 1L);
                             return null;
 
                         });
@@ -167,33 +160,14 @@ public class FlagSetting implements Comparable<FlagSetting>
                         
                     case SET:
                         player.sendMessage("§fНаберите в чате новое значение для флага и нажмите Enter");
-                        PhoenixAPI.get().getPlayerChatInput(player, value -> {
-                            try {
-                                setFlag(region, this.flag, (Actor)BukkitAdapter.adapt(player), value);
-                                Bukkit.getScheduler().runTaskLater((Plugin)RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
-                            }
-                            catch (InvalidFlagFormat invalidFlagFormat) {
-                                player.sendMessage(invalidFlagFormat.getMessage());
-                            }
+                        PlayerChatInput.get(player, value -> {
+                            setFlag(player, region, this.flag, (String)value);
+                            Bukkit.getScheduler().runTaskLater((Plugin)RegionGUI.getInstance(), () -> contents.getHost().getProvider().reopen(player, contents), 1L);
                         });
                         break;
 
                 }
 
-                
-                
-                
-                //player.sendMessage(Language.FLAG_INPUT_CHAT.toChatString().replace("%flag%", this.getName()));
-                /*PhoenixAPI.get().getPlayerChatInput(player, value -> {
-                    try {
-                        setFlag(region, this.flag, (Actor)BukkitAdapter.adapt(player), value);
-                        Bukkit.getScheduler().runTaskLater((Plugin)RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
-                    }
-                    catch (InvalidFlagFormat invalidFlagFormat) {
-                        player.sendMessage(invalidFlagFormat.getMessage());
-                    }
-                });*/
-                
             }
         });
     }
@@ -266,17 +240,21 @@ public class FlagSetting implements Comparable<FlagSetting>
                 return region.getFlag((Flag)this.getFlag()) == StateFlag.State.ALLOW ? "§2Да":"§4Нет";
             
             case DOUBLE: 
-                return F.name(new StringBuilder().append((double)region.getFlag((Flag)this.getFlag())).toString());
+                //return F.name(new StringBuilder().append((double)region.getFlag((Flag)this.getFlag())).toString());
+                return "" + (Double)region.getFlag((DoubleFlag)this.getFlag());
             
             case INTEGER: 
-                return F.name(new StringBuilder().append((int)region.getFlag((Flag)this.getFlag())).toString());
+                //return F.name(new StringBuilder().append((int)region.getFlag((Flag)this.getFlag())).toString());
+                return "" + (Integer)region.getFlag((IntegerFlag)this.getFlag());
 
             case STRING: 
                 // return F.name(((String)region.getFlag((Flag)this.getFlag())).toString());
                 return (String)region.getFlag(this.getFlag());
             
             case SET: 
-                return F.format((Iterable)region.getFlag(this.getFlag()), ",", "none");
+                //return F.format((Iterable)region.getFlag(this.getFlag()), ",", "none");
+                SetFlag var2 = (SetFlag)this.getFlag();
+                return (String)((Set)region.getFlag(var2)).stream().collect(Collectors.joining(",", "[", "]"));
             
             case OTHER:
             default:
@@ -337,8 +315,13 @@ public class FlagSetting implements Comparable<FlagSetting>
         return this.flag;
     }
     
-    protected static <V> void setFlag(final ProtectedRegion region, final Flag<V> flag, final Actor sender, final String value) throws InvalidFlagFormat {
-        region.setFlag((Flag)flag, flag.parseInput(FlagContext.create().setSender(sender).setInput(value).setObject("region", (Object)region).build()));
+    //protected static <V> void setFlag(final ProtectedRegion region, final Flag<V> flag, final Actor sender, final String value) throws InvalidFlagFormat {
+    protected static <V> void setFlag(final Player player, final ProtectedRegion region, final Flag<V> flag, final String value) {
+        try {
+            region.setFlag(flag, flag.parseInput(FlagContext.create().setSender(BukkitAdapter.adapt(player)).setInput(value).setObject("region", region).build()));
+        } catch (InvalidFlagFormat ex) {
+            player.sendMessage("§cНедопустимое значение : "+ex.getMessage());
+        }
     }
     
     public String getName() {
@@ -353,4 +336,6 @@ public class FlagSetting implements Comparable<FlagSetting>
     public Permission getPermission() {
         return this.permission;
     }
+
+
 }

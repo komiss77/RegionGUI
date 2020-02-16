@@ -6,16 +6,17 @@ import java.util.List;
 import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
-import net.crytec.phoenix.api.inventory.content.Pagination;
-import net.crytec.phoenix.api.inventory.content.SlotIterator;
-import net.crytec.phoenix.api.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.utils.inventory.InventoryProvider;
+import ru.komiss77.utils.inventory.Pagination;
+import ru.komiss77.utils.inventory.SlotIterator;
+import ru.komiss77.utils.inventory.SlotPos;
 
 
 
@@ -29,7 +30,7 @@ public class RegionSelectMenu implements InventoryProvider
     
     //если стоять в перекрывающихся регионах
     @Override
-    public void init(final Player player, InventoryContents inventoryContents) {
+    public void init(final Player player, InventoryContent inventoryContents) {
         player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
         
         Pagination pagination = inventoryContents.pagination();
@@ -62,7 +63,7 @@ public class RegionSelectMenu implements InventoryProvider
         
         pagination.setItems(citems);
         pagination.setItemsPerPage(18);
-        pagination.addToIterator(inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 0));
+        pagination.addToIterator(inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, SlotPos.of(1, 0)));
         
     }
     /*

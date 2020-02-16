@@ -9,13 +9,6 @@ import net.crytec.RegionGUI.data.BorderDisplay;
 import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.SmartInventory;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
-import net.crytec.phoenix.api.inventory.content.SlotPos;
-import net.crytec.phoenix.api.item.ItemBuilder;
-import net.crytec.phoenix.api.utils.UtilPlayer;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -24,6 +17,12 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.utils.inventory.InventoryProvider;
+import ru.komiss77.utils.inventory.SlotPos;
+import ru.komiss77.utils.inventory.SmartInventory;
 
 
 
@@ -39,7 +38,7 @@ implements InventoryProvider {
     
 
     @Override
-    public void init(Player player, InventoryContents inventoryContents) {
+    public void init(Player player, InventoryContent inventoryContents) {
         player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
         
         inventoryContents.fillBorders(ClickableItem.empty(fill));
@@ -109,7 +108,7 @@ implements InventoryProvider {
         
         
         inventoryContents.set(SlotPos.of(1, 3), ClickableItem.of( new ItemBuilder(Material.OAK_SIGN).name("§2Сообщения при входе/выходе").build(), p2 -> {
-            UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 2,2);
             SmartInventory.builder().provider(new RegionMessages(region)).size(3).title("§2Сообщения").build().open(player);
         }));
         

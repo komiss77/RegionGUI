@@ -12,7 +12,6 @@ import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -28,12 +27,14 @@ import java.util.Iterator;
 import net.crytec.RegionGUI.Language;
 import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.manager.PreviewBlockManager;
-import net.crytec.shaded.org.apache.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ru.komiss77.ApiOstrov;
 
@@ -64,7 +65,7 @@ public class PlotBuilder
         final int blockZ = this.loc.getBlockZ();
         int blockY = this.loc.getBlockY();
         
-        if (blockY<70) blockY = 70; 
+        if (blockY>30) blockY = 30; 
         
         final int size = this.claimTemplate.getSize();
         
@@ -81,8 +82,8 @@ public class PlotBuilder
         
         //final ProtectedCuboidRegion region = new ProtectedCuboidRegion( this.plugin.getConfig().getString("region-identifier").replace("%player%", this.player.getName()).replace("%displayname%", this.regionName), BlockVector3.at(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ()), BlockVector3.at(vector2.getBlockX(), vector2.getBlockY(), vector2.getBlockZ()));
         final ProtectedCuboidRegion region = new ProtectedCuboidRegion( regName, 
-                                                                        BlockVector3.at(top.getBlockX(), top.getBlockY(), top.getBlockZ()),
-                                                                        BlockVector3.at(down.getBlockX(), down.getBlockY(), down.getBlockZ())
+            BlockVector3.at(top.getBlockX(), top.getBlockY(), top.getBlockZ()),
+            BlockVector3.at(down.getBlockX(), down.getBlockY(), down.getBlockZ())
         );
         
         if (this.manager.overlapsUnownedRegion(region, this.localPlayer) && this.plugin.getConfig().getBoolean("preventRegionOverlap", true)) {
@@ -122,26 +123,27 @@ public class PlotBuilder
         
         
         //сохранение в файл
-        final World faweWorld = FaweAPI.getWorld(player.getWorld().getName());
+        final com.sk89q.worldedit.world.World faweWorld = FaweAPI.getWorld(player.getWorld().getName());
         CuboidRegion  toSave = new CuboidRegion(faweWorld, region.getMinimumPoint(), region.getMaximumPoint());
         
         
-        EditSession editSession = new EditSessionBuilder(toSave.getWorld()).autoQueue(true).fastmode(true).build();
+        EditSession editSession = new EditSessionBuilder(toSave.getWorld()).autoQueue(false).fastmode(true).build();
         
         Clipboard clipboard = new BlockArrayClipboard(toSave);
         ForwardExtentCopy copy = new ForwardExtentCopy(editSession, toSave, clipboard, region.getMinimumPoint());
         copy.setCopyingEntities(false);
         copy.setCopyingBiomes(false);
         Operations.completeLegacy(copy);
+        //editSession.flushQueue(); тут нельзя, не успевает сохранить!
         
         File file = new File("plugins/RegionGUI/schematics/land/"+regName.toLowerCase()+".schem");
         final ClipboardFormat cf = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 
         try {
             
-            clipboard.save(file, cf);
+            clipboard.save(file, cf); //java.lang.ArrayIndexOutOfBoundsException: -71 ??
             
-        } catch (IOException ex) {
+        } catch (IOException | ArrayIndexOutOfBoundsException ex) {
             
             RegionGUI.log_err("Сохранение копии региона "+region.getId()+" : "+ex.getMessage());
             
@@ -151,6 +153,12 @@ public class PlotBuilder
             
         }
         
+           // new BukkitRunnable() {
+            //    @Override
+           //     public void run() {
+                   // editSession.flushQueue();
+           //     }
+          //  }.runTaskLater(RegionGUI.getInstance(), 5);
         
       
         
@@ -159,7 +167,16 @@ public class PlotBuilder
         
         
         if (this.claimTemplate.isGenerateBorder()) {
-            Walls walls = new Walls(player.getWorld(), this.claimTemplate.getBorderMaterial(), region);
+            final Material mat = claimTemplate.getBorderMaterial();
+            final World world = player.getWorld();
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    //editSession.flushQueue();
+                    Walls walls = new Walls(world, mat, region);
+                }
+            }.runTaskLater(RegionGUI.getInstance(), 30);
+            
         }
         
         
@@ -170,7 +187,7 @@ public class PlotBuilder
         while (iterator.hasNext()) {
             final String replace = iterator.next().replace("%player%", player.getName()).replace("%region%", region.getId()).replace("%world%", player.getWorld().getName());
             if (replace.startsWith("<server>")) {
-                final String trim = StringUtils.trim(replace.replace("<server>", ""));
+                final String trim = replace.replace("<server>", "").trim();
                 RegionGUI.log_ok("Performing Command:" + trim);
                 Bukkit.getServer().dispatchCommand((CommandSender)Bukkit.getConsoleSender(), trim);
             }

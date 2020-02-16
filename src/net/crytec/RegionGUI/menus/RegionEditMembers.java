@@ -1,21 +1,22 @@
 package net.crytec.RegionGUI.menus;
 
-import net.crytec.phoenix.api.inventory.content.Pagination;
-import net.crytec.phoenix.api.inventory.content.SlotIterator;
-import net.crytec.phoenix.api.utils.UtilPlayer;
+
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import java.util.ArrayList;
+import net.crytec.RegionGUI.Language;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import net.crytec.RegionGUI.Language;
-import java.util.ArrayList;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import org.bukkit.entity.Player;
-import net.crytec.phoenix.api.item.ItemBuilder;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
+import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.utils.inventory.InventoryProvider;
+import ru.komiss77.utils.inventory.Pagination;
+import ru.komiss77.utils.inventory.SlotIterator;
+import ru.komiss77.utils.inventory.SlotPos;
 
 
 
@@ -33,7 +34,7 @@ public class RegionEditMembers implements InventoryProvider
     }
     
     @Override
-    public void init(final Player player, final InventoryContents contents) {
+    public void init(final Player player, final InventoryContent contents) {
         player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
         contents.fillBorders(ClickableItem.empty(RegionEditMembers.fill));
         final Pagination pagination = contents.pagination();
@@ -63,8 +64,8 @@ public class RegionEditMembers implements InventoryProvider
                // else {
                     
                     region.getMembers().removePlayer(name);
-                    contents.inventory().open(player, pagination.getPage(), new String[] { "region" }, new Object[] { this.region });
-                    UtilPlayer.playSound(player, Sound.BLOCK_LEVER_CLICK);
+                    contents.getHost().open(player, pagination.getPage());
+                    player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 2,2);
                     player.sendMessage(Language.INTERFACE_REMOVE_SUCESSFULL.toChatString().replaceAll("%name%", name));
                     //return;
               //  }
@@ -81,12 +82,14 @@ public class RegionEditMembers implements InventoryProvider
                 -> MenuOpener.openMain(player, region) ));
         
         contents.set( 4, 6, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_NEXT_PAGE.toString()).build(), p4 
-                -> contents.inventory().open(player, pagination.next().getPage(), new String[] { "region" }, new Object[] { this.region })));
+                -> contents.getHost().open(player, pagination.next().getPage()) )
+        );
         
         contents.set( 4, 2, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_PREVIOUS_PAGE.toString()).build(), p4 
-                -> contents.inventory().open(player, pagination.previous().getPage(), new String[] { "region" }, new Object[] { this.region })));
+                -> contents.getHost().open(player, pagination.previous().getPage()) )
+        );
         
-        pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 1).allowOverride(false));
+        pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, SlotPos.of(1, 1)).allowOverride(false));
         
      /*   
         final Iterator iterator = this.region.getMembers().getUniqueIds().iterator();

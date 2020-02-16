@@ -1,25 +1,22 @@
 package net.crytec.RegionGUI.menus;
 
-import com.sk89q.worldguard.domains.PlayerDomain;
 import com.sk89q.worldguard.domains.DefaultDomain;
-import net.crytec.phoenix.api.inventory.content.Pagination;
-import net.crytec.phoenix.api.inventory.content.SlotIterator;
-import net.crytec.phoenix.api.PhoenixAPI;
-import net.crytec.phoenix.api.inventory.content.SlotPos;
-import net.crytec.phoenix.api.utils.UtilPlayer;
-import org.bukkit.Sound;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import net.crytec.RegionGUI.Language;
-import java.util.ArrayList;
+import com.sk89q.worldguard.domains.PlayerDomain;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import org.bukkit.entity.Player;
-import net.crytec.phoenix.api.item.ItemBuilder;
+import java.util.ArrayList;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.utils.inventory.InventoryProvider;
+import ru.komiss77.utils.inventory.Pagination;
+import ru.komiss77.utils.inventory.SlotIterator;
+import ru.komiss77.utils.inventory.SlotPos;
+import net.crytec.RegionGUI.Language;
+import ru.komiss77.utils.PlayerChatInput;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
+import ru.komiss77.utils.ItemBuilder;
 
 
 
@@ -37,7 +34,7 @@ public class RegionAddMembers implements InventoryProvider
     }
     
     @Override
-    public void init(final Player player, final InventoryContents contents) {
+    public void init(final Player player, final InventoryContent contents) {
         player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
         contents.fillBorders(ClickableItem.empty(RegionAddMembers.fill));
         final Pagination pagination = contents.pagination();
@@ -60,11 +57,12 @@ public class RegionAddMembers implements InventoryProvider
                     final ItemStack head = new ItemBuilder(Material.PLAYER_HEAD)
                             .name("§f" + v.getName())
                             .lore("§7ЛКМ - добавить пользователем")
+                            .setSkullOwner(v.getName())
                             .build();
-                    final SkullMeta skullmeta = (SkullMeta)head.getItemMeta();
-                    skullmeta.hasOwner();
-                    skullmeta.setOwner(v.getName());
-                    head.setItemMeta((ItemMeta)skullmeta);
+                    //final SkullMeta skullmeta = (SkullMeta)head.getItemMeta();
+                    //skullmeta.hasOwner();
+                    //skullmeta.setOwner(v.getName());
+                    //head.setItemMeta((ItemMeta)skullmeta);
 
                     menuEntry.add(ClickableItem.of(head, p6 -> {
 
@@ -73,8 +71,9 @@ public class RegionAddMembers implements InventoryProvider
                         region.setMembers(domain);
                         region.setDirty(true);
                         
-                        contents.inventory().open(player, pagination.getPage(), new String[] { "region" }, new Object[] { this.region });
-                        UtilPlayer.playSound(player, Sound.BLOCK_LEVER_CLICK);
+                        //contents.getHost().open( player, pagination.getPage(), new String[] { "region" }, new Object[] { this.region });
+                        contents.getHost().open( player, pagination.getPage() );
+                        player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 2,2);
                         //player.sendMessage(Language.INTERFACE_REMOVE_SUCESSFULL.toChatString().replaceAll("%name%", name));
 
                     }));            
@@ -105,62 +104,39 @@ public class RegionAddMembers implements InventoryProvider
             
             player.closeInventory();
             player.sendMessage(Language.REGION_MESSAGE_CHATADDMEMBER.toChatString());
-            PhoenixAPI.get().getPlayerChatInput(player, addName -> {
+            PlayerChatInput.get(player, addName -> {
                 
-              //  final OfflinePlayer offlinePlayer2 = Bukkit.getOfflinePlayer(s);
-              //  if (!offlinePlayer2.hasPlayedBefore()) {
-               //     player.sendMessage(Language.ERROR_INVALID_OFFLINEPLAYER.toChatString());
-               // }
-               // else {
-                   // RegionAddMemberEvent regionAddMemberEvent = new RegionAddMemberEvent(player, this.claim.getTemplate(), offlinePlayer2.getUniqueId());
-                   // Bukkit.getPluginManager().callEvent((Event)regionAddMemberEvent);
-                   // if (regionAddMemberEvent.isCancelled()) {
-                      //  this.reOpen(player, contents);
-                   // }
-                    //else {
-                        
-                        //DefaultDomain defaultDomain = this.region.getMembers();
-                        //PlayerDomain playerDomain = defaultDomain.getPlayerDomain();
+
                         playerDomain.addPlayer(addName);
                         domain.setPlayerDomain(playerDomain);
                         region.setMembers(domain);
                         region.setDirty(true);
-                        //Profile profile = new Profile(offlinePlayer2.getUniqueId(), offlinePlayer2.getName());
-                       // WorldGuard.getInstance().getProfileCache().put(profile);
-                        //defaultDomain.toUserFriendlyComponent(WorldGuard.getInstance().getProfileCache());
-                        this.reOpen(player, contents);
-                        
-                        
-                        
-                        /*
-                        //protectedRegion.getMembers();
-                        protectedRegion.getMembers().getPlayerDomain().addPlayer(offlinePlayer2.getUniqueId());
-                        protectedRegion.getMembers().setPlayerDomain(playerDomain);
-                        protectedRegion.setMembers(members);
-                        protectedRegion.setDirty(true);
-                        WorldGuard.getInstance().getProfileCache().put(new Profile(offlinePlayer2.getUniqueId(), offlinePlayer2.getName()));
-                        members.toUserFriendlyComponent(WorldGuard.getInstance().getProfileCache());
-                        this.reOpen(player, contents);*/
-                   // }
-               // }
+
+                        this.reopen(player, contents);
+
             });
-            //return;
+
         }));
         
         
-        
+        //ClickableItem clickItem = ClickableItem.of( new ItemBuilder(Material.OAK_DOOR).name(Language.INTERFACE_BACK.toString()).build(), p1 
+        //        -> MenuOpener.openMain(player, region) );
         
         
         contents.set( 4, 4, ClickableItem.of( new ItemBuilder(Material.OAK_DOOR).name(Language.INTERFACE_BACK.toString()).build(), p1 
                 -> MenuOpener.openMain(player, region) ));
         
         contents.set( 4, 6, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_NEXT_PAGE.toString()).build(), p4 
-                -> contents.inventory().open(player, pagination.next().getPage(), new String[] { "region" }, new Object[] { this.region })));
+                //-> contents.getHost().open(player, pagination.next().getPage(), new String[] { "region" }, new Object[] { this.region })));
+                -> contents.getHost().open(player, pagination.next().getPage()) )
+        );
         
         contents.set( 4, 2, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_PREVIOUS_PAGE.toString()).build(), p4 
-                -> contents.inventory().open(player, pagination.previous().getPage(), new String[] { "region" }, new Object[] { this.region })));
+                //-> contents.getHost().open(player, pagination.previous().getPage(), new String[] { "region" }, new Object[] { this.region })));
+                -> contents.getHost().open(player, pagination.previous().getPage()) )
+        );
         
-        pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 1).allowOverride(false));
+        pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, SlotPos.of(1, 1)).allowOverride(false));
         
      /*   
         final Iterator iterator = this.region.getMembers().getUniqueIds().iterator();

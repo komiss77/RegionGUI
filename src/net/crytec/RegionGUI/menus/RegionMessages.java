@@ -3,17 +3,17 @@ package net.crytec.RegionGUI.menus;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.crytec.RegionGUI.Language;
-import net.crytec.phoenix.api.implementation.AnvilGUI;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
-import net.crytec.phoenix.api.inventory.content.SlotPos;
-import net.crytec.phoenix.api.item.ItemBuilder;
-import net.crytec.phoenix.api.utils.UtilPlayer;
+import net.crytec.RegionGUI.RegionGUI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.utils.inventory.InventoryProvider;
+import ru.komiss77.utils.inventory.SlotPos;
+import ru.komiss77.version.AnvilGUI;
 
 
 
@@ -30,7 +30,7 @@ public class RegionMessages implements InventoryProvider
     
     
     @Override
-    public void init(final Player player, InventoryContents contents) {
+    public void init(final Player player, InventoryContent contents) {
         player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
         
         contents.fillBorders(ClickableItem.empty(RegionMain.fill));
@@ -47,18 +47,18 @@ public class RegionMessages implements InventoryProvider
                 .lore("§6ПКМ §7- удалить")
                 .build(), inventoryClickEvent -> {
                     
-                    UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     
                     if (inventoryClickEvent.getClick() == ClickType.LEFT) {
 
-                        new AnvilGUI( player, "Вы вошли в приват "+player.getName(), (player2, welcome) -> {
+                        new AnvilGUI(RegionGUI.getInstance(), player, "Вы вошли в приват "+player.getName(), (player2, welcome) -> {
 
                             if(welcome.length()>40 ) {
                                 player.sendMessage("§cНе больше 40 символов!");
                                 return null;
                             } else {
                                 region.setFlag(Flags.GREET_MESSAGE, welcome);
-                                this.reOpen(player, contents);
+                                this.reopen(player, contents);
                                 return null;
                             }
 
@@ -67,7 +67,7 @@ public class RegionMessages implements InventoryProvider
                     }  else if (inventoryClickEvent.getClick() == ClickType.RIGHT && region.getFlags().containsKey(Flags.GREET_MESSAGE)) {
 
                         region.setFlag(Flags.GREET_MESSAGE, null);
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                     }
         }));
         
@@ -82,18 +82,18 @@ public class RegionMessages implements InventoryProvider
                 .lore("§6ПКМ §7- удалить")
                 .build(), inventoryClickEvent -> {
                     
-                    UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     
                     if (inventoryClickEvent.getClick() == ClickType.LEFT) {
 
-                        new AnvilGUI( player, "Здравствуйте!", (player2, welcome) -> {
+                        new AnvilGUI(RegionGUI.getInstance(), player, "Здравствуйте!", (player2, welcome) -> {
 
                             if(welcome.length()>40 ) {
                                 player.sendMessage("§cНе больше 40 символов!");
                                 return null;
                             } else {
                                 region.setFlag(Flags.GREET_TITLE, welcome);
-                                this.reOpen(player, contents);
+                                this.reopen(player, contents);
                                 return null;
                             }
 
@@ -102,7 +102,7 @@ public class RegionMessages implements InventoryProvider
                     }  else if (inventoryClickEvent.getClick() == ClickType.RIGHT && region.getFlags().containsKey(Flags.GREET_TITLE)) {
 
                         region.setFlag(Flags.GREET_TITLE, null);
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                         
                     }                
         }));
@@ -121,18 +121,18 @@ public class RegionMessages implements InventoryProvider
                 .lore("§6ПКМ §7- удалить")
                 .build(), inventoryClickEvent -> {
                     
-                    UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     
                     if (inventoryClickEvent.getClick() == ClickType.LEFT) {
 
-                        new AnvilGUI( player, "Вы покинули приват "+player.getName(), (player2, welcome) -> {
+                        new AnvilGUI(RegionGUI.getInstance(), player, "Вы покинули приват "+player.getName(), (player2, welcome) -> {
 
                             if(welcome.length()>40 ) {
                                 player.sendMessage("§cНе больше 40 символов!");
                                 return null;
                             } else {
                                 region.setFlag(Flags.FAREWELL_MESSAGE, welcome);
-                                this.reOpen(player, contents);
+                                this.reopen(player, contents);
                                 return null;
                             }
 
@@ -141,7 +141,7 @@ public class RegionMessages implements InventoryProvider
                     }  else if (inventoryClickEvent.getClick() == ClickType.RIGHT && region.getFlags().containsKey(Flags.FAREWELL_MESSAGE)) {
 
                         region.setFlag(Flags.FAREWELL_MESSAGE, null);
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                         
                     }                
         }));
@@ -157,18 +157,18 @@ public class RegionMessages implements InventoryProvider
                 .lore("§6ПКМ §7- удалить")
                 .build(), inventoryClickEvent -> {
                     
-                    UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     
                     if (inventoryClickEvent.getClick() == ClickType.LEFT) {
 
-                        new AnvilGUI( player, "До свидания!", (player2, welcome) -> {
+                        new AnvilGUI(RegionGUI.getInstance(), player, "До свидания!", (player2, welcome) -> {
 
                             if(welcome.length()>40 ) {
                                 player.sendMessage("§cНе больше 40 символов!");
                                 return null;
                             } else {
                                 region.setFlag(Flags.FAREWELL_TITLE, welcome);
-                                this.reOpen(player, contents);
+                                this.reopen(player, contents);
                                 return null;
                             }
 
@@ -177,7 +177,7 @@ public class RegionMessages implements InventoryProvider
                     }  else if (inventoryClickEvent.getClick() == ClickType.RIGHT && region.getFlags().containsKey(Flags.FAREWELL_TITLE)) {
 
                         region.setFlag(Flags.FAREWELL_TITLE, null);
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                         
                     }                
         }));

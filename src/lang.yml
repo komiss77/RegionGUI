@@ -1,0 +1,150 @@
+title-name: '&2[&fРегионы&2]:'
+error:
+  WorldDisabled: '&cВ этом мире регион сделать нельзя.'
+  noPermission: '&cУ вас нет права &7[&6%permission%&7]'
+  alreadyMember: '&6%name% &7уже добавлен пользователем в ваш регион.'
+  notMember: ' &cУдалить некого! &6%name% &7нет в списке пользователей.'
+  uuidResolve: '&cThe given nickname could not be resolved to a UUID. Did you enter
+    the nickname correctly?'
+  offlineplayer: '&cИгрок с таким именем никогда не был здесь.'
+  cancel: '&cДействие отменено!'
+  noRegionFound: '&cВойдите в регион, который нужно изменить.'
+  notOwner: '&cВы находитесь в чужом регионе. Для создания своего региона, найдите
+    свободное место.'
+  notEnoughMoney: '&cНедостаточно денег для покупки.'
+  overlap: '&cРегион пересекается с чужим! Найдите другое место!'
+  max_regions: '&cВы достигли максимальное количество регионов в данном мире.'
+  borderLimit: '&cМожно показать границы только одного региона!'
+  invalidVersion: '&cВерсия не та, показ частиц невозможен!'
+  noRegions: '&cВ этом мире не найдено ни одного вашего региона.'
+  invalidName: '&cВ введеных данных есть недопустимые символы!'
+  alreadyexists: '&cРегион с таким названием уже создан.'
+  no-home: '&cДля выбранного региона не задана точка телепорта. Укажите её через меню.'
+chat:
+  enterRegionName: '&7Введите название региона'
+command:
+  list:
+    own: '&7Регионы в мире &6%world%&7:'
+    others: '&7Регионы &6%player%&7 в мире &6%world%&7:'
+    entry: '&7ИД:&6 %region% &7 - Временный: &6 %template%'
+manage:
+  memberAdded: '&6%name%&2 теперь пользователь.'
+  memberRemoved: '&6%name%&4 больше не пользователь.'
+interface:
+  general:
+    nextpage: '&fследующие'
+    previous: '&fпредыдущие'
+    back: '&fвернуться'
+  select:
+    title: '&7Выберите регион'
+    description: '&7Левый клик-редактировать &a%region%'
+  manage:
+    title: Управление регионом
+    button_info: '&6>> &7Информация &6<<'
+    info:
+      description:
+      - '&6Размер: %size% x %size%'
+      - '&6Высота: %heigth% блоков'
+      - '&6Подземная часть: %depth% блоков'
+      - '&cСтоимость: %refund% лони'
+    button_showBorder:
+      name: '&6>> Показать границы региона &6<<'
+      description:
+      - '&7Включить показ границ региона.'
+      - '&7Для выключения показа'
+      - '&7присядьте (клав. Shift)'
+    button_flag:
+      name: '&6>> Управление флагами региона &6<<'
+      description:
+      - '&7Разрешение/запрет некоторых действий.'
+      - '&7Левая кнопка - ВКЛ/ВЫКЛ.'
+      - '&7Правая кнопка - сбросить.'
+    walk-flags:
+      name: '&7Изменить сообщение при входе/выходе в регион.'
+      description:
+      - '&aЛКМ &7изменить приветствие'
+      - '&aПКМ &7изменить сообщение при выходе.'
+    button_deleteRegion:
+      name: '&7Удалить регион (&cНеобратимая операция!&7)'
+      description:
+      - '&c&l        ВНИМАНИЕ !'
+      - '&c&l Все постройки в регионе'
+      - '&c&l будут уничтожены!'
+    button:
+      managemembers: §7Редактировать пользователей
+    members:
+      name: '&7Пользователи'
+    button_addMember:
+      name: '&aДобавить&7 пользователя.'
+      description:
+      - '&7После нажатия'
+      - '&7нужно будет набраать ник'
+      - '&7добавляемого в приват игрока.'
+  remove:
+    title: '&2Пользователи'
+    desc: '&7Клик - удалить %name%'
+    successfull: '&6%name% &7больше не пользователь.'
+  welcome:
+    title: '&7Приветствие при входе в регион.'
+    chat: '&eПриветствие в чате'
+    titlemessage: '&eТитры'
+    actionbar: '&eПриветствие в панели действий'
+    button:
+      description:
+      - '&aЛКМ &7изменить'
+      - '&aПКМ &7удалить.'
+  farewell:
+    title: '&7Cообщение при выходе из региона.'
+    chat: '&eСообщение в чате'
+    titlemessage: '&eТитры'
+    actionbar: '&7Сообщение в &eпанели действий'
+    button:
+      description:
+      - '&aЛКМ &7изменить'
+      - '&aПКМ &7удалить.'
+  delete:
+    title: '&4Подтвердите удаление'
+    buttonConfirm: '&aУдалить'
+    buttonAbort: '&cОтмена'
+  buy:
+    title: '&fСоздание региона:'
+  home:
+    title: '&9Регионы'
+    entrybutton-description:
+    - '&7Мир: %world%'
+    - '&aЛКМ &7телепорт'
+    button: '&6>> Установить точку телепорта &6<<'
+    buttondescription:
+    - '&7Нажмите, чтобы установить'
+    - '&7точку телепорта для'
+    - '&7данного региона'
+    success: '&2Точка телепорта для данного региона установлена.'
+region:
+  messageDeleteAbort: §cУдаление отменено!
+  messageChatAddMember: '&fНаберите в чате &6ник &fигрока, которого желаете &aдобавить&7:'
+  removed: '&cВаш регион удалён.'
+  refunded: '&7Возращены средства: &a%refund% лони'
+  create: '&aСоздан новый регион.'
+  createMoney: '&aОплата за регион %money% лони.'
+  reload: '&aНастройки перезагружены.'
+  messageInput: '&7Наберите в чате новое сообщение:'
+  welcomeRemoved: '&cПриветствие выключено.'
+  welcomeMessageChanged: '&7Приветствие: %message%'
+  farewellRemoved: '&cСообщение при выходе выключено.'
+  farewellMessageChanged: '&7Сообщение при выходе: %message%'
+  list:
+    others: '&6Регионы %target% в этом мире:'
+  preview:
+    cancel: '&2Нажмите Shift для остановки предпросмотра'
+displaytask:
+  start: '&7Границы региона будут показаны &6%cooldown%&7 сек.'
+  stop: '&7Показ границ завершен.'
+flag:
+  menu_title: §lУправление Флагами
+  message:
+    empty: §cК сожалению, вам недоступно управление флагами!
+    chatinput: '&7Введите значение для флага %flag%:'
+  menu:
+    cleared: §7Флаг (&6%flag%&7) сброшен.
+    allowed: §7Флаг (&6%flag%&7) &2- ДА!
+    denied: §7Флаг (&6%flag%&7) &4- НЕТ!

@@ -1,24 +1,24 @@
 package net.crytec.RegionGUI.menus;
 
+import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
-import net.crytec.phoenix.api.implementation.AnvilGUI;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.ConfirmationGUI;
-import net.crytec.phoenix.api.inventory.SmartInventory;
-import net.crytec.phoenix.api.inventory.buttons.InputButton;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
-import net.crytec.phoenix.api.inventory.content.SlotPos;
-import net.crytec.phoenix.api.item.ItemBuilder;
-import net.crytec.phoenix.api.utils.UtilMath;
-import net.crytec.phoenix.api.utils.UtilPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import ru.komiss77.ApiOstrov;
+import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.ConfirmationGUI;
+import ru.komiss77.utils.inventory.InputButton;
+import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.utils.inventory.InventoryProvider;
+import ru.komiss77.utils.inventory.SlotPos;
+import ru.komiss77.utils.inventory.SmartInventory;
+import ru.komiss77.version.AnvilGUI;
 
 
 
@@ -38,7 +38,7 @@ public class TemplateEditor implements InventoryProvider
     
     
     @Override
-    public void init(final Player player, final InventoryContents contents) {
+    public void init(final Player player, final InventoryContent contents) {
         contents.fillRow(0, ClickableItem.empty(TemplateEditor.filler));
         contents.fillRow(4, ClickableItem.empty(TemplateEditor.filler));
         
@@ -49,11 +49,11 @@ public class TemplateEditor implements InventoryProvider
                 .lore("§7для смены иконки")
                 .build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.LEFT && inventoryClickEvent.getCursor() != null && inventoryClickEvent.getCursor().getType() != Material.AIR) {
-                UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                 this.claim.setIcon(inventoryClickEvent.getCursor().getType());
                 inventoryClickEvent.getView().getBottomInventory().addItem(new ItemStack[] { inventoryClickEvent.getCursor() });
                 inventoryClickEvent.getView().setCursor(new ItemStack(Material.AIR));
-                this.reOpen(player, contents);
+                this.reopen(player, contents);
             }
             //return;
         }));
@@ -63,7 +63,7 @@ public class TemplateEditor implements InventoryProvider
                 .name("§7Отображаемое название")
                 .lore("§7Текущее: §6" + this.claim.getDisplayname())
                 .build(), claim.getDisplayname(), displayname -> {
-            UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
             this.claim.setDisplayname(displayname);
             SmartInventory.builder().provider(new AdminTemplateList()).size(6).title("§8Редактор заготовок [" + player.getWorld().getName() + "]").build().open(player);
            // return;
@@ -90,7 +90,7 @@ public class TemplateEditor implements InventoryProvider
                         if ( inventoryClickEvent2.getClick() == ClickType.RIGHT) {
                         if (!claim.getDescription().isEmpty()) {
                             claim.getDescription().remove(claim.getDescription().size() - 1);
-                            reOpen(player, contents);
+                            reopen(player, contents);
                         }
                         /*if (!claim.getDescription().isEmpty()) {
                             List<String> list = claim.getDescription();
@@ -99,17 +99,17 @@ public class TemplateEditor implements InventoryProvider
                             reOpen(player, contents);
                         }*/
                     } else {
-                       AnvilGUI agui = new AnvilGUI( player, "строка..", (player2, value) -> {
+                       AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
                             claim.getDescription().add(ChatColor.translateAlternateColorCodes('&', value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
-                            reOpen(player, contents);
+                            reopen(player, contents);
                             return null;
                         });
                        /* player.closeInventory();
                         player.sendMessage("§7Введите новую строку, §eexit§7 для завершения");
                         PhoenixAPI.get().getPlayerChatInput(player, input -> {
                             if (input==null|| input.isEmpty() || input.equals("exit")) {
-                                Bukkit.getScheduler().runTask(RegionGUI.getInstance(), () -> this.reOpen(player, contents));
+                                Bukkit.getScheduler().runTask(RegionGUI.getInstance(), () -> this.reopen(player, contents));
                             } else {
                                 final List<String> description;
                                 if (this.claim.getDescription() != null) description = this.claim.getDescription();
@@ -117,7 +117,7 @@ public class TemplateEditor implements InventoryProvider
                                 //description2 = ((this.claim.getDescription() == null) ? Lists.newArrayList() : this.claim.getDescription());
                                 description.add(input);
                                 this.claim.setDescription(description);
-                                Bukkit.getScheduler().runTask(RegionGUI.getInstance(), () -> this.reOpen(player, contents));
+                                Bukkit.getScheduler().runTask(RegionGUI.getInstance(), () -> this.reopen(player, contents));
                             }
                         });*/
                        // return;
@@ -142,9 +142,9 @@ public class TemplateEditor implements InventoryProvider
                 .name("§7Право")
                 .lore("§7Текущее: §6" + claim.getPermission())
                 .build(), "region.template.xxx", permission -> {
-                    UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     this.claim.setPermission(permission);
-                    this.reOpen(player, contents);
+                    this.reopen(player, contents);
                 }
         ));*/
         //Сообщение, когда нет права
@@ -157,23 +157,23 @@ public class TemplateEditor implements InventoryProvider
                 .build(), clickEvent -> {
                     if (clickEvent.getClick() == ClickType.RIGHT) {
                         claim.setPermission("");
-                        reOpen(player, contents);
+                        reopen(player, contents);
                     } else {
-                        AnvilGUI agui = new AnvilGUI( player, "region.template.xxx", (player2, value) -> {
+                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "region.template.xxx", (player2, value) -> {
                             claim.setPermission(ChatColor.stripColor(value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
-                            reOpen(player, contents);
+                            reopen(player, contents);
                             return null;
                         });
                        /* player.closeInventory();
                         player.sendMessage("§7Введите новую строку, §eexit§7 для завершения");
                         PhoenixAPI.get().getPlayerChatInput(player, s3 -> {
                             if (s3.equals("exit")) {
-                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reOpen(player, contents));
+                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, contents));
                             }
                             else {
                                 this.claim.getNoPermDescription().add(ChatColor.translateAlternateColorCodes('&', s3));
-                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reOpen(player, contents));
+                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, contents));
                             }
                         });*/
                     }
@@ -203,24 +203,24 @@ public class TemplateEditor implements InventoryProvider
                     if (inventoryClickEvent3.getClick() == ClickType.RIGHT) {
                         if (!claim.getNoPermDescription().isEmpty()) {
                             claim.getNoPermDescription().remove(claim.getNoPermDescription().size() - 1);
-                            reOpen(player, contents);
+                            reopen(player, contents);
                         }
                     } else {
-                        AnvilGUI agui = new AnvilGUI( player, "строка..", (player2, value) -> {
+                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
                             claim.getNoPermDescription().add(ChatColor.translateAlternateColorCodes('&', value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
-                            reOpen(player, contents);
+                            reopen(player, contents);
                             return null;
                         });
                        /* player.closeInventory();
                         player.sendMessage("§7Введите новую строку, §eexit§7 для завершения");
                         PhoenixAPI.get().getPlayerChatInput(player, s3 -> {
                             if (s3.equals("exit")) {
-                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reOpen(player, contents));
+                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, contents));
                             }
                             else {
                                 this.claim.getNoPermDescription().add(ChatColor.translateAlternateColorCodes('&', s3));
-                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reOpen(player, contents));
+                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, contents));
                             }
                         });*/
                     }
@@ -234,15 +234,15 @@ public class TemplateEditor implements InventoryProvider
                 .name("§7Цена")
                 .lore("§7Сейчас: §6" + this.claim.getPrice()+" §7лони")
                 .build(), String.valueOf(this.claim.getPrice()), s4 -> {
-                    if (!UtilMath.isInt(s4)) {
+                    if (!ApiOstrov.isInteger(s4)) {
                         player.sendMessage("§cВведите целое число!");
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                         //return;
                     }
                     else {
-                        UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                         this.claim.setPrice(Integer.parseInt(s4));
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                         //return;
                     }
                 }
@@ -257,14 +257,14 @@ public class TemplateEditor implements InventoryProvider
                 .lore("§7игроком после удаления региона.")
                 .lore("§7Сейчас: §6" + this.claim.getRefund())
                 .build(), String.valueOf(this.claim.getRefund()), s5 -> {
-                    if (!UtilMath.isInt(s5)) {
+                    if (!ApiOstrov.isInteger(s5)) {
                         player.sendMessage("§cВведите целое число!");
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                        // return;
                     } else {
-                        UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                         claim.setRefund(Integer.parseInt(s5));
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                         //return;
                     }
                 }
@@ -279,15 +279,15 @@ public class TemplateEditor implements InventoryProvider
                 .lore("§7Длинна каждой стороны")
                 .lore("§7квадратного основания.")
                 .build(), String.valueOf(this.claim.getSize()), s6 -> {
-                    if (!UtilMath.isInt(s6)) {
+                    if (!ApiOstrov.isInteger(s6)) {
                         player.sendMessage("§cВведите целое число!");
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                        // return;
                     }
                     else {
-                        UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                         this.claim.setSize(Integer.parseInt(s6));
-                        this.reOpen(player, contents);
+                        this.reopen(player, contents);
                         //return;
                     }
                 }
@@ -311,24 +311,24 @@ public class TemplateEditor implements InventoryProvider
                 .lore("§aЛКМ §7добавить строку")
                 .lore("§aПКМ §7удалить последнюю строку.")
                 .build(), inventoryClickEvent4 -> {
-                    UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     if (inventoryClickEvent4.isRightClick()) {
                         if (!claim.getRunCommands().isEmpty()) {
                             this.claim.getRunCommands().remove(this.claim.getRunCommands().size() - 1);
-                            this.reOpen(player, contents);
+                            this.reopen(player, contents);
                         }
                     } else {
-                        AnvilGUI agui = new AnvilGUI( player, "строка..", (player2, value) -> {
+                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
                             claim.getRunCommands().add(ChatColor.stripColor(value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
-                            reOpen(player, contents);
+                            reopen(player, contents);
                             return null;
                         });
                        /* player.closeInventory();
                         player.sendMessage("§7Введите строку команды (§cбез§7 (/)): ");
                         PhoenixAPI.get().getPlayerChatInput(player, s7 -> {
                             this.claim.getRunCommands().add(s7);
-                            this.reOpen(player, contents);
+                            this.reopen(player, contents);
                         });*/
                         //return;
                     }
@@ -341,9 +341,9 @@ public class TemplateEditor implements InventoryProvider
                 .name("§7Автопостройка ограждения")
                 .lore("§7Сейчас: " + (claim.isGenerateBorder() ? "да":"нет")   )
                 .build(), p2 -> {
-                    UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     this.claim.setGenerateBorder(!this.claim.isGenerateBorder());
-                    this.reOpen(player, contents);
+                    this.reopen(player, contents);
                     //return;
                 }
         ));
@@ -359,13 +359,13 @@ public class TemplateEditor implements InventoryProvider
                     if (inventoryClickEvent5.getClick() == ClickType.LEFT && inventoryClickEvent5.getCursor() != null && inventoryClickEvent5.getCursor().getType() != Material.AIR) {
                         if (!inventoryClickEvent5.getCursor().getType().isBlock()) {
                             player.sendMessage("§cЭтот материал не может быть блоком!");
-                            this.reOpen(player, contents);
+                            this.reopen(player, contents);
                         } else {
-                            UtilPlayer.playSound(player, Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+                            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                             this.claim.setBorderMaterial(inventoryClickEvent5.getCursor().getType());
                             inventoryClickEvent5.getView().getBottomInventory().addItem(new ItemStack[] { inventoryClickEvent5.getCursor() });
                             inventoryClickEvent5.getView().setCursor(new ItemStack(Material.AIR));
-                            this.reOpen(player, contents);
+                            this.reopen(player, contents);
                         }
                     }
                    // return;
@@ -379,15 +379,15 @@ public class TemplateEditor implements InventoryProvider
                 .name("§4Удалить заготовку")
                 .lore("§7После удаления заготовку не будет")
                 .lore("§7доступна для покупки игроками.")
-                .build(), p2 -> ConfirmationGUI.open(player, "§4Подтверждение", b -> {
-                    if (b) {
-                        UtilPlayer.playSound(player, Sound.ENTITY_GENERIC_EXPLODE, 0.5f, 1.15f);
+                .build(), p2 -> ConfirmationGUI.open( player, "§4Подтверждение", result -> {
+                    if (result) {
+                        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 0.5f, 1.15f);
                         SmartInventory.builder().provider((InventoryProvider)new AdminTemplateList()).size(6).title("§8Редактор заготовок [" + player.getWorld().getName() + "]").build().open(player);
                         TemplateManager.deleteTemplate(this.claim);
                     }
                     else {
-                        this.reOpen(player, contents);
-                        UtilPlayer.playSound(player, Sound.ENTITY_LEASH_KNOT_PLACE, 1.0f, 0.85f);
+                        this.reopen(player, contents);
+                        player.playSound(player.getLocation(), Sound.ENTITY_LEASH_KNOT_PLACE, 0.5f, 0.85f);
                     }
                 }
                 )));
@@ -480,7 +480,7 @@ implements InventoryProvider {
                 this.claim.setIcon(inventoryClickEvent.getCursor().getType());
                 inventoryClickEvent.getView().getBottomInventory().addItem(new ItemStack[]{inventoryClickEvent.getCursor()});
                 inventoryClickEvent.getView().setCursor(new ItemStack(Material.AIR));
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
             }
         }));
         
@@ -500,20 +500,20 @@ implements InventoryProvider {
                 List<String> list = this.claim.getDescription();
                 list.remove(list.size() - 1);
                 this.claim.setDescription(list);
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
                 return;
             }
             player.closeInventory();
             player.sendMessage("\u00a77Enter a new line. Type \u00a7eexit\u00a77 to abort");
             PhoenixAPI.get().getPlayerChatInput(player, string -> {
                 if (string.equals("exit")) {
-                    Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reOpen(player, inventoryContents));
+                    Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, inventoryContents));
                     return;
                 }
                 ArrayList arrayList = this.claim.getDescription() == null ? Lists.newArrayList() : this.claim.getDescription();
                 arrayList.add(string);
                 this.claim.setDescription(arrayList);
-                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reOpen(player, inventoryContents));
+                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, inventoryContents));
             });
         }));
         
@@ -522,7 +522,7 @@ implements InventoryProvider {
         inventoryContents.set(SlotPos.of((int)1, (int)1), (ClickableItem)new InputButton(new ItemBuilder(Material.BLAZE_POWDER).name("\u00a77Set Permission").lore("\u00a77Current Permission: \u00a76" + this.claim.getPermission()).build(), "permission..", string -> {
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
             this.claim.setPermission((String)string);
-            this.reOpen(player, inventoryContents);
+            this.reopen(player, inventoryContents);
         }));
         inventoryContents.set(SlotPos.of((int)2, (int)1), ClickableItem.of((ItemStack)new ItemBuilder(Material.REDSTONE_TORCH).name("\u00a77Set 'No Permission' description").lore("\u00a7eThis lines will be added below").lore("\u00a7ethe claim description in /land").lore("").lore("\u00a77Current:").lore(this.claim.getNoPermDescription()).lore("\u00a7aЛКМ \u00a77to add a new line").lore("\u00a7aПКМ \u00a77to delete the last line.").build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.RIGHT) {
@@ -530,18 +530,18 @@ implements InventoryProvider {
                     return;
                 }
                 this.claim.getNoPermDescription().remove(this.claim.getNoPermDescription().size() - 1);
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
                 return;
             }
             player.closeInventory();
             player.sendMessage("\u00a77Enter a new line. Type \u00a7eexit\u00a77 to abort");
             PhoenixAPI.get().getPlayerChatInput(player, string -> {
                 if (string.equals("exit")) {
-                    Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reOpen(player, inventoryContents));
+                    Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, inventoryContents));
                     return;
                 }
                 this.claim.getNoPermDescription().add(ChatColor.translateAlternateColorCodes((char)'&', (String)string));
-                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reOpen(player, inventoryContents));
+                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, inventoryContents));
             });
         }));
         
@@ -550,32 +550,32 @@ implements InventoryProvider {
         inventoryContents.set(SlotPos.of((int)1, (int)2), (ClickableItem)new InputButton(new ItemBuilder(Material.GOLD_NUGGET).name("\u00a77Price").lore("\u00a77Current Price: \u00a76" + this.claim.getPrice()).build(), String.valueOf(this.claim.getPrice()), string -> {
             if (!UtilMath.isInt((String)string)) {
                 player.sendMessage("\u00a7cError: \u00a77The given input is not a valid integer!");
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
                 return;
             }
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
             this.claim.setPrice(Integer.parseInt(string));
-            this.reOpen(player, inventoryContents);
+            this.reopen(player, inventoryContents);
         }));
         inventoryContents.set(SlotPos.of((int)2, (int)2), (ClickableItem)new InputButton(new ItemBuilder(Material.GOLD_NUGGET).name("\u00a77Refund").lore("\u00a77This amount will be \u00a7aadded\u00a77 to").lore("\u00a77the players balance on deletion").lore("\u00a77Current Refund: \u00a76" + this.claim.getRefund()).build(), String.valueOf(this.claim.getRefund()), string -> {
             if (!UtilMath.isInt((String)string)) {
                 player.sendMessage("\u00a7cError: \u00a77The given input is not a valid integer!");
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
                 return;
             }
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
             this.claim.setRefund(Integer.parseInt(string));
-            this.reOpen(player, inventoryContents);
+            this.reopen(player, inventoryContents);
         }));
         inventoryContents.set(SlotPos.of((int)1, (int)3), (ClickableItem)new InputButton(new ItemBuilder(Material.BEACON).name("\u00a77Set Size").lore("\u00a77Current Size: \u00a76" + this.claim.getSize()).lore("\u00a77Increasing the size \u00a7c\u00a7lwill not\u00a77 update").lore("\u00a77already claimed/existing regions.").lore("\u00a77This does only affect new regions").build(), String.valueOf(this.claim.getSize()), string -> {
             if (!UtilMath.isInt((String)string)) {
                 player.sendMessage("\u00a7cError: \u00a77The given input is not a valid integer!");
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
                 return;
             }
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
             this.claim.setSize(Integer.parseInt(string));
-            this.reOpen(player, inventoryContents);
+            this.reopen(player, inventoryContents);
         }));
         inventoryContents.set(SlotPos.of((int)1, (int)5), new ClickableItem(new ItemBuilder(Material.COMMAND_BLOCK).name("\u00a77Commands").lore("\u00a77This is a set of commands that will be").lore("\u00a77executed by the \u00a7a\u00a7lplayer\u00a77 after").lore("\u00a77a successfull purchase.").lore("\u00a77You may use this to set default flags or").lore("\u00a77whatever you want.").lore("\u00a77Valid placeholders:").lore("\u00a7e%player% \u00a77- The players name").lore("\u00a7e%region% \u00a77- The purchased region").lore("\u00a7e%world% \u00a77- The worldname").lore("").lore("\u00a77To run a command from the console,").lore("\u00a77simply put \u00a7e<server>\u00a77 in front").lore("").lore("\u00a77ПКМ to \u00a7cdelete\u00a77 the last command in the list.").lore("\u00a77Current Commands:").lore(this.claim.getRunCommands()).build(), inventoryClickEvent -> {
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
@@ -584,33 +584,33 @@ implements InventoryProvider {
                     return;
                 }
                 this.claim.getRunCommands().remove(this.claim.getRunCommands().size() - 1);
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
                 return;
             }
             player.closeInventory();
             player.sendMessage("\u00a77Please enter the command you want to add (\u00a7cwithout\u00a77 the first slash (/)): ");
             PhoenixAPI.get().getPlayerChatInput(player, string -> {
                 this.claim.getRunCommands().add((String)string);
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
             });
         }));
         inventoryContents.set(SlotPos.of((int)1, (int)4), ClickableItem.of((ItemStack)new ItemBuilder(Material.OAK_FENCE).name("\u00a77Enable Border").lore("\u00a77Currently enabled: " + F.tf((boolean)this.claim.isGenerateBorder())).build(), inventoryClickEvent -> {
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
             this.claim.setGenerateBorder(!this.claim.isGenerateBorder());
-            this.reOpen(player, inventoryContents);
+            this.reopen(player, inventoryContents);
         }));
         inventoryContents.set(SlotPos.of((int)2, (int)4), ClickableItem.of((ItemStack)new ItemBuilder(this.claim.getBorderMaterial()).name("\u00a77Set Border Material").lore("\u00a77Click with an Item on your").lore("\u00a77curser to set the border material").build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.LEFT && inventoryClickEvent.getCursor() != null && inventoryClickEvent.getCursor().getType() != Material.AIR) {
                 if (!inventoryClickEvent.getCursor().getType().isBlock()) {
                     player.sendMessage("\u00a7cERROR: \u00a77The given material is not a placeable block.");
-                    this.reOpen(player, inventoryContents);
+                    this.reopen(player, inventoryContents);
                     return;
                 }
                 UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
                 this.claim.setBorderMaterial(inventoryClickEvent.getCursor().getType());
                 inventoryClickEvent.getView().getBottomInventory().addItem(new ItemStack[]{inventoryClickEvent.getCursor()});
                 inventoryClickEvent.getView().setCursor(new ItemStack(Material.AIR));
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
             }
         }));
         inventoryContents.set(SlotPos.of((int)4, (int)8), ClickableItem.of((ItemStack)new ItemBuilder(Material.TNT).name("\u00a74Delete template").lore("\u00a77Deleting this template will remove it").lore("\u00a77from all players that have already").lore("\u00a77purchased it.").build(), inventoryClickEvent -> ConfirmationGUI.open((Player)player, (String)"\u00a74Confirm to delete template", bl -> {
@@ -619,7 +619,7 @@ implements InventoryProvider {
                 SmartInventory.builder().provider((InventoryProvider)new AdminTemplateList()).size(6).title("\u00a78Template Editor [" + player.getWorld().getName() + "]").build().open(player);
                 RegionGUI.getInstance().getClaimManager().deleteTemplate(this.claim);
             } else {
-                this.reOpen(player, inventoryContents);
+                this.reopen(player, inventoryContents);
                 UtilPlayer.playSound((Player)player, (Sound)Sound.ENTITY_LEASH_KNOT_PLACE, (float)1.0f, (float)0.85f);
             }
         })));

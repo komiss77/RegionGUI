@@ -6,6 +6,7 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.math.transform.Transform;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import net.crytec.RegionGUI.Language;
@@ -13,16 +14,16 @@ import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
-import net.crytec.phoenix.api.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.komiss77.ApiOstrov;
+import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.utils.inventory.InventoryProvider;
 
 
 
@@ -40,7 +41,7 @@ public class RegionDeleteConfirm implements InventoryProvider
     }
     
     @Override
-    public void init(Player player, InventoryContents inventoryContents) {
+    public void init(Player player, InventoryContent inventoryContents) {
         player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
         inventoryContents.fill(ClickableItem.empty(fill));
         //if (!this.claim.getProtectedRegion().isPresent()) {
@@ -76,11 +77,11 @@ public class RegionDeleteConfirm implements InventoryProvider
             if (RegionGUI.getInstance().getConfig().getBoolean("regenOnDelete", true)) {
             
                     final World faweWorld = FaweAPI.getWorld(player.getWorld().getName());
+                    final File file = new File("plugins/RegionGUI/schematics/land/"+region.getId().toLowerCase()+".schem");
 
                      
                 try{
          
-                    final File file = new File("plugins/RegionGUI/schematics/land/"+region.getId().toLowerCase()+".schem");
                     
                     if (file.exists()) {
                         final ClipboardFormat cf = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
@@ -88,24 +89,32 @@ public class RegionDeleteConfirm implements InventoryProvider
                         final boolean allowUndo = false;
                         final boolean withAir = true;
 
-                        cf.load(file).paste(faweWorld, region.getMinimumPoint(), allowUndo, withAir, (Transform) null); ;
+                        try {
+                            cf.load(file).paste(faweWorld, region.getMinimumPoint(), allowUndo, withAir, null);
+                        } catch (EOFException ex) {
+                            RegionGUI.log_err("Вставка соханённой копии региона "+region.getId()+" : файл не полный! " +ex.getMessage());
+                        };
 
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                if ( !file.delete() ) {
-                                    RegionGUI.log_err("файл не удалился");
-                                }
-                            }
-                        }.runTaskLaterAsynchronously(RegionGUI.getInstance(), 100);
                         
                     } else {
-                    RegionGUI.log_err("Вставка соханённой копии региона "+region.getId()+" : файл не найден!1");
-                }
+                        RegionGUI.log_err("Вставка соханённой копии региона "+region.getId()+" : файл не найден!1");
+                    }
                     
-                } catch (IOException ex) {
+                } catch (IOException | ArrayIndexOutOfBoundsException ex) {
+                    
                     RegionGUI.log_err("Вставка соханённой копии региона "+region.getId()+" : "+ex.getMessage());
                     //ex.printStackTrace();
+                } finally {
+                    
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            if ( !file.delete() ) {
+                                RegionGUI.log_err("файл не удалился");
+                            }
+                        }
+                    }.runTaskLaterAsynchronously(RegionGUI.getInstance(), 60);
+
                 }
                 
             }

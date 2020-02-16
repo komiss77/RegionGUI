@@ -3,8 +3,16 @@ version: 4.1.8
 description: User can create their own protected region using a simple Interface
 author: crysis992
 main: net.crytec.RegionGUI.RegionGUI
-depend: [PhoenixProject, WorldGuard, ProtocolLib]
+depend: [WorldGuard, ProtocolLib]
 api-version: 1.14
+
+commands:
+  land:
+    description: Помошник привата
+  landadmin:
+    description: Настройка Помошника привата
+
+
 
 # permissions
 permissions:

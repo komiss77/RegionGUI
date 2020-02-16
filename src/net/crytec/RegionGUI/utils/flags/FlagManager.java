@@ -1,19 +1,20 @@
 package net.crytec.RegionGUI.utils.flags;
 
+import com.google.common.collect.Lists;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.LocationFlag;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
+import net.crytec.RegionGUI.RegionGUI;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import java.util.Comparator;
-import org.bukkit.ChatColor;
-import net.crytec.shaded.org.apache.lang3.EnumUtils;
-import org.bukkit.Material;
-import com.sk89q.worldguard.protection.flags.LocationFlag;
-import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.WorldGuard;
-import com.google.common.collect.Lists;
-import net.crytec.RegionGUI.RegionGUI;
-import java.util.ArrayList;
-import net.crytec.phoenix.api.io.PluginConfig;
-import java.util.LinkedList;
 
 
 public class FlagManager {
@@ -21,7 +22,7 @@ public class FlagManager {
     
     private LinkedList<FlagSetting> settings;
     private LinkedList<FlagSetting> flags;
-    private final PluginConfig flagConfig;
+    private final YamlConfiguration flagConfig;
     private ArrayList<String> forbiddenFlags;
     
     
@@ -52,10 +53,12 @@ public class FlagManager {
         //this.forbiddenFlags.add("price");
         //this.forbiddenFlags.add("price");
 
-        this.flagConfig = new PluginConfig(plugin, plugin.getDataFolder(), "flags.yml");
+        //this.flagConfig = new PluginConfig(plugin, plugin.getDataFolder(), "flags.yml");
+        this.flagConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "flags.yml"));
         
         boolean b = false;
         
+        Material icon;
         for (final Flag flag : WorldGuard.getInstance().getFlagRegistry().getAll()) {
             if (!this.forbiddenFlags.contains(flag.getName())) {
                 if (flag instanceof LocationFlag) {
@@ -68,10 +71,12 @@ public class FlagManager {
                     this.flagConfig.set(String.valueOf(string) + "icon", (Object)Material.LIGHT_GRAY_DYE.toString());
                     b = true;
                 }
-                Material icon = Material.LIGHT_GRAY_BANNER;
-                if (EnumUtils.isValidEnum((Class)Material.class, this.flagConfig.getString(String.valueOf(string) + "icon"))) {
-                    icon = Material.valueOf(this.flagConfig.getString(String.valueOf(string) + "icon"));
-                }
+                
+                //if (EnumUtils.isValidEnum((Class)Material.class, this.flagConfig.getString(String.valueOf(string) + "icon"))) {
+                //if ( Material.matchMaterial( this.flagConfig.getString(String.valueOf(string) + "icon")) != null ) {
+                icon = Material.matchMaterial( this.flagConfig.getString(String.valueOf(string) + "icon"));
+                if (icon==null) icon = Material.LIGHT_GRAY_BANNER;
+                //}
                 if (!this.flagConfig.getBoolean(String.valueOf(string) + "enabled")) {
                     continue;
                 }
@@ -81,7 +86,11 @@ public class FlagManager {
         
         if (b) {
             RegionGUI.log_ok("§eFlag settings configuration updated with new entires.");
-            this.flagConfig.saveConfig();
+           try {
+              this.flagConfig.save(new File(plugin.getDataFolder(), "flags.yml"));
+           } catch (IOException var7) {
+              var7.printStackTrace();
+           }
         }
         
        //this.settings.sort(Comparator.comparing((Function<? super Object, ? extends Comparable>)FlagSetting::getId));

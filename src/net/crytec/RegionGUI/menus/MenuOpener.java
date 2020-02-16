@@ -2,8 +2,8 @@ package net.crytec.RegionGUI.menus;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.crytec.RegionGUI.Language;
-import net.crytec.phoenix.api.inventory.SmartInventory;
 import org.bukkit.entity.Player;
+import ru.komiss77.utils.inventory.SmartInventory;
 
 
 

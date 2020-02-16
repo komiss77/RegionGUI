@@ -9,10 +9,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.Template;
-import net.crytec.shaded.org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 import org.bukkit.event.Listener;
 
 

@@ -1,15 +1,14 @@
 package net.crytec.RegionGUI.manager;
 
-import org.bukkit.plugin.Plugin;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.World;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import net.crytec.phoenix.api.utils.UtilLoc;
+import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.utils.packets.WrapperPlayServerWorldBorder;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import net.crytec.RegionGUI.RegionGUI;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 
 
@@ -25,7 +24,7 @@ public class BorderPacketManager
     
     public BorderPacketManager(final RegionGUI plugin, final Location center, final Template claim) {
         this.plugin = plugin;
-        this.center = UtilLoc.getCenter(center).clone();
+        this.center = center.clone().add(0.5D, 0.0D, 0.5D);;
         this.size = claim.getSize() + 1;
         this.centerPacket = new WrapperPlayServerWorldBorder();
         this.sizePacket = new WrapperPlayServerWorldBorder();

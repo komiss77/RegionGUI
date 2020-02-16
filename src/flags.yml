@@ -1,0 +1,325 @@
+flags:
+  other-explosion:
+    name: '&7Всякие взрывы'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  lava-fire:
+    name: '&7Поджигание лавой'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  water-flow:
+    name: '&7Разлив воды'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  use:
+    name: '&7Использование оборудования'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  snow-fall:
+    name: '&7Снегопад'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  leaf-decay:
+    name: '&7Рост листьев'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  firework-damage:
+    name: '&7Ранение фейверком'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  heal-min-health:
+    name: '&7Порог начала излечения'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  mob-damage:
+    name: '&7Ранение животных'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  feed-delay:
+    name: '&7Задержка подачи '
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  ravager-grief:
+    name: '&7Гриферство разорителем'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  heal-delay:
+    name: '&7Интервал излечения'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  mushroom-growth:
+    name: '&7Рост грибов'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  lightning:
+    name: '&7Молнии'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  wither-damage:
+    name: '&7Повреждение Исушителем'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  ice-form:
+    name: '&7Таяние льда'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  chorus-fruit-teleport:
+    name: '&7Тп плодами хоруса'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  feed-amount:
+    name: '&7Количество еды'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  enderman-grief:
+    name: '&7Гриферство эндерменом'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  pvp:
+    name: '&7ПВП'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  mob-spawning:
+    name: '&7Спавнинг мобов'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  crop-growth:
+    name: '&7Рост сельскохозяйственных культур'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  entry:
+    name: '&7Вход'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  exit:
+    name: '&7Выход'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  exit-override:
+    name: '&7Выход из переопределения'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  creeper-explosion:
+    name: '&7Гриферство крипером'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  vine-growth:
+    name: '&7Рост винограда'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  heal-max-health:
+    name: '&7Порог регенерации'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  damage-animals:
+    name: '&7Повреждение животных'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  snow-melt:
+    name: '&7Таяние снега'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  notify-enter:
+    name: '&7Уведомление о входе'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  tnt:
+    name: '&7ТНТ'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  exit-via-teleport:
+    name: '&7Выход с помощью телепорта'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  ghast-fireball:
+    name: '&7Огненный шар гаста'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  entity-item-frame-destroy:
+    name: '&7Разрушение рамок'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  time-lock:
+    name: '&7Смена времени суток'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  feed-max-hunger:
+    name: '&7Максимум пищи'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  deny-message:
+    name: '&7Запретить сообщения'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  frosted-ice-form:
+    name: '&7Образование льда'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  mycelium-spread:
+    name: '&7Рост мицелия'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  ice-melt:
+    name: '&7Таяние льда'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  block-trampling:
+    name: '&7Вытаптывание земли'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  vehicle-destroy:
+    name: '&7Уничтожать транспортное средство'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  interact:
+    name: '&7Взаимодействовать'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  chest-access:
+    name: '&7Доступ к сундукам'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  ride:
+    name: '&7Ездить'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  weather-lock:
+    name: '&7Блокировка смены погоды'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  fire-spread:
+    name: '&7Распространение огня'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  enderdragon-block-damage:
+    name: '&7Гриферство ЭндерДраконом'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  sleep:
+    name: '&7Сон в регионе'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  vehicle-place:
+    name: '&7Установка транспортного средства'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  snowman-trails:
+    name: '&7Следы снеговика'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  block-break:
+    name: '&7Ломание блоков'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  entity-painting-destroy:
+    name: '&7Уничтожение картин'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  heal-amount:
+    name: '&7Эффективность лечения'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  exit-deny-message:
+    name: '&7Сообщение при запрете выхода из региона'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  lighter:
+    name: '&7Зажигалка'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  pistons:
+    name: '&7Работа поршней'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  deny-spawn:
+    name: '&7Запрет спавна'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  block-place:
+    name: '&7Установка блоков'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  enderpearl:
+    name: '&7Эндр перлы'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  item-drop:
+    name: '&7Выброс предметов'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  soil-dry:
+    name: '&7Высыхание почвы'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  exp-drops:
+    name: '&7Выпадение опыта'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  build:
+    name: '&7Строительство'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  fall-damage:
+    name: '&7Урон от падения'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  game-mode:
+    name: '&7Режим игры в регионе'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  item-pickup:
+    name: '&7Подбор предметов'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  item-frame-rotation:
+    name: '&7Вращение рамки'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  potion-splash:
+    name: '&7Бросание зелий'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  frosted-ice-melt:
+    name: '&7Таянье матового льда'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  entry-deny-message:
+    name: '&7Сообщение при отказе во входе в регион'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  lava-flow:
+    name: '&7Растекание лавы'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  grass-growth:
+    name: '&7Рост травы'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  feed-min-hunger:
+    name: '&7Уровень голода для начала кормёжки'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  notify-leave:
+    name: '&7Уведомлять о выходе из региона'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  receive-chat:
+    name: '&7Получение сообщений чата'
+    enabled: true
+    icon: LIGHT_GRAY_BANNER
+  greeting:
+    name: '&7greeting'
+    enabled: true
+    icon: LIGHT_GRAY_DYE
+  greeting-title:
+    name: '&7greeting-title'
+    enabled: true
+    icon: LIGHT_GRAY_DYE
+  farewell-title:
+    name: '&7farewell-title'
+    enabled: true
+    icon: LIGHT_GRAY_DYE
+  farewell:
+    name: '&7farewell'
+    enabled: true
+    icon: LIGHT_GRAY_DYE

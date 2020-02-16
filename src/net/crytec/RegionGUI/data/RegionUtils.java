@@ -11,7 +11,6 @@ import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
 import java.util.List;
-import net.crytec.shaded.org.apache.lang3.EnumUtils;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -27,9 +26,9 @@ public class RegionUtils
         RegionUtils.platform = WorldGuard.getInstance().getPlatform();
     }
     
-    public static boolean validateMaterial(final String material) {
-        return EnumUtils.isValidEnum((Class)Material.class, material);
-    }
+    //public static boolean validateMaterial(final String material) {
+   //     return EnumUtils.isValidEnum((Class)Material.class, material);
+   // }
     
     public static boolean saveRegions(final World world) {
         try {

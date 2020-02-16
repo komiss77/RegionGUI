@@ -14,36 +14,64 @@ import net.crytec.RegionGUI.menus.LandBuyMenu;
 import net.crytec.RegionGUI.menus.LandHomeMenu;
 import net.crytec.RegionGUI.menus.MenuOpener;
 import net.crytec.RegionGUI.menus.RegionSelectMenu;
-import net.crytec.acf.BaseCommand;
-import net.crytec.acf.CommandHelp;
-import net.crytec.acf.CommandIssuer;
-import net.crytec.acf.annotation.CommandAlias;
-import net.crytec.acf.annotation.Default;
-import net.crytec.acf.annotation.Optional;
-import net.crytec.acf.annotation.Subcommand;
-import net.crytec.acf.bukkit.contexts.OnlinePlayer;
-import net.crytec.phoenix.api.inventory.SmartInventory;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ru.komiss77.utils.inventory.InventoryProvider;
+import ru.komiss77.utils.inventory.SmartInventory;
 
 
 
-@CommandAlias("land")
-public class LandCommand extends BaseCommand
+//@CommandAlias("land")
+public class LandCommand implements CommandExecutor
 {
-    //private final PlayerManager manager;
-    private final RegionGUI plugin;
     
-    public LandCommand(final RegionGUI plugin) {
-        this.plugin = plugin;
-        //this.manager = manager;
+    public LandCommand() {
     }
     
-    @Default
+    
+   @Override
+    public boolean onCommand ( CommandSender se, Command comandd, String cmd, String[] a) {
+        
+        if ( !(se instanceof Player) ) { 
+            se.sendMessage("§4Это не консольная команда!"); 
+            return false; 
+        }
+        
+        final Player player = (Player) se;
+        
+        if (!RegionGUI.getInstance().getConfig().getStringList("enabled_worlds").contains(player.getWorld().getName())) {
+            player.sendMessage(Language.ERROR_WORLD_DISABLED.toChatString());
+            return false;
+        }
+        
+        if (a.length>=1 && a[0].equalsIgnoreCase("home")) {
+            SmartInventory.builder().id("home-" + player.getName()).provider((InventoryProvider)new LandHomeMenu()).size(5, 9).title(Language.INTERFACE_HOME_TITLE.toString()).build().open(player);
+            return true;
+        }
+        
+        if (a.length>=2 && a[0].equalsIgnoreCase("list")) {
+            if (player.getName().equalsIgnoreCase(a[1])) {
+                player.performCommand("rg list");
+            } else {
+                player.performCommand("rg list -p "+a[1]);
+            }
+            return true;
+        }
+        
+        checkForRegions(player);
+        
+        return true;
+    }
+    
+    
+    
+   /*  @Default
     public void openLandInterface(final Player issuer) {
         if (!this.plugin.getConfig().getStringList("enabled_worlds").contains(issuer.getWorld().getName())) {
             issuer.sendMessage(Language.ERROR_WORLD_DISABLED.toChatString());
@@ -72,7 +100,7 @@ public class LandCommand extends BaseCommand
         }
         
         //issuer.sendMessage("LandCommand displayLandList не доделано");
-       /* if (op == null) {
+       if (op == null) {
             for (final ClaimEntry claimEntry : RegionGUI.getInstance().getPlayerManager().getPlayerClaims(issuer.getUniqueId())) {
                 issuer.sendMessage(Language.COMMAND_LIST_ENTRY.toChatString().replace("%region%", claimEntry.getRegionID()).replace("%template%", claimEntry.getTemplate().getDisplayname()));
             }
@@ -80,9 +108,9 @@ public class LandCommand extends BaseCommand
         }
         for (final ClaimEntry claimEntry2 : RegionGUI.getInstance().getPlayerManager().getPlayerClaims(issuer.getUniqueId())) {
             issuer.sendMessage(Language.COMMAND_LIST_ENTRY.toChatString().replace("%region%", claimEntry2.getRegionID()).replace("%template%", claimEntry2.getTemplate().getDisplayname()));
-        }*/
+        }
     }
-    
+    */
     
     
     
@@ -104,7 +132,7 @@ public class LandCommand extends BaseCommand
             //    player.sendMessage(Language.ERROR_NO_PERMISSION.toChatString());
             //    return;
             //}
-            SmartInventory.builder().id("regiongui.claim"). provider(new LandBuyMenu(this.plugin)). size(5, 9). title(Language.INTERFACE_BUY_TITLE.toString()). build().open(player);
+            SmartInventory.builder().id("regiongui.claim"). provider(new LandBuyMenu(RegionGUI.getInstance())). size(5, 9). title(Language.INTERFACE_BUY_TITLE.toString()). build().open(player);
 
             
             

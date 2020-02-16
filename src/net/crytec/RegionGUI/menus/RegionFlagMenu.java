@@ -1,20 +1,21 @@
 package net.crytec.RegionGUI.menus;
 
-import net.crytec.phoenix.api.inventory.content.Pagination;
-import net.crytec.RegionGUI.Language;
-import net.crytec.phoenix.api.inventory.content.SlotIterator;
-import java.util.LinkedList;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import net.crytec.phoenix.api.inventory.ClickableItem;
-import net.crytec.phoenix.api.inventory.content.InventoryContents;
-import org.bukkit.entity.Player;
+import java.util.LinkedList;
+import net.crytec.RegionGUI.Language;
 import net.crytec.RegionGUI.RegionGUI;
-import net.crytec.phoenix.api.item.ItemBuilder;
-import org.bukkit.Material;
 import net.crytec.RegionGUI.utils.flags.FlagManager;
-import org.bukkit.inventory.ItemStack;
-import net.crytec.phoenix.api.inventory.content.InventoryProvider;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.utils.inventory.InventoryProvider;
+import ru.komiss77.utils.inventory.Pagination;
+import ru.komiss77.utils.inventory.SlotIterator;
+import ru.komiss77.utils.inventory.SlotPos;
 
 
 
@@ -35,7 +36,7 @@ public class RegionFlagMenu implements InventoryProvider
     
     
     @Override
-       public void init(Player player, InventoryContents inventoryContents) {
+       public void init(Player player, InventoryContent inventoryContents) {
            
         inventoryContents.fillRow(0, ClickableItem.empty(fill));
         inventoryContents.fillRow(4, ClickableItem.empty(fill));
@@ -63,7 +64,7 @@ public class RegionFlagMenu implements InventoryProvider
         ClickableItem[] arrclickableItem = new ClickableItem[menuEntryList.size()];
         arrclickableItem = menuEntryList.toArray(arrclickableItem);
         
-        SlotIterator slotIterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 0);
+        SlotIterator slotIterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, SlotPos.of(1,0));
         slotIterator = slotIterator.allowOverride(false);
         
         Pagination pagination = inventoryContents.pagination();
@@ -78,23 +79,25 @@ public class RegionFlagMenu implements InventoryProvider
         
         if (!pagination.isLast()) {
             inventoryContents.set( 4, 6, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_NEXT_PAGE.toString()).build(),
-                    inventoryClickEvent -> inventoryContents.inventory().open( player, pagination.next().getPage(), new String[]{"region"}, new Object[]{this.region})));
+                    inventoryClickEvent -> inventoryContents.getHost().open( player, pagination.next().getPage()) )
+            );
         }
         
         
         if (!pagination.isFirst()) {
             inventoryContents.set( 4, 2, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_PREVIOUS_PAGE.toString()).build(),
-                    inventoryClickEvent -> inventoryContents.inventory().open( player, pagination.previous().getPage(), new String[]{"region"}, new Object[]{this.region})));
+                    inventoryClickEvent -> inventoryContents.getHost().open( player, pagination.previous().getPage()) )
+            );
         }
         
         
-        pagination.addToIterator(inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 0));
+        pagination.addToIterator(inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, SlotPos.of(1,0)));
         
     }
        
 
     
-    @Override
-    public void update(final Player player, final InventoryContents contents) {
-    }
+   // @Override
+   // public void update(final Player player, final InventoryContent contents) {
+   // }
 }

@@ -6,19 +6,13 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.logging.Logger;
 import net.crytec.RegionGUI.commands.LandAdmin;
 import net.crytec.RegionGUI.commands.LandCommand;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.PreviewBlockManager;
 import net.crytec.RegionGUI.manager.TemplateManager;
 import net.crytec.RegionGUI.utils.flags.FlagManager;
-import net.crytec.acf.BaseCommand;
-import net.crytec.acf.BukkitCommandIssuer;
-import net.crytec.acf.BukkitCommandManager;
-import net.crytec.acf.InvalidCommandArgument;
-import net.crytec.phoenix.api.PhoenixAPI;
-import net.crytec.phoenix.api.chat.program.ChatEditorCore;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -73,63 +67,28 @@ public final class RegionGUI extends JavaPlugin
     
     @Override
     public void onEnable() {
-        //loadConfig0();
-        /*if (!this.setupEconomy()) {
-            this.log("§cNo Vault Compatible Economy Plugin found! Cannot load RegionGUI", true);
-            Bukkit.getPluginManager().disablePlugin((Plugin)this);
-        }*/
-        if (!PhoenixAPI.get().requireAPIVersion((JavaPlugin)this, 108)) {
-            Bukkit.getPluginManager().disablePlugin((Plugin)this);
-            log_err("Для работы нужен PhoenixAPI!");
-            return;
-        }
         
         this.loadLanguage();
         
-        final BukkitCommandManager bukkitCommandManager = new BukkitCommandManager(this);
-        
-        
-        bukkitCommandManager.getCommandContexts().registerContext(ProtectedRegion.class, bukkitCommandExecutionContext -> {
-            final ProtectedRegion region = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(((BukkitCommandIssuer)bukkitCommandExecutionContext.getIssuer()).getPlayer().getWorld())).getRegion(bukkitCommandExecutionContext.popFirstArg());
-            if (region == null) {
-                throw new InvalidCommandArgument("Could not find an region with that name in your current world.");
-            }
-            return region;
-        });
-        
-        bukkitCommandManager.getCommandContexts().registerContext(Template.class, bukkitCommandExecutionContext -> {
-            final Optional<Template> first = TemplateManager.getTemplates((bukkitCommandExecutionContext.getIssuer()).getPlayer().getWorld()).stream().filter(regionClaim -> ChatColor.stripColor(regionClaim.getDisplayname()).equals(bukkitCommandExecutionContext.popFirstArg())).findFirst();
-            if (!first.isPresent()) {
-                throw new InvalidCommandArgument("Could not find a template with that name in your current world.");
-            }
-            return first.get();
-        });
-        
         this.flagmanager = new FlagManager(this);
-        new ChatEditorCore(this);
-        //this.claimManager = new ClaimManager(this);
-        new TemplateManager(this);
-        //this.playerManager = new PlayerManager(this, this.claimManager);
-        //Bukkit.getPluginManager().registerEvents((Listener)new RegionPurchaseListener(), (Plugin)this);
-        bukkitCommandManager.registerCommand(new LandCommand(this));
-        bukkitCommandManager.registerCommand(new LandAdmin(this));
         
+        new TemplateManager(this);
+        
+        instance.getCommand("land").setExecutor(new LandCommand());
+        instance.getCommand("landadmin").setExecutor(new LandAdmin());
+
         Bukkit.getPluginManager().registerEvents(new PreviewBlockManager(), this);
         
-        bukkitCommandManager.enableUnstableAPI("help");
 
     }
     
     @Override
     public void onDisable() {
-       // if (this.getPlayerManager() != null) {
-      //      this.getPlayerManager().saveOnDisable();
-      //  }
+
         TemplateManager.saveAll();
-      //  if (this.claimManager != null) {
-      //      this.claimManager.saveAll();
-       // }
+
     }
+    
     
     public static RegionGUI getInstance() {
         return RegionGUI.instance;
