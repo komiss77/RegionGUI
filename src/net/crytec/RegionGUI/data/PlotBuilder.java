@@ -64,8 +64,8 @@ public class PlotBuilder
         }
         
         //final int halfSize = (int)Math.round(size / 2.0);
-        final Vector top = claimTemplate.getMaximumPoint(loc);//new Vector(down.getBlockX() + size, blockY + claimTemplate.getHeight(), down.getBlockZ() + size); //на 1 меньше, т.к. включая
-        final Vector down = claimTemplate.getMinimumPoint(loc);//new Vector(blockX - halfSize, blockY - claimTemplate.getDepth(), blockZ - halfSize); //находим нижний угол
+        final Vector top = claimTemplate.getMaximumPoint(loc).toVector();//new Vector(down.getBlockX() + size, blockY + claimTemplate.getHeight(), down.getBlockZ() + size); //на 1 меньше, т.к. включая
+        final Vector down = claimTemplate.getMinimumPoint(loc).toVector();//new Vector(blockX - halfSize, blockY - claimTemplate.getDepth(), blockZ - halfSize); //находим нижний угол
         //final Vector top = new Vector(blockX + n, blockY + claimTemplate.getHeight(), blockZ + n);
         
         final String regName = this.player.getName()+"-rgui-"+claimTemplate.getName()+"-"+System.currentTimeMillis()/1000;

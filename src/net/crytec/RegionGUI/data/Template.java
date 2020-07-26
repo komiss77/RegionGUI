@@ -307,21 +307,21 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
     }
 
 
-    public Vector getMinimumPoint(final Location loc) {
+    public Location getMinimumPoint(final Location loc) {
         final int halfSize = (int)Math.round(size / 2.0);
         int blockY = loc.getBlockY();
         if (blockY>30) blockY = 30;
         blockY-=depth;
         if (blockY<0) blockY=0;
-        return new Vector(loc.getBlockX() - halfSize, blockY, loc.getBlockZ() - halfSize);
+        return new Location(loc.getWorld(), loc.getBlockX() - halfSize, blockY, loc.getBlockZ() - halfSize);
     }
     
-    public Vector getMaximumPoint(final Location loc) {
-        final Location high =  getMinimumPoint(loc).toLocation(loc.getWorld()).add(size, 0, size);
+    public Location getMaximumPoint(final Location loc) {
+        final Location high =  getMinimumPoint(loc).add(size, 0, size);
         int blockY = loc.getBlockY();
         blockY+=height;
         if (blockY>256) blockY = 256;
         high.setY(blockY);
-        return high.toVector();
+        return high;
     }
 }

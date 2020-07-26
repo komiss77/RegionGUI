@@ -2,8 +2,6 @@ package net.crytec.RegionGUI.data;
 
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector2;
-import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -14,14 +12,10 @@ import java.util.Set;
 import net.crytec.RegionGUI.RegionGUI;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
 import ru.komiss77.utils.BlockUtils;
 
 
@@ -121,10 +115,17 @@ public class PreviewBlock {
         }
         toResetLine.clear();
     }
+    
+    
+    
+    
 
     private void setLine () {
         
-        Update_vectors();
+        toSetLine.clear();
+        for (final Block b: BlockUtils.getCuboidBorder(p.getWorld(), template.getMinimumPoint(p.getLocation().clone().add(0.5D, 0.0D, 0.5D)), template.getSize() )) {
+            toSetLine.add(b.getLocation());
+        }
         
         if (!toSetLine.isEmpty()) {
             
@@ -153,40 +154,7 @@ public class PreviewBlock {
     
     
     
-    
-    private void Update_vectors () {
-        Location location = p.getLocation().clone().add(0.5D, 0.0D, 0.5D);
-        //int x = location.getBlockX();
-        //int y = location.getBlockZ();
-        //int z = location.getBlockY();
-        
-        //int templateSize = template.getSize();
-        //int halfSize = Math.round((float) (templateSize / 2));
-        
-        Vector top = template.getMaximumPoint(location); //new Vector(x + halfSize, z + template.getHeight(), y + halfSize);
-        Vector down = template.getMinimumPoint(location);//new Vector(x - halfSize, z - template.getDepth(), y - halfSize);
-        
-        //selection = new CuboidRegion(vector.toBlockVector(), vector1.toBlockVector());
-        selection = new CuboidRegion( 
-                BlockVector3.at( top.getBlockX(), top.getBlockY(), top.getBlockZ()), 
-                BlockVector3.at(down.getBlockX(), down.getBlockY(), down.getBlockZ())
-        );
-        
-        selection.setPos1(selection.getMaximumPoint().withY(0));
-        selection.setPos2(selection.getMinimumPoint().withY(0));
-        
-        BlockVector2 bv2;
-        Block topBlock;
-        toSetLine.clear();
-        
-        for (BlockVector3 bv3 : selection.getWalls()) {
-            bv2 = bv3.toBlockVector2();
-            topBlock = BlockUtils.getHighestBlock(p.getWorld(), bv2.getBlockX(), bv2.getBlockZ());
-            toSetLine.add(topBlock.getLocation());
-        }
-        
-        //border = RegionPreviewBlockManager.getLocationsFromRegion(selection);
-   }       
+      
     
     
  
