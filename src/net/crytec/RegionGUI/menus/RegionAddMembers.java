@@ -11,12 +11,12 @@ import ru.komiss77.utils.inventory.Pagination;
 import ru.komiss77.utils.inventory.SlotIterator;
 import ru.komiss77.utils.inventory.SlotPos;
 import net.crytec.RegionGUI.Language;
-import ru.komiss77.utils.PlayerChatInput;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.PlayerChatInput;
 
 
 

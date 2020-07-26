@@ -1,15 +1,5 @@
 package net.crytec.RegionGUI.data;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.plugin.Plugin;
-import net.crytec.RegionGUI.RegionGUI;
-import org.bukkit.Bukkit;
-import com.comphenix.protocol.wrappers.EnumWrappers;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.entity.Player;
-import net.crytec.RegionGUI.utils.packets.WrapperPlayServerWorldBorder;
-
+/*
 
 
 public class PreviewBorder implements Runnable {
@@ -28,6 +18,7 @@ public class PreviewBorder implements Runnable {
         this.player = player;
         final World world = player.getWorld();
         this.size = size;
+        
         this.resetcenterPacket = new WrapperPlayServerWorldBorder();
         (this.resetsizePacket = new WrapperPlayServerWorldBorder()).setRadius(world.getWorldBorder().getSize());
         this.resetsizePacket.setOldRadius(world.getWorldBorder().getSize());
@@ -36,6 +27,7 @@ public class PreviewBorder implements Runnable {
         this.resetcenterPacket.setCenterX(world.getWorldBorder().getCenter().getBlockX());
         this.resetcenterPacket.setCenterZ(world.getWorldBorder().getCenter().getBlockZ());
         this.resetcenterPacket.setAction(EnumWrappers.WorldBorderAction.SET_CENTER);
+        
         this.centerPacket = new WrapperPlayServerWorldBorder();
         (this.sizePacket = new WrapperPlayServerWorldBorder()).setRadius(this.size);
         this.sizePacket.setOldRadius(this.size);
@@ -45,6 +37,7 @@ public class PreviewBorder implements Runnable {
         this.centerPacket.setCenterZ(player.getLocation().getBlockZ());
         this.centerPacket.setAction(EnumWrappers.WorldBorderAction.SET_CENTER);
         this.centerPacket.sendPacket(this.player);
+        
         Bukkit.getScheduler().runTaskLater((Plugin)RegionGUI.getInstance(), () -> this.sizePacket.sendPacket(this.player), 1L);
         this.task = Bukkit.getScheduler().runTaskTimer((Plugin)RegionGUI.getInstance(), (Runnable)this, 5L, 15L);
     }
@@ -69,12 +62,12 @@ public class PreviewBorder implements Runnable {
     
     @Override
     public void run() {
-        if (!this.player.isOnline() || this.player.isSneaking()) {
+        if (player ==  null || !player.isOnline() || player.isSneaking()) {
             this.task.cancel();
             this.reset();
-            this.player.resetTitle();
+            player.resetTitle();
         } else {
-            this.player.sendTitle("", "§2Shift - остановить показ", 0, 30, 0);
+            player.sendTitle("", "§2Shift - остановить показ", 0, 30, 0);
             this.updateCenter();
         }
     }
@@ -87,4 +80,4 @@ public class PreviewBorder implements Runnable {
     }
     
     
-}
+}*/

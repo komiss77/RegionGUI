@@ -92,35 +92,16 @@ public class TemplateEditor implements InventoryProvider
                             claim.getDescription().remove(claim.getDescription().size() - 1);
                             reopen(player, contents);
                         }
-                        /*if (!claim.getDescription().isEmpty()) {
-                            List<String> list = claim.getDescription();
-                            list.remove(list.size() - 1); 
-                            claim.setDescription(list);
-                            reOpen(player, contents);
-                        }*/
+
                     } else {
+                            
                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
                             claim.getDescription().add(ChatColor.translateAlternateColorCodes('&', value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
                         });
-                       /* player.closeInventory();
-                        player.sendMessage("§7Введите новую строку, §eexit§7 для завершения");
-                        PhoenixAPI.get().getPlayerChatInput(player, input -> {
-                            if (input==null|| input.isEmpty() || input.equals("exit")) {
-                                Bukkit.getScheduler().runTask(RegionGUI.getInstance(), () -> this.reopen(player, contents));
-                            } else {
-                                final List<String> description;
-                                if (this.claim.getDescription() != null) description = this.claim.getDescription();
-                                else description = new ArrayList<>();
-                                //description2 = ((this.claim.getDescription() == null) ? Lists.newArrayList() : this.claim.getDescription());
-                                description.add(input);
-                                this.claim.setDescription(description);
-                                Bukkit.getScheduler().runTask(RegionGUI.getInstance(), () -> this.reopen(player, contents));
-                            }
-                        });*/
-                       // return;
+
                     }
                 }
         ));
@@ -138,15 +119,7 @@ public class TemplateEditor implements InventoryProvider
         
         
         //права
-       /* contents.set(SlotPos.of(1, 1), new InputButton(new ItemBuilder(Material.BLAZE_POWDER)
-                .name("§7Право")
-                .lore("§7Текущее: §6" + claim.getPermission())
-                .build(), "region.template.xxx", permission -> {
-                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                    this.claim.setPermission(permission);
-                    this.reopen(player, contents);
-                }
-        ));*/
+
         //Сообщение, когда нет права
         contents.set(SlotPos.of(1, 1), ClickableItem.of(new ItemBuilder(Material.BLAZE_POWDER)
                 .name("§7Право для покупки")
@@ -165,17 +138,7 @@ public class TemplateEditor implements InventoryProvider
                             reopen(player, contents);
                             return null;
                         });
-                       /* player.closeInventory();
-                        player.sendMessage("§7Введите новую строку, §eexit§7 для завершения");
-                        PhoenixAPI.get().getPlayerChatInput(player, s3 -> {
-                            if (s3.equals("exit")) {
-                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, contents));
-                            }
-                            else {
-                                this.claim.getNoPermDescription().add(ChatColor.translateAlternateColorCodes('&', s3));
-                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, contents));
-                            }
-                        });*/
+
                     }
                 }));
         
@@ -212,17 +175,8 @@ public class TemplateEditor implements InventoryProvider
                             reopen(player, contents);
                             return null;
                         });
-                       /* player.closeInventory();
-                        player.sendMessage("§7Введите новую строку, §eexit§7 для завершения");
-                        PhoenixAPI.get().getPlayerChatInput(player, s3 -> {
-                            if (s3.equals("exit")) {
-                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, contents));
-                            }
-                            else {
-                                this.claim.getNoPermDescription().add(ChatColor.translateAlternateColorCodes('&', s3));
-                                Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, contents));
-                            }
-                        });*/
+
+
                     }
                 }));
         

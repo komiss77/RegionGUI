@@ -1,17 +1,7 @@
 package net.crytec.RegionGUI.data;
 
-import com.boydti.fawe.FaweAPI;
-import com.boydti.fawe.util.EditSessionBuilder;
-import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
-import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -21,8 +11,6 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
-import java.io.File;
-import java.io.IOException;
 import java.util.Iterator;
 import net.crytec.RegionGUI.Language;
 import net.crytec.RegionGUI.RegionGUI;
@@ -37,6 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ru.komiss77.ApiOstrov;
+import ru.komiss77.Managers.WE;
 
 
 public class PlotBuilder
@@ -61,22 +50,23 @@ public class PlotBuilder
     
     public void build() {
         PreviewBlockManager.stopPrewiev(player);
-        final int blockX = this.loc.getBlockX();
-        final int blockZ = this.loc.getBlockZ();
+        //final int blockX = this.loc.getBlockX();
+        //final int blockZ = this.loc.getBlockZ();
         int blockY = this.loc.getBlockY();
         
         if (blockY>30) blockY = 30; 
         
         final int size = this.claimTemplate.getSize();
-        
+//System.out.println("claimTemplate size="+size);        
         if (this.claimTemplate.getPermission() != null && !this.claimTemplate.getPermission().isEmpty() && !this.player.hasPermission(this.claimTemplate.getPermission())) {
             this.player.sendMessage(Language.ERROR_NO_PERMISSION.toChatString().replaceAll("%permission%", this.claimTemplate.getPermission()));
             return;
         }
         
-        final int n = (int)Math.round(size / 2.0);
-        final Vector top = new Vector(blockX + n, blockY + this.claimTemplate.getHeight(), blockZ + n);
-        final Vector down = new Vector(blockX - n, blockY - this.claimTemplate.getDepth(), blockZ - n);
+        //final int halfSize = (int)Math.round(size / 2.0);
+        final Vector top = claimTemplate.getMaximumPoint(loc);//new Vector(down.getBlockX() + size, blockY + claimTemplate.getHeight(), down.getBlockZ() + size); //на 1 меньше, т.к. включая
+        final Vector down = claimTemplate.getMinimumPoint(loc);//new Vector(blockX - halfSize, blockY - claimTemplate.getDepth(), blockZ - halfSize); //находим нижний угол
+        //final Vector top = new Vector(blockX + n, blockY + claimTemplate.getHeight(), blockZ + n);
         
         final String regName = this.player.getName()+"-rgui-"+claimTemplate.getName()+"-"+System.currentTimeMillis()/1000;
         
@@ -101,6 +91,7 @@ public class PlotBuilder
         region.setOwners(owners);
         region.setFlag((Flag)Flags.TELE_LOC, (Object)BukkitAdapter.adapt(this.player.getLocation()));
         
+//System.out.println("claimTemplate size="+size+" region "+region.getMinimumPoint()+"  "+region.getMaximumPoint());        
         
         final int price = this.claimTemplate.getPrice();
         //if (!RegionGUI.econ.withdrawPlayer((OfflinePlayer)this.player.getPlayer(), (double)price).transactionSuccess()) {
@@ -118,32 +109,34 @@ public class PlotBuilder
         
         
         
-        
+        if (RegionGUI.getInstance().getConfig().getBoolean("regenOnDelete", true)) {
+            WE.save(player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()), RegionGUI.getInstance().getDataFolder() + "/schematics", regName, true);
+        }
         
         
         
         //сохранение в файл
-        final com.sk89q.worldedit.world.World faweWorld = FaweAPI.getWorld(player.getWorld().getName());
+        /*final com.sk89q.worldedit.world.World faweWorld = FaweAPI.getWorld(player.getWorld().getName());
         CuboidRegion  toSave = new CuboidRegion(faweWorld, region.getMinimumPoint(), region.getMaximumPoint());
         
         
         EditSession editSession = new EditSessionBuilder(toSave.getWorld()).autoQueue(false).fastmode(true).build();
         
-        Clipboard clipboard = new BlockArrayClipboard(toSave);
-        ForwardExtentCopy copy = new ForwardExtentCopy(editSession, toSave, clipboard, region.getMinimumPoint());
-        copy.setCopyingEntities(false);
-        copy.setCopyingBiomes(false);
-        Operations.completeLegacy(copy);
-        //editSession.flushQueue(); тут нельзя, не успевает сохранить!
-        
-        File file = new File("plugins/RegionGUI/schematics/land/"+regName.toLowerCase()+".schem");
-        final ClipboardFormat cf = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
-
         try {
+            Clipboard clipboard = new BlockArrayClipboard(toSave);
+            ForwardExtentCopy copy = new ForwardExtentCopy(editSession, toSave, clipboard, region.getMinimumPoint());
+            copy.setCopyingEntities(false);
+            copy.setCopyingBiomes(false);
+            Operations.completeLegacy(copy);
+            //editSession.flushQueue(); тут нельзя, не успевает сохранить!
+
+            File file = new File("plugins/RegionGUI/schematics/land/"+regName.toLowerCase()+".schem");
+            final ClipboardFormat cf = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
+
             
             clipboard.save(file, cf); //java.lang.ArrayIndexOutOfBoundsException: -71 ??
             
-        } catch (IOException | ArrayIndexOutOfBoundsException ex) {
+        } catch (IOException | ArrayIndexOutOfBoundsException | NullPointerException ex) {
             
             RegionGUI.log_err("Сохранение копии региона "+region.getId()+" : "+ex.getMessage());
             
@@ -151,7 +144,7 @@ public class PlotBuilder
             
             editSession.flushQueue();
             
-        }
+        }*/
         
            // new BukkitRunnable() {
             //    @Override
@@ -173,7 +166,8 @@ public class PlotBuilder
                 @Override
                 public void run() {
                     //editSession.flushQueue();
-                    Walls walls = new Walls(world, mat, region);
+                    //Walls walls = new Walls(world, mat, region);
+                    Walls walls = new Walls(world, mat, down.toLocation(world), claimTemplate.getSize() );
                 }
             }.runTaskLater(RegionGUI.getInstance(), 30);
             

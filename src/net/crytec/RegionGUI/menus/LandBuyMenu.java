@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
 import ru.komiss77.Managers.PM;
+import ru.komiss77.Managers.WE;
 import ru.komiss77.Objects.Oplayer;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
@@ -148,11 +149,11 @@ public class LandBuyMenu implements InventoryProvider {
                 lore.add("§7Цена: §b"+(template.getPrice()==0?"бесплатно":template.getPrice()+" §7лони."));
                 lore.add("");
                 lore.add("§6ЛКМ §f- предпросмотр на местности");
-                lore.add("§6ПКМ §f- создать регион");
+                lore.add( WE.hasJob(player) ? "§cДождитесь окончания операции!" : "§6ПКМ §f- создать регион");
                 itemBuilder.lore(lore);
 
                 //если нет права на эту заготовку, не кликабельное и добавляем сообщение 
-                if (!template.getPermission().isEmpty() && !player.hasPermission(template.getPermission())) {
+                if ( !template.getPermission().isEmpty() && !player.hasPermission(template.getPermission())) {
 
                     //itemBuilder.lore("");
                     itemBuilder.lore(template.getNoPermDescription());
@@ -165,18 +166,21 @@ public class LandBuyMenu implements InventoryProvider {
                         if (e.getClick() == ClickType.RIGHT) { //пкм - покупка
                             
                             player.closeInventory();
+                            if (WE.hasJob(player))  {
+                                player.sendMessage("§cДождитесь окончания операции!");
+                                return;
+                            }
                             player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
 
                                 //создание привата
-                                new PlotBuilder(player, template).build();
-                                player.resetTitle();
+                            new PlotBuilder(player, template).build();
+                            player.resetTitle();
 
 
                         } else if (e.getClick() == ClickType.LEFT) { //лкм - предпросмотр
 
                             //new RegionPreview(player, template.getSize() + 1);
                             player.closeInventory();
-
                             PreviewBlockManager.startPreview(player, template);
                             
                             player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);

@@ -1,11 +1,12 @@
 package net.crytec.RegionGUI;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import net.crytec.RegionGUI.commands.LandAdmin;
 import net.crytec.RegionGUI.commands.LandCommand;
 import net.crytec.RegionGUI.data.Template;
@@ -13,12 +14,6 @@ import net.crytec.RegionGUI.manager.PreviewBlockManager;
 import net.crytec.RegionGUI.manager.TemplateManager;
 import net.crytec.RegionGUI.utils.flags.FlagManager;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 
 

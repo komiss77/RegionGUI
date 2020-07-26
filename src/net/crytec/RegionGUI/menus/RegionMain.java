@@ -5,18 +5,17 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.crytec.RegionGUI.Language;
-import net.crytec.RegionGUI.data.BorderDisplay;
 import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import ru.komiss77.Managers.WE;
+import ru.komiss77.Ostrov;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
@@ -61,18 +60,25 @@ implements InventoryProvider {
                 .lore(template==null ? "§8но невозможно получить":"§7Стоимость :§6 "+template.getPrice())
                 .lore(template==null ? "§8подробные данные о нём.":"§7Возврат после удаления :§6 "+template.getRefund())
                 .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
-                .enchantment(Enchantment.ARROW_INFINITE)
-                .setItemFlag(ItemFlag.HIDE_ENCHANTS)
+                //.unsaveEnchantment(Enchantment.ARROW_INFINITE, 1)
+                //.setItemFlag(ItemFlag.HIDE_ENCHANTS)
                 .build()));
 
         
         
         //кнопка удаления
-        inventoryContents.set(0, 8, ClickableItem.of( new ItemBuilder(Material.TNT).name(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION.toString()).lore(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION_DESCRIPTION.getDescriptionArray()).build(), inventoryClickEvent -> {
-            player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
-            Inventory inventory = SmartInventory.builder().provider(new RegionDeleteConfirm(this.region)).title(Language.INTERFACE_DELETE_TITLE.toString()).size(1).build().open(player);
-        }));
-        
+        inventoryContents.set(0, 8, ClickableItem.of( 
+                new ItemBuilder(Material.TNT)
+                        .name(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION.toString())
+                        .lore(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION_DESCRIPTION.getDescriptionArray())
+                        .addLore( WE.hasJob(player) ? "§cДождитесь окончания операции!" : "§4Шифт+ПКМ §f- удалить")
+                        .build(), e -> {
+                            if ( e.getClick()==ClickType.SHIFT_RIGHT && !WE.hasJob(player) ) {
+                                player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
+                                Inventory inventory = SmartInventory.builder().provider(new RegionDeleteConfirm(this.region)).title(Language.INTERFACE_DELETE_TITLE.toString()).size(1).build().open(player);
+                            }
+                        }
+        ));
         
         
         
@@ -134,7 +140,19 @@ implements InventoryProvider {
         inventoryContents.set(1, 7, ClickableItem.of( new ItemBuilder(Material.EXPERIENCE_BOTTLE).name(Language.INTERFACE_MANAGE_BUTTON_SHOWBORDER.toString()).lore(Language.INTERFACE_MANAGE_BUTTON_SHOWBORDER_DESCRIPTION.getDescriptionArray()).build(), inventoryClickEvent 
                 -> {
             player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
-            BorderDisplay borderDisplay = new BorderDisplay(player, this.region);
+            
+            Ostrov.VM.getNmsServer().BorderDisplay(
+                player, 
+                BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), 
+                BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()),
+                true);
+            
+            //BorderDisplay borderDisplay = new BorderDisplay(
+            //    player, 
+            //    BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), 
+            //    BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()),
+            //    true
+            //);
         }));
 
     

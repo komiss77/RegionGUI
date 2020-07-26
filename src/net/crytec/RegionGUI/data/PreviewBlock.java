@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+import ru.komiss77.utils.BlockUtils;
 
 
 
@@ -155,20 +156,20 @@ public class PreviewBlock {
     
     private void Update_vectors () {
         Location location = p.getLocation().clone().add(0.5D, 0.0D, 0.5D);
-        int x = location.getBlockX();
-        int y = location.getBlockZ();
-        int z = location.getBlockY();
+        //int x = location.getBlockX();
+        //int y = location.getBlockZ();
+        //int z = location.getBlockY();
         
-        int templateSize = template.getSize();
-        int halfSize = Math.round((float) (templateSize / 2));
+        //int templateSize = template.getSize();
+        //int halfSize = Math.round((float) (templateSize / 2));
         
-        Vector vector = new Vector(x + halfSize, z + template.getHeight(), y + halfSize);
-        Vector vector1 = new Vector(x - halfSize, z - template.getDepth(), y - halfSize);
+        Vector top = template.getMaximumPoint(location); //new Vector(x + halfSize, z + template.getHeight(), y + halfSize);
+        Vector down = template.getMinimumPoint(location);//new Vector(x - halfSize, z - template.getDepth(), y - halfSize);
         
         //selection = new CuboidRegion(vector.toBlockVector(), vector1.toBlockVector());
         selection = new CuboidRegion( 
-                BlockVector3.at( vector.getBlockX(), vector.getBlockY(), vector.getBlockZ()), 
-                BlockVector3.at(vector1.getBlockX(), vector1.getBlockY(), vector1.getBlockZ())
+                BlockVector3.at( top.getBlockX(), top.getBlockY(), top.getBlockZ()), 
+                BlockVector3.at(down.getBlockX(), down.getBlockY(), down.getBlockZ())
         );
         
         selection.setPos1(selection.getMaximumPoint().withY(0));
@@ -180,7 +181,7 @@ public class PreviewBlock {
         
         for (BlockVector3 bv3 : selection.getWalls()) {
             bv2 = bv3.toBlockVector2();
-            topBlock = getTopBlock(p.getWorld(), bv2.getBlockX(), bv2.getBlockZ());
+            topBlock = BlockUtils.getHighestBlock(p.getWorld(), bv2.getBlockX(), bv2.getBlockZ());
             toSetLine.add(topBlock.getLocation());
         }
         
@@ -189,11 +190,6 @@ public class PreviewBlock {
     
     
  
-    private Block getTopBlock(final World world, final int x, final int z) {
-        Block block;
-        for (block = world.getHighestBlockAt(x, z).getRelative(BlockFace.DOWN); Tag.LEAVES.isTagged(block.getType()) || block.getType() == Material.AIR || block.getType() == Material.GRASS || block.getType() == Material.TALL_GRASS; block = block.getRelative(BlockFace.DOWN)) {}
-        return block.getRelative(BlockFace.UP);
-    }
 
 
     

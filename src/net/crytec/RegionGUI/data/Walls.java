@@ -1,47 +1,46 @@
 package net.crytec.RegionGUI.data;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
 import org.bukkit.Tag;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Block;
 import org.bukkit.Effect;
-import java.util.HashSet;
-import net.crytec.RegionGUI.RegionGUI;
 import org.bukkit.Bukkit;
-import com.google.common.collect.Sets;
-import java.util.ArrayDeque;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.math.BlockVector2;
-import java.util.Queue;
+import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.Material;
 import org.bukkit.World;
+import net.crytec.RegionGUI.RegionGUI;
+import ru.komiss77.utils.BlockUtils;
 
 
 
-public class Walls implements Runnable
-{
+public class Walls implements Runnable {
+    
     private final World world;
     private final Material material;
-    private BukkitTask task;
-    private Queue<BlockVector2> toFill;
-    //private static final int increment = 10;
-    //private CuboidRegion region;
+    private final BukkitTask task;
+    private final Queue<PairCoord> toFill;
     
-    public Walls(final World world, final Material mat, final ProtectedRegion region) {
+    public Walls(final World world, final Material wallMat, final Location minpoint, final int size) {
         this.toFill = new ArrayDeque<>();
-        //(this.region = new CuboidRegion(region.getMaximumPoint(), region.getMinimumPoint())).setPos1(region.getMaximumPoint().withY(0));
-        CuboidRegion temp = new CuboidRegion(region.getMaximumPoint(), region.getMinimumPoint());
-        temp.setPos1(region.getMaximumPoint().withY(0));
-        temp.setPos2(region.getMinimumPoint().withY(0));
+        minpoint.setY(0);
         
-        final HashSet<BlockVector2> hashSet = Sets.newHashSet();
-        temp.getWalls().forEach(blockVector3 -> hashSet.add(blockVector3.toBlockVector2()));
-        this.toFill.addAll(hashSet);
+        toFill.add( new PairCoord(minpoint.getBlockX(), minpoint.getBlockZ()));
+        toFill.add( new PairCoord(minpoint.getBlockX()+size, minpoint.getBlockZ()) );
+        toFill.add( new PairCoord(minpoint.getBlockX(), minpoint.getBlockZ()+size) );
+        toFill.add( new PairCoord(minpoint.getBlockX()+size, minpoint.getBlockZ()+size) );
         
+        for (int i = 1; i<size; i++) {
+            toFill.add( new PairCoord(minpoint.getBlockX()+i, minpoint.getBlockZ()));
+            toFill.add( new PairCoord(minpoint.getBlockX(), minpoint.getBlockZ()+i));
+            toFill.add( new PairCoord(minpoint.getBlockX()+size-i, minpoint.getBlockZ()+size));
+            toFill.add( new PairCoord(minpoint.getBlockX()+size, minpoint.getBlockZ()+size-i));
+        }
+
         this.world = world;
-        //this.world = claim.getWorld().get();
-        this.material = mat;
+        this.material = wallMat;
         this.task = Bukkit.getScheduler().runTaskTimer(RegionGUI.getInstance(), this, 20, 10L);
     }
     
@@ -52,16 +51,36 @@ public class Walls implements Runnable
                 this.task.cancel();
                 return;
             }
-            final BlockVector2 blockVector2 = this.toFill.poll();
-            final Block highestBlock = this.getHighestBlock(this.world, blockVector2.getBlockX(), blockVector2.getBlockZ());
+            final PairCoord pc = toFill.poll();
+            final Block highestBlock = BlockUtils.getHighestBlock(this.world, pc.x, pc.z);
             highestBlock.setType(this.material, true);
             this.world.playEffect(highestBlock.getLocation(), Effect.STEP_SOUND, (Object)this.material);
         }
     }
     
-    private Block getHighestBlock(final World world, final int x, final int z) {
-        Block block;
-        for (block = world.getHighestBlockAt(x, z).getRelative(BlockFace.DOWN); Tag.LEAVES.isTagged(block.getType()) || block.getType() == Material.AIR || block.getType() == Material.GRASS || block.getType() == Material.TALL_GRASS; block = block.getRelative(BlockFace.DOWN)) {}
-        return block.getRelative(BlockFace.UP);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private class PairCoord {
+        public final int x;
+        public final int z;
+        
+        private PairCoord(final int x, final int z) {
+            this.x = x;
+            this.z = z;
+        }
+        
     }
+    
+    
+    
+    
 }
