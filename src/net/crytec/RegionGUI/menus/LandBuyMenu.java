@@ -47,6 +47,8 @@ public class LandBuyMenu implements InventoryProvider {
     @Override
     public void init(final Player player, final InventoryContent inventoryContents) {
         
+        inventoryContents.fillRow(3, ClickableItem.empty(fill));
+        
         final Oplayer op = PM.getOplayer(player);
         if (op==null) {
             RegionGUI.log_err("§c[ERROR] нет экземпляра Oplayer для "+player.getName());
@@ -54,43 +56,14 @@ public class LandBuyMenu implements InventoryProvider {
         }
         
         
-        final List <ProtectedRegion> playerRegions = RegionUtils.getPlayerRegions(player);
+        final List <ProtectedRegion> playerRegions = RegionUtils.getPlayerOwnedRegions(player);
         
         int totalRegion = playerRegions.size();
         
         int totatRegionLimit = op.getBigestPermValue("region.limit.total");
         if (totatRegionLimit<1) totatRegionLimit = 1; //один приват всегда можно, раз уж есть плагин на сервере!
         
-        
-       /* for (final PermissionAttachmentInfo permissionAttachmentInfo : player.getEffectivePermissions()) {
-            if (permissionAttachmentInfo.getPermission().startsWith("region.maxregions.")) {
-                if (UtilMath.isInt(permissionAttachmentInfo.getPermission().split("region.maxregions.")[1])) {
-                    maxRegionAvalable = Math.max(maxRegionAvalable, Integer.valueOf(permissionAttachmentInfo.getPermission().split("region.maxregions.")[1]));
-                }
-                else {
-                    maxRegionAvalable = 0;
-                    RegionGUI.getInstance().log("§c[ERROR] Failed to parse permission node [§6" + permissionAttachmentInfo.getPermission().split("region.maxregions.")[1] + "§c]", true);
-                    RegionGUI.getInstance().log("§c[ERROR] Make sure the last entry is a valid number!", true);
-                }
-            }
-            if (maxRegionAvalable < 0) {
-                maxRegionAvalable = 0;
-            }
-        }*/
-        
-        //boolean limitReached = false;
-      //  if (totalRegion >= totatRegionLimit) { //если достигнут глобальный лимит приватов
-            //player.sendMessage(Language.ERROR_MAX_REGIONS.toString());
-            //player.closeInventory();
-          //  limitReached = true;
-           // return;
-      //  }
-        
-        
-        //int n = 0/;
-        
-        
-        inventoryContents.fillRow(3, ClickableItem.empty(fill));
+
 
         if (!playerRegions.isEmpty()) {
             inventoryContents.set(4, 2, ClickableItem.of( new ItemBuilder(Material.GRAY_BED).name("§aТП в регион").build(), e -> {
@@ -118,7 +91,11 @@ public class LandBuyMenu implements InventoryProvider {
 
         if (totalRegion >= totatRegionLimit) {
             
-            inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER).name("§4Создание новых недоступно").lore("§cВаш глобальный лимит: "+totatRegionLimit,"§c").build() ) );
+            inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER)
+                    .name("§4Создание новых недоступно")
+                    .lore("§cВаш глобальный лимит: "+totatRegionLimit,"§c")
+                    .build() )
+            );
             
         } else {
             
@@ -134,33 +111,40 @@ public class LandBuyMenu implements InventoryProvider {
                         currentTemplateCount=++currentTemplateCount;
                     }
                 }
-
-
-                final ItemBuilder itemBuilder = new ItemBuilder(template.getIcon().clone());
+                
+                
+                final ItemBuilder itemBuilder = new ItemBuilder(template.getIcon());
                 itemBuilder.name(ChatColor.translateAlternateColorCodes('&', template.getDisplayname()));
                 itemBuilder.setItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 
-                final ArrayList <String> lore = new ArrayList();
-                lore.addAll(template.getDescription());
-                lore.add("");
-                lore.add("§7Ваши регионы: §3"+(totalRegion==0?"не найдено":totalRegion)+(" §7(лимит: §5"+totatRegionLimit+"§7)"));
-                lore.add("§7Регионы данного типа: §3"+(currentTemplateCount==0?"не найдено":currentTemplateCount)+(" §7(лимит: §5"+currentTemplateLimit+"§7)"));
-                lore.add("§7Размеры: §e"+template.getSize()+"x"+template.getSize()+"§7, вниз §e"+template.getDepth()+"§7, вверх §e"+template.getHeight());
-                lore.add("§7Цена: §b"+(template.getPrice()==0?"бесплатно":template.getPrice()+" §7лони."));
-                lore.add("");
-                lore.add("§6ЛКМ §f- предпросмотр на местности");
-                lore.add( WE.hasJob(player) ? "§cДождитесь окончания операции!" : "§6ПКМ §f- создать регион");
-                itemBuilder.lore(lore);
+                //final ArrayList <String> lore = new ArrayList();
+                itemBuilder.addLore(template.getDescription());
+                itemBuilder.addLore("");
+                itemBuilder.addLore("§7Ваши регионы: §3"+(totalRegion==0?"не найдено":totalRegion)+(" §7(лимит: §5"+totatRegionLimit+"§7)"));
+                itemBuilder.addLore("§7Регионы данного типа: §3"+(currentTemplateCount==0?"не найдено":currentTemplateCount)+(" §7(лимит: §5"+currentTemplateLimit+"§7)"));
+                itemBuilder.addLore("§7Размеры: §e"+template.getSize()+"x"+template.getSize()+"§7, вниз §e"+template.getDepth()+"§7, вверх §e"+template.getHeight());
+                itemBuilder.addLore("§7Цена: §b"+(template.getPrice()==0?"бесплатно":template.getPrice()+" §7лони."));
+                itemBuilder.addLore("");
+                
+                //itemBuilder.lore(lore);
 
                 //если нет права на эту заготовку, не кликабельное и добавляем сообщение 
                 if ( !template.getPermission().isEmpty() && !player.hasPermission(template.getPermission())) {
 
                     //itemBuilder.lore("");
-                    itemBuilder.lore(template.getNoPermDescription());
+                    itemBuilder.addLore(template.getNoPermDescription());
                     inventoryContents.add(ClickableItem.empty(itemBuilder.build()));
 
-                }  else {
-
+                } else if (currentTemplateCount>=currentTemplateLimit) {
+                    
+                    itemBuilder.addLore("§cЛимит регионов данного типа!");
+                    inventoryContents.add(ClickableItem.empty(itemBuilder.build()));
+                    
+                } else {
+                    
+                    itemBuilder.addLore("§6ЛКМ §f- предпросмотр на местности");
+                    itemBuilder.addLore( WE.hasJob(player) ? "§cДождитесь окончания операции!" : "§6ПКМ §f- создать регион");
+                    
                     inventoryContents.add(ClickableItem.of(itemBuilder.build(), e -> {
                         
                         if (e.getClick() == ClickType.RIGHT) { //пкм - покупка

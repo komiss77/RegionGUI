@@ -6,6 +6,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import net.crytec.RegionGUI.Language;
 import net.crytec.RegionGUI.RegionGUI;
@@ -18,22 +20,54 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import ru.komiss77.utils.inventory.InventoryProvider;
 import ru.komiss77.utils.inventory.SmartInventory;
 
 
 
 //@CommandAlias("land")
-public class LandCommand implements CommandExecutor
-{
+public class LandCommand implements CommandExecutor, TabCompleter {
     
+    public static List<String> commands = Arrays.asList( "home", "list");
+
     public LandCommand() {
     }
     
+    
+    @Override
+    public List<String> onTabComplete(CommandSender cs, Command cmnd, String command, String[] strings) {
+        List <String> sugg = new ArrayList<>();
+
+        switch (strings.length) {
+            
+            case 1:
+                //0- пустой (то,что уже введено)
+                for (String s : commands) {
+                    if (s.startsWith(strings[0])) sugg.add(s);
+                }
+                break;
+                
+            case 2:
+                //1-то,что вводится (обновляется после каждой буквы
+//System.out.println("l="+strings.length+" 0="+strings[0]+" 1="+strings[1]);
+                if (strings[0].equalsIgnoreCase("list") ) {
+                    for (final Player p : Bukkit.getOnlinePlayers()) {
+                        if (p.getName().startsWith(strings[1])) sugg.add(p.getName());
+                    }
+                }
+                break;
+        }
+        
+       return sugg;
+    }
+
+
+
     
    @Override
     public boolean onCommand ( CommandSender se, Command comandd, String cmd, String[] a) {
@@ -50,19 +84,26 @@ public class LandCommand implements CommandExecutor
             return false;
         }
         
-        if (a.length>=1 && a[0].equalsIgnoreCase("home")) {
-            SmartInventory.builder().id("home-" + player.getName()).provider((InventoryProvider)new LandHomeMenu()).size(5, 9).title(Language.INTERFACE_HOME_TITLE.toString()).build().open(player);
-            return true;
+        if (a.length>=1) {
+            if (a[0].equalsIgnoreCase("home")) {
+                
+                SmartInventory.builder().id("home-" + player.getName()).provider(new LandHomeMenu()).size(5, 9).title(Language.INTERFACE_HOME_TITLE.toString()).build().open(player);
+                return true;
+                
+            } else if (a[0].equalsIgnoreCase("list")) {
+                
+                if (a.length>=2) {
+                    player.performCommand("rg list -p "+a[1]);
+                    return true;
+                } else {
+                    player.performCommand("rg list");
+                    return true;
+                }
+                
+            }
+            
         }
         
-        if (a.length>=2 && a[0].equalsIgnoreCase("list")) {
-            if (player.getName().equalsIgnoreCase(a[1])) {
-                player.performCommand("rg list");
-            } else {
-                player.performCommand("rg list -p "+a[1]);
-            }
-            return true;
-        }
         
         checkForRegions(player);
         
@@ -71,55 +112,15 @@ public class LandCommand implements CommandExecutor
     
     
     
-   /*  @Default
-    public void openLandInterface(final Player issuer) {
-        if (!this.plugin.getConfig().getStringList("enabled_worlds").contains(issuer.getWorld().getName())) {
-            issuer.sendMessage(Language.ERROR_WORLD_DISABLED.toChatString());
-            return;
-        }
-        this.checkForRegions(issuer);
-    }
-    
-    @Subcommand("help")
-    public void sendCommandHelp(final CommandIssuer issuer, final CommandHelp help) {
-        help.showHelp(issuer);
-    }
-    
-    @Subcommand("home")
-    public void openHomeGUI(final Player issuer) {
-        SmartInventory.builder().id("home-" + issuer.getName()).provider((InventoryProvider)new LandHomeMenu()).size(5, 9).title(Language.INTERFACE_HOME_TITLE.toString()).build().open(issuer);
-    }
-    
-    @Subcommand("list")
-    //@CommandPermission("region.list")
-    public void displayLandList(final Player issuer, @Optional final OnlinePlayer op) {
-        if (op == null || op.getPlayer()==null || issuer.getName().equals(op.getPlayer().getName())) {
-            issuer.performCommand("rg list");
-        } else {
-            issuer.performCommand("rg list -p "+op.getPlayer().getName());
-        }
-        
-        //issuer.sendMessage("LandCommand displayLandList не доделано");
-       if (op == null) {
-            for (final ClaimEntry claimEntry : RegionGUI.getInstance().getPlayerManager().getPlayerClaims(issuer.getUniqueId())) {
-                issuer.sendMessage(Language.COMMAND_LIST_ENTRY.toChatString().replace("%region%", claimEntry.getRegionID()).replace("%template%", claimEntry.getTemplate().getDisplayname()));
-            }
-            return;
-        }
-        for (final ClaimEntry claimEntry2 : RegionGUI.getInstance().getPlayerManager().getPlayerClaims(issuer.getUniqueId())) {
-            issuer.sendMessage(Language.COMMAND_LIST_ENTRY.toChatString().replace("%region%", claimEntry2.getRegionID()).replace("%template%", claimEntry2.getTemplate().getDisplayname()));
-        }
-    }
-    */
-    
+
     
     
     private void checkForRegions(Player player) {
         //RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt((org.bukkit.World)player.getWorld()));
         
-        LocalPlayer lp = WorldGuardPlugin.inst().wrapPlayer(player);
-        RegionManager rm = RegionUtils.getRegionManager(player.getWorld());
-        ApplicableRegionSet applicableRegionSet = rm.getApplicableRegions(BukkitAdapter.asBlockVector(player.getLocation()));
+        final LocalPlayer lp = WorldGuardPlugin.inst().wrapPlayer(player);
+        final RegionManager rm = RegionUtils.getRegionManager(player.getWorld());
+        final ApplicableRegionSet applicableRegionSet = rm.getApplicableRegions(BukkitAdapter.asBlockVector(player.getLocation()));
         
         
         
@@ -132,7 +133,12 @@ public class LandCommand implements CommandExecutor
             //    player.sendMessage(Language.ERROR_NO_PERMISSION.toChatString());
             //    return;
             //}
-            SmartInventory.builder().id("regiongui.claim"). provider(new LandBuyMenu(RegionGUI.getInstance())). size(5, 9). title(Language.INTERFACE_BUY_TITLE.toString()). build().open(player);
+            SmartInventory.builder().id("regiongui.claim")
+                    .provider(new LandBuyMenu(RegionGUI.getInstance()))
+                    .size(5, 9)
+                    .title(Language.INTERFACE_BUY_TITLE.toString())
+                    .build()
+                    .open(player);
 
             
             
@@ -140,7 +146,7 @@ public class LandCommand implements CommandExecutor
         } else if (applicableRegionSet.size() == 1) { //только один приват в точке нахождения, открываем меню управления им
             
             
-            ProtectedRegion rg = applicableRegionSet.getRegions().iterator().next();
+            final ProtectedRegion rg = applicableRegionSet.getRegions().iterator().next();
             
             if ( rg.isOwner(lp) ) { //если владелец, меню управления
                 
@@ -157,7 +163,7 @@ public class LandCommand implements CommandExecutor
                         player.sendMessage("§cВы в чужом регионе.");
                     }
 
-                        if (RegionUtils.getPlayerRegions(player).isEmpty()) {
+                        if (RegionUtils.getPlayerUserRegions(player).isEmpty()) {
 
                             TextComponent msg = new TextComponent( "§fНажмите сюда для ТП в свободное место!" );
                             msg.setHoverEvent( new HoverEvent(HoverEvent.Action.SHOW_TEXT,  new ComponentBuilder("§aКлик - случайный телепорт в свободное место").create()));
@@ -182,16 +188,37 @@ public class LandCommand implements CommandExecutor
         } else  if (applicableRegionSet.size() > 1) {   //несколько приватов в точке нахождения, открываем меню выбора каким управлять
             
             //находим приваты игрока в данной точке
-            final List <ProtectedRegion> playerRegions = RegionUtils.getPlayerRegions(player);
-            
+            final List <ProtectedRegion> playerOwndeRegions = new ArrayList<>();//RegionUtils.getPlayerRegions(player);
+            for (final ProtectedRegion rg : applicableRegionSet.getRegions()) {
+                if (rg.isOwner(lp)) {
+                    playerOwndeRegions.add(rg);
+                }
+            }
             //если его приватов тут нет, посылаем гулять или предложить тп в свои регионы
-            if (playerRegions.isEmpty()) {
+            if (playerOwndeRegions.isEmpty()) {
                 
-                player.sendMessage("Вы в чужом регионе! Отойдите за его границы.");
+                player.sendMessage("§eВы в чужом регионе! Отойдите за его границы.");
                 
+                if (RegionUtils.getPlayerUserRegions(player).isEmpty()) {
+
+                    TextComponent msg = new TextComponent( "§fНажмите сюда для ТП в свободное место!" );
+                    msg.setHoverEvent( new HoverEvent(HoverEvent.Action.SHOW_TEXT,  new ComponentBuilder("§aКлик - случайный телепорт в свободное место").create()));
+                    msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpr" ) );
+                    player.spigot().sendMessage( msg);
+
+                } else {
+
+                    TextComponent msg = new TextComponent( "§fНажмите сюда для перехода в свой регион!" );
+                    msg.setHoverEvent( new HoverEvent(HoverEvent.Action.SHOW_TEXT,  new ComponentBuilder("§aКлик-открыть меню ТП в свой регион").create()));
+                    msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/land home" ) );
+                    player.spigot().sendMessage( msg);
+                    //p.spigot().sendMessage(ChatMessageType.CHAT, msg);
+                } 
+
+
             } else {
                 
-                SmartInventory.builder().id("regiongui.regionselect").provider( new RegionSelectMenu(playerRegions)).size(3).title(Language.INTERFACE_SELECT_TITLE.toString()).build().open(player);
+                SmartInventory.builder().id("regiongui.regionselect").provider( new RegionSelectMenu(playerOwndeRegions)).size(3).title(Language.INTERFACE_SELECT_TITLE.toString()).build().open(player);
             
             }
             

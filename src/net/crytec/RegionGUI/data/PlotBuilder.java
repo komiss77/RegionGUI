@@ -99,7 +99,7 @@ public class PlotBuilder
             this.player.sendMessage(Language.ERROR_NO_MONEY.toChatString());
             return;
         }
-        ApiOstrov.moneyChange(player.getName(), price, "Покупка региона");
+        ApiOstrov.moneyChange(player.getName(), -price, "Покупка региона");
         //this.player.sendMessage(Language.REGION_CREATE_MONEY.toChatString().replace("%money%", new StringBuilder().append(price).toString()).replace("%currencyname%", RegionGUI.econ.currencyNameSingular()));
         region.setDirty(true);
         this.manager.addRegion(region);
@@ -110,7 +110,7 @@ public class PlotBuilder
         
         
         if (RegionGUI.getInstance().getConfig().getBoolean("regenOnDelete", true)) {
-            WE.save(player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()), RegionGUI.getInstance().getDataFolder() + "/schematics", regName, true);
+            WE.save(player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()), RegionGUI.getInstance().getDataFolder() + "/schematics", regName.toLowerCase(), true);
         }
         
         

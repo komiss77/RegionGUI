@@ -11,6 +11,7 @@ import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -90,22 +91,38 @@ public class RegionUtils
     
     
     
-    public static List <ProtectedRegion> getPlayerRegions (final Player bukkitplayer) {
+    public static List <ProtectedRegion> getPlayerOwnedRegions (final Player bukkitplayer) {
+        final List <ProtectedRegion> playerRegions = new ArrayList<>();
+        for (final World world : Bukkit.getWorlds()) {
+            playerRegions.addAll(getPlayerOwnedRegions(bukkitplayer, world));
+        }
+        return playerRegions;
+    }
+
+    public static List <ProtectedRegion> getPlayerOwnedRegions (final Player bukkitplayer, final World world) {
         final LocalPlayer lp = WorldGuardPlugin.inst().wrapPlayer(bukkitplayer);
-        List <ProtectedRegion> playerRegions = new ArrayList<>();
-        for (ProtectedRegion rg : getRegionManager(bukkitplayer.getWorld()).getRegions().values()) {
-            if (rg.getOwners().contains(lp) && rg.getId().startsWith(lp.getName()+"-rgui-")) {
+        final List <ProtectedRegion> playerRegions = new ArrayList<>();
+        for (final ProtectedRegion rg : getRegionManager(world).getRegions().values()) {
+            if (rg.isOwner(lp) && rg.getId().startsWith(lp.getName()+"-rgui-")) {
                 playerRegions.add(rg);
             }
         }
         return playerRegions;
     }
-
-    public static List <ProtectedRegion> getPlayerRegions (final Player bukkitplayer, final World world) {
+    
+    public static List <ProtectedRegion> getPlayerUserRegions (final Player bukkitplayer) {
+        final List <ProtectedRegion> playerRegions = new ArrayList<>();
+        for (final World world : Bukkit.getWorlds()) {
+            playerRegions.addAll(getPlayerUserRegions(bukkitplayer, world));
+        }
+        return playerRegions;
+    }
+    
+    public static List <ProtectedRegion> getPlayerUserRegions (final Player bukkitplayer, final World world) {
         final LocalPlayer lp = WorldGuardPlugin.inst().wrapPlayer(bukkitplayer);
-        List <ProtectedRegion> playerRegions = new ArrayList<>();
-        for (ProtectedRegion rg : getRegionManager(world).getRegions().values()) {
-            if (rg.getOwners().contains(lp) && rg.getId().startsWith(lp.getName()+"-rgui-")) {
+        final List <ProtectedRegion> playerRegions = new ArrayList<>();
+        for (final ProtectedRegion rg : getRegionManager(world).getRegions().values()) {
+            if (rg.isMember(lp) && rg.getId().startsWith(lp.getName()+"-rgui-")) {
                 playerRegions.add(rg);
             }
         }

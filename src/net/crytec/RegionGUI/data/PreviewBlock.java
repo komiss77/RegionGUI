@@ -1,15 +1,9 @@
 package net.crytec.RegionGUI.data;
 
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 import java.util.HashSet;
 import java.util.Set;
-import net.crytec.RegionGUI.RegionGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,6 +11,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import ru.komiss77.utils.BlockUtils;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import net.crytec.RegionGUI.RegionGUI;
+import net.crytec.RegionGUI.manager.PreviewBlockManager;
 
 
 
@@ -28,86 +29,68 @@ import ru.komiss77.utils.BlockUtils;
 
 public class PreviewBlock {
 
-    private Player p;
-    //public String region_type;
     private final BukkitTask render;
-    //private RegionClaim region;
-    private final Template template;
-    CuboidRegion selection;
-    //private List<Vector> border;
     private final Set<Location> toSetLine;
     private final Set<Location> toResetLine;
-    private int count = 60;
-    private int last_x,last_z;
+    private final Template template;
     
     
     
     
     
-    public PreviewBlock(final Player player, final Template template) {
-        this.p=player;
-        this.template=template;
+    
+    
+    public PreviewBlock(final Player p, final Template template) {
+        
+        final String playerName = p.getName();
+        final String worldName = p.getWorld().getName();
+        this.template = template;
         toSetLine = new HashSet<>();
         toResetLine = new HashSet<>();
-        //this.region=regionclaim;
-        //this.border=new ArrayList<>();
-        //this.count = 0;
-        //this.last_x = p.getLocation().getBlockX(); - не делать, или не прорисовывает, пока не двинуться
-        //this.last_z = p.getLocation().getBlockZ();
-        
-        //Update_vectors();
-        //RegionPreviewBlockManager.sendOutline(p, border);
+       
         
         
         render = (new BukkitRunnable() {
+            
+            private int last_x,last_z;
+            private int count = 60;
+            
             @Override
             public void run() {
                 
+                final Player p = Bukkit.getPlayer(playerName);
+                
                 if (p==null || !p.isOnline()) {
                     this.cancel();
+                    return;
+                }
+                
+                if (p.isDead() || !worldName.equals(p.getWorld().getName()) || count<=0 || p.isSneaking()) {
+                    stop(p, true);
+                    return;
                 }
                 
                 p.sendTitle("", "§7Shift - остановить показ ("+count+"§7)", 0, 21, 0);
-                
-                if (count<=0 || p.isSneaking()) {
-                    stopPrewiev(true);
-                }
                 count--;
-                
-              /*  switch (count) {
-                    case 1:
-                        Utils.sendTitle(p, "§aРежим предпросмотра", "");
-                        break;
-                    case 10:
-                        Utils.sendTitle(p, "§aДля подтверждения", "§eПовторный клик в меню покупки");
-                        break;
-                    case 20:
-                        Utils.sendTitle(p, "§4Для отмены", "§eПравый клик в меню покупки");
-                        break;
-                }*/
                 
                 if (p.getLocation().getBlockX()!=last_x || p.getLocation().getBlockZ()!=last_z) {
                     last_x = p.getLocation().getBlockX();
                     last_z = p.getLocation().getBlockZ();
                     
-                    //RegionPreviewBlockManager.removeOutline(p, border);
-                    resetLine();
-                    //Update_vectors();
-                    setLine();
-                    //RegionPreviewBlockManager.sendOutline(p, border);
+                    resetLine(p);
+                    setLine(p);
                     
                 }
                 
            }
-        //}).runTaskTimerAsynchronously(RegionGUI.getInstance(), 1, 10);
-        }).runTaskTimer(RegionGUI.getInstance(), 1, 20);
+        }).runTaskTimer(RegionGUI.getInstance(), 1, 17);
         
         
         
         
     }
 
-    private void resetLine () {
+    private void resetLine (final Player p) {
         if (!toResetLine.isEmpty()) {
             for (Location loc:toResetLine) {
                 p.sendBlockChange(loc, loc.getBlock().getBlockData());
@@ -120,7 +103,7 @@ public class PreviewBlock {
     
     
 
-    private void setLine () {
+    private void setLine (final Player p) {
         
         toSetLine.clear();
         for (final Block b: BlockUtils.getCuboidBorder(p.getWorld(), template.getMinimumPoint(p.getLocation().clone().add(0.5D, 0.0D, 0.5D)), template.getSize() )) {
@@ -162,13 +145,17 @@ public class PreviewBlock {
 
     
     
-    public void stopPrewiev(boolean endTitle) {
+    public void stop(final Player p, boolean endTitle) {
         if(render!=null) render.cancel();
-        resetLine();
-        p.resetTitle();
-        if (endTitle) p.sendTitle("", "§7Предпросмотр закончен.", 0, 30, 0);
-        //RegionPreviewBlockManager.removeOutline(p, border);
-        //if (this.p!=null) Utils.sendTitle(this.p, "", "§4Режим предпросмотра закончен");
+        if (p!=null) {
+            resetLine(p);
+            p.resetTitle();
+            if (endTitle) p.sendTitle("", "§7Предпросмотр закончен.", 0, 30, 0);
+        }
+        if (PreviewBlockManager.on_wiev.containsKey(p.getName())) {
+            PreviewBlockManager.on_wiev.remove(p.getName());
+        }
+
     }
    
     

@@ -67,19 +67,20 @@ public class RegionDeleteConfirm implements InventoryProvider {
                     true,
                     true,
                     () -> {
-                        RegionUtils.getRegionManager(player.getWorld()).removeRegion(this.region.getId());
-                        RegionUtils.saveRegions(player.getWorld());
-                    }
+                        //RegionUtils.getRegionManager(player.getWorld()).removeRegion(this.region.getId().toLowerCase());
+                        //RegionUtils.saveRegions(player.getWorld());
+                    },
+                    WE.scipOnPasteDefault
                 );
             
 
                 
-            } else {
+            }// else {
                 
                 RegionUtils.getRegionManager(player.getWorld()).removeRegion(this.region.getId());
                 RegionUtils.saveRegions(player.getWorld());
                 
-            }
+          //  }
             
             
             //возврат денег

@@ -5,6 +5,7 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
+import java.util.List;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
@@ -52,28 +53,35 @@ public class LandHomeMenu implements InventoryProvider
         //final List <ProtectedRegion> playerRegions = new ArrayList<>();
         
         
-        boolean found = false;
+        //boolean found = false;
+        final List<ProtectedRegion> rgList = new ArrayList<>();//RegionUtils.getPlayerOwnedRegions(player, world);
         
         for (World world : Bukkit.getWorlds()) {
             //playerRegions.addAll(RegionUtils.getPlayerRegions(player, world));
             
-        int number = 1;
-            for (ProtectedRegion region : RegionUtils.getPlayerRegions(player, world)) {
+            int number = 1;
             
-            final Template template = TemplateManager.getByName( RegionUtils.getTemplateName(region) );
-            final String createTime = RegionUtils.getCreateTime(region);
+            for (final ProtectedRegion region : RegionUtils.getPlayerOwnedRegions(player, world)) {
+                rgList.add(region);
+            
+                final Template template = TemplateManager.getByName( RegionUtils.getTemplateName(region) );
+                final String createTime = RegionUtils.getCreateTime(region);
 
-            ArrayList<String> regionButton = new ArrayList<>(Language.INTERFACE_HOME_ENTRYBUTTON_DESCRIPTION.getDescriptionArray());
-                regionButton.replaceAll(string -> string.replace("%world%", world.getName()));
+                //ArrayList<String> regionButton = new ArrayList<>(Language.INTERFACE_HOME_ENTRYBUTTON_DESCRIPTION.getDescriptionArray());
+                //regionButton.replaceAll(string -> string.replace("%world%", world.getName()));
                 
                 arrayList.add(ClickableItem.of(new ItemBuilder(Material.GRAY_BED)
                         .name("§7Регион §6"+number)
+                        .lore("§fВы владелец.")
+                        .lore("")
                         .lore("§7Тип региона: "+template.getDisplayname())
                         .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
                         .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
+                        .lore("")
                         .lore("ЛКМ - телепорт в регион")
-                        .lore(regionButton)
-                        .build(), inventoryClickEvent -> {
+                        .lore("")
+                        //.lore(regionButton)
+                        .build(), e -> {
                             
                     if (region.getFlag((Flag)Flags.TELE_LOC) != null) {
                         
@@ -91,13 +99,57 @@ public class LandHomeMenu implements InventoryProvider
                 }));
                 
                 number++;
-                found = true;
+                //found = true;
+            }
+
+            
+            
+            for (final ProtectedRegion region : RegionUtils.getPlayerUserRegions(player, world)) {
+                
+                if (rgList.contains(region)) continue;
+                rgList.add(region); //нужно ниже
+            
+                final Template template = TemplateManager.getByName( RegionUtils.getTemplateName(region) );
+                final String createTime = RegionUtils.getCreateTime(region);
+
+                //ArrayList<String> regionButton = new ArrayList<>(Language.INTERFACE_HOME_ENTRYBUTTON_DESCRIPTION.getDescriptionArray());
+                //regionButton.replaceAll(string -> string.replace("%world%", world.getName()));
+                
+                arrayList.add(ClickableItem.of(new ItemBuilder(Material.GRAY_BED)
+                        .name("§7Регион §6"+number)
+                        .lore("§fВы пользователь.")
+                        .lore("")
+                        .lore("§7Тип региона: "+template.getDisplayname())
+                        .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
+                        .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
+                        .lore("")
+                        .lore("ЛКМ - телепорт в регион")
+                        .lore("")
+                        //.lore(regionButton)
+                        .build(), e -> {
+                            
+                    if (region.getFlag((Flag)Flags.TELE_LOC) != null) {
+                        
+                        com.sk89q.worldedit.util.Location location = (com.sk89q.worldedit.util.Location)region.getFlag((Flag)Flags.TELE_LOC);
+                        org.bukkit.Location location2 = BukkitAdapter.adapt((com.sk89q.worldedit.util.Location)location);
+                        player.teleport(location2);
+                        
+                    } else {
+                        
+                        player.sendMessage(Language.ERROR_NO_HOME_SET.toChatString());
+                        
+                    }
+                    
+                    player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
+                }));
+                
+                number++;
             }
 
             
         }
         
-        if (!found) {
+        if (rgList.isEmpty()) {
             inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER).name("§4Нет регионов!").lore( ItemUtils.Gen_lore(null, "Не найдено ни одного вашего региона в каком-либо мире!", "§c") ).build() ) );
             //player.sendMessage("§cНе найдено ни одного вашего региона в каком-либо мире!");
             //return;

@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.crytec.RegionGUI.commands.LandAdmin;
 import net.crytec.RegionGUI.commands.LandCommand;
 import net.crytec.RegionGUI.data.Template;
+import net.crytec.RegionGUI.commands.CommadClaimListener;
 import net.crytec.RegionGUI.manager.PreviewBlockManager;
 import net.crytec.RegionGUI.manager.TemplateManager;
 import net.crytec.RegionGUI.utils.flags.FlagManager;
@@ -20,24 +21,13 @@ import net.crytec.RegionGUI.utils.flags.FlagManager;
 public final class RegionGUI extends JavaPlugin
 {
     private static RegionGUI instance;
-    //public final Logger log;
-    //public static Economy econ;
     private FlagManager flagmanager;
-    //private ClaimManager claimManager;
-    //private PlayerManager playerManager;
-    //public static String USER;
     
     static {
-       // RegionGUI.econ = null;
-        //RegionGUI.USER = "38105";
         ConfigurationSerialization.registerClass(Template.class, "Template");
-        //ConfigurationSerialization.registerClass((Class)ClaimEntry.class, "PlayerClaim");
     }
     
-   // public RegionGUI() {
-        //this.log = Bukkit.getLogger();
-   // }
-    
+     
     @Override
     public void onLoad() {
         
@@ -63,19 +53,23 @@ public final class RegionGUI extends JavaPlugin
     @Override
     public void onEnable() {
         
-        this.loadLanguage();
+        loadLanguage();
         
-        this.flagmanager = new FlagManager(this);
+        flagmanager = new FlagManager(this);
         
-        new TemplateManager(this);
+        TemplateManager templateManager = new TemplateManager(this);
+        PreviewBlockManager pbm = new PreviewBlockManager();
         
         instance.getCommand("land").setExecutor(new LandCommand());
         instance.getCommand("landadmin").setExecutor(new LandAdmin());
 
-        Bukkit.getPluginManager().registerEvents(new PreviewBlockManager(), this);
+        Bukkit.getPluginManager().registerEvents(new CommadClaimListener(), this);
         
 
     }
+
+ 
+
     
     @Override
     public void onDisable() {
