@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.ItemUtils;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
@@ -38,7 +39,7 @@ public class RegionFlagMenu implements InventoryProvider
     @Override
        public void init(Player player, InventoryContent inventoryContents) {
            
-        inventoryContents.fillRow(0, ClickableItem.empty(fill));
+        //inventoryContents.fillRow(0, ClickableItem.empty(fill));
         inventoryContents.fillRow(4, ClickableItem.empty(fill));
 
         
@@ -49,11 +50,10 @@ public class RegionFlagMenu implements InventoryProvider
         
         LinkedList<ClickableItem> menuEntryList = new LinkedList();
         
-        flagManager.getFlagMap().forEach(flagSetting -> {
-            
-            if (player.hasPermission(flagSetting.getPermission()) || player.hasPermission("region.flagmenu.all")) {
-                menuEntryList.add(flagSetting.getButton(player, region, inventoryContents));
-            }
+        flagManager.getFlagMap().forEach( flagSetting -> {
+                        //if (player.hasPermission(flagSetting.getPermission()) || player.hasPermission("region.flagmenu.all")) {
+            menuEntryList.add(flagSetting.getButton(player, region, inventoryContents));
+            //}
             
         });
         
@@ -64,34 +64,37 @@ public class RegionFlagMenu implements InventoryProvider
         ClickableItem[] arrclickableItem = new ClickableItem[menuEntryList.size()];
         arrclickableItem = menuEntryList.toArray(arrclickableItem);
         
-        SlotIterator slotIterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, SlotPos.of(1,0));
+        SlotIterator slotIterator = inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, SlotPos.of(0,0));
         slotIterator = slotIterator.allowOverride(false);
         
         Pagination pagination = inventoryContents.pagination();
         pagination.setItems(arrclickableItem);
-        pagination.setItemsPerPage(27);
+        pagination.setItemsPerPage(36);
         pagination.addToIterator(slotIterator);
+        //pagination.addToIterator(slotIterator);
         
         
-        inventoryContents.set(  4, 4, ClickableItem.of( new ItemBuilder(Material.OAK_DOOR).name(Language.INTERFACE_BACK.toString()).build(), 
-                inventoryClickEvent -> MenuOpener.openMain(player, region) ));
+        
+        
+        
+        inventoryContents.set(  4, 4, ClickableItem.of(  new ItemBuilder(Material.OAK_DOOR).name("гл.меню").build(), 
+                e -> MenuOpener.openMain(player, region) ));
         
         
         if (!pagination.isLast()) {
-            inventoryContents.set( 4, 6, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_NEXT_PAGE.toString()).build(),
-                    inventoryClickEvent -> inventoryContents.getHost().open( player, pagination.next().getPage()) )
+            inventoryContents.set( 4, 6, ClickableItem.of( ItemUtils.nextPage, 
+                    e -> inventoryContents.getHost().open( player, pagination.next().getPage()) )
             );
         }
         
         
         if (!pagination.isFirst()) {
-            inventoryContents.set( 4, 2, ClickableItem.of( new ItemBuilder(Material.MAP).name(Language.INTERFACE_PREVIOUS_PAGE.toString()).build(),
-                    inventoryClickEvent -> inventoryContents.getHost().open( player, pagination.previous().getPage()) )
+            inventoryContents.set( 4, 2, ClickableItem.of( ItemUtils.previosPage, 
+                    e -> inventoryContents.getHost().open( player, pagination.previous().getPage()) )
             );
         }
         
         
-        pagination.addToIterator(inventoryContents.newIterator(SlotIterator.Type.HORIZONTAL, SlotPos.of(1,0)));
         
     }
        

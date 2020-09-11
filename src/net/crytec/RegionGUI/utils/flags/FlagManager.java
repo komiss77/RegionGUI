@@ -6,120 +6,108 @@ import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.LocationFlag;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import net.crytec.RegionGUI.RegionGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 
 
 public class FlagManager {
     
     
-    private LinkedList<FlagSetting> settings;
-    private LinkedList<FlagSetting> flags;
+    private final LinkedList<FlagSetting> settings;
+    private final LinkedList<FlagSetting> flags;
     private final YamlConfiguration flagConfig;
-    private ArrayList<String> forbiddenFlags;
+    private final Set<String> forbiddenFlags;
     
     
     
     public FlagManager(final RegionGUI plugin) {
-        this.settings = Lists.newLinkedList();//(LinkedList<FlagSetting>)Lists.newLinkedList();
-        this.flags = Lists.newLinkedList();//(LinkedList<FlagSetting>)Lists.newLinkedList();
-        this.forbiddenFlags = new ArrayList<>();//(ArrayList<String>)Lists.newArrayList()).add("receive-chat");
-        this.forbiddenFlags.add("allowed-cmds");
-        this.forbiddenFlags.add("blocked-cmds");
-        this.forbiddenFlags.add("send-chat");
-        this.forbiddenFlags.add("invincible");
-        this.forbiddenFlags.add("command-on-entry");
-        this.forbiddenFlags.add("command-on-exit");
-        this.forbiddenFlags.add("console-command-on-entry");
-        this.forbiddenFlags.add("console-command-on-exit");
-        this.forbiddenFlags.add("godmode");
-        this.forbiddenFlags.add("worldedit");
-        this.forbiddenFlags.add("chunk-unload");
-        this.forbiddenFlags.add("passthrough");
-        this.forbiddenFlags.add("price");
+        settings = Lists.newLinkedList();//(LinkedList<FlagSetting>)Lists.newLinkedList();
+        flags = Lists.newLinkedList();//(LinkedList<FlagSetting>)Lists.newLinkedList();
         
-        this.forbiddenFlags.add("greeting");
-        this.forbiddenFlags.add("farewell");
-        this.forbiddenFlags.add("greeting-title");
-        this.forbiddenFlags.add("farewell-title");
+        forbiddenFlags = new HashSet<>();//(ArrayList<String>)Lists.newArrayList()).add("receive-chat");
+        forbiddenFlags.add("allowed-cmds");
+        forbiddenFlags.add("blocked-cmds");
+        forbiddenFlags.add("send-chat");
+        forbiddenFlags.add("invincible");
+        forbiddenFlags.add("command-on-entry");
+        forbiddenFlags.add("command-on-exit");
+        forbiddenFlags.add("console-command-on-entry");
+        forbiddenFlags.add("console-command-on-exit");
+        forbiddenFlags.add("godmode");
+        forbiddenFlags.add("worldedit");
+        forbiddenFlags.add("chunk-unload");
+        forbiddenFlags.add("passthrough");
+        forbiddenFlags.add("price");
+        forbiddenFlags.add("receive-chat");
         
-        //this.forbiddenFlags.add("price");
-        //this.forbiddenFlags.add("price");
-
-        //this.flagConfig = new PluginConfig(plugin, plugin.getDataFolder(), "flags.yml");
-        this.flagConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "flags.yml"));
+        forbiddenFlags.add("greeting"); //настраивается в гл.меню
+        forbiddenFlags.add("farewell"); //настраивается в гл.меню
+        forbiddenFlags.add("greeting-title"); //настраивается в гл.меню
+        forbiddenFlags.add("farewell-title"); //настраивается в гл.меню
         
-        boolean b = false;
+        flagConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "flags.yml"));
         
+        boolean newFlag = false;
         Material icon;
+        
+        
         for (final Flag flag : WorldGuard.getInstance().getFlagRegistry().getAll()) {
-            if (!this.forbiddenFlags.contains(flag.getName())) {
-                if (flag instanceof LocationFlag) {
-                    continue;
-                }
-                final String string = "flags." + flag.getName() + ".";
-                if (!this.flagConfig.isSet("flags." + flag.getName() + ".name")) {
-                    this.flagConfig.set(String.valueOf(string) + "name", (Object)("&7" + flag.getName()));
-                    this.flagConfig.set(String.valueOf(string) + "enabled", (Object)true);
-                    this.flagConfig.set(String.valueOf(string) + "icon", (Object)Material.LIGHT_GRAY_DYE.toString());
-                    b = true;
-                }
+            if (forbiddenFlags.contains(flag.getName())) continue;
+            if (flag instanceof LocationFlag) continue;
+
+            final String flagPath = "flags." + flag.getName() + ".";
+            
+            if (flagConfig.isSet("flags." + flag.getName() + ".name")) {
                 
-                //if (EnumUtils.isValidEnum((Class)Material.class, this.flagConfig.getString(String.valueOf(string) + "icon"))) {
-                //if ( Material.matchMaterial( this.flagConfig.getString(String.valueOf(string) + "icon")) != null ) {
-                icon = Material.matchMaterial( this.flagConfig.getString(String.valueOf(string) + "icon"));
-                if (icon==null) icon = Material.LIGHT_GRAY_BANNER;
-                //}
-                if (!this.flagConfig.getBoolean(String.valueOf(string) + "enabled")) {
-                    continue;
-                }
-                this.addFlags(flag.getName(), (Flag<?>)flag, icon, ChatColor.translateAlternateColorCodes('&', this.flagConfig.getString(String.valueOf(string) + "name")));
+                if (!flagConfig.getBoolean(flagPath + "enabled")) continue;
+                icon = Material.matchMaterial( flagConfig.getString(flagPath + "icon"));
+                if (icon==null) icon = Material.LIGHT_GRAY_DYE;
+                addFlags(flag.getName(), (Flag<?>)flag, icon, ChatColor.translateAlternateColorCodes('&', flagConfig.getString(flagPath + "name")));
+                
+            } else {
+                
+                flagConfig.set(flagPath + "name", ("&7" + flag.getName()));
+                flagConfig.set(flagPath + "enabled", true);
+                flagConfig.set(flagPath + "icon", Material.LIGHT_GRAY_DYE.toString());
+                newFlag = true;
+                addFlags(flag.getName(), (Flag<?>)flag, Material.LIGHT_GRAY_DYE, "§7" + flag.getName());
+               
             }
+            
         }
         
-        if (b) {
-            RegionGUI.log_ok("§eFlag settings configuration updated with new entires.");
+        
+        if (newFlag) {
+            RegionGUI.log_ok("§eВ конфигурацию флагов добавлены новые записи!");
            try {
-              this.flagConfig.save(new File(plugin.getDataFolder(), "flags.yml"));
-           } catch (IOException var7) {
-              var7.printStackTrace();
+              flagConfig.save(new File(plugin.getDataFolder(), "flags.yml"));
+           } catch (IOException ex) {
+              ex.printStackTrace();
            }
         }
         
-       //this.settings.sort(Comparator.comparing((Function<? super Object, ? extends Comparable>)FlagSetting::getId));
-        this.settings.sort(Comparator.comparing(FlagSetting::getId));
-        //proc
-       // this.getFlagMap().stream().map((Function<? super Object, ?>)FlagSetting::getPermission).collect((Collector<? super Object, ?, List<? super Object>>)Collectors.toList()).forEach(permission -> new Permission("region.flagmenu.all", "Allow the useage of all flags", PermissionDefault.FALSE).getChildren().put(permission.getName(), permission.getDefault().getValue(false)));
+        settings.sort(Comparator.comparing(FlagSetting::getId));
         
-    //ff
-      Permission var7 = new Permission("region.flagmenu.all", "Allow the useage of all flags", PermissionDefault.FALSE);
-      
-      for ( FlagSetting fs : getFlagMap()) {
-          //List <String> perms = fs.getPermission().co
-                  var7.getChildren().put(fs.getPermission().getName(), fs.getPermission().getDefault().getValue(false));
-      }
-      
-      //((List)this.getFlagMap().stream().map(FlagSetting::getPermission).collect(Collectors.toList())).forEach(  (var1x) -> {
-      //   var7.getChildren().put(var1x.getName(), var1x.getDefault().getValue(false));
-      //}
-      
-     // );    
+        //final Permission perm = new Permission("region.flagmenu.all", "Allow the useage of all flags", PermissionDefault.FALSE);
+        //flags.forEach( (fs) -> {
+        //    perm.getChildren().put(fs.getPermission().getName(), fs.getPermission().getDefault().getValue(false));
+        //});
+ 
     
     
     }
     
     public void addFlags(final String idenfifier, final Flag<?> flag, final Material icon, final String displayname) {
-        this.flags.add(new FlagSetting(idenfifier, flag, icon, displayname));
+        flags.add(new FlagSetting(idenfifier, flag, icon, displayname));
     }
     
     public LinkedList<FlagSetting> getFlagMap() {
-        return this.flags;
+        return flags;
     }
 }
