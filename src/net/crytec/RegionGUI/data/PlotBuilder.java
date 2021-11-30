@@ -25,7 +25,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ru.komiss77.ApiOstrov;
-import ru.komiss77.Managers.WE;
 
 
 public class PlotBuilder
@@ -68,7 +67,7 @@ public class PlotBuilder
         final Vector down = claimTemplate.getMinimumPoint(loc).toVector();//new Vector(blockX - halfSize, blockY - claimTemplate.getDepth(), blockZ - halfSize); //находим нижний угол
         //final Vector top = new Vector(blockX + n, blockY + claimTemplate.getHeight(), blockZ + n);
         
-        final String regName = this.player.getName()+"-rgui-"+claimTemplate.getName()+"-"+System.currentTimeMillis()/1000;
+        final String regName = this.player.getName()+"-rgui-"+claimTemplate.getName()+"-"+ApiOstrov.currentTimeSec();
         
         //final ProtectedCuboidRegion region = new ProtectedCuboidRegion( this.plugin.getConfig().getString("region-identifier").replace("%player%", this.player.getName()).replace("%displayname%", this.regionName), BlockVector3.at(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ()), BlockVector3.at(vector2.getBlockX(), vector2.getBlockY(), vector2.getBlockZ()));
         final ProtectedCuboidRegion region = new ProtectedCuboidRegion( regName, 
@@ -110,7 +109,8 @@ public class PlotBuilder
         
         
         if (RegionGUI.getInstance().getConfig().getBoolean("regenOnDelete", true)) {
-            WE.save(player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()), RegionGUI.getInstance().getDataFolder() + "/schematics", regName.toLowerCase(), true);
+            //ApiOstrov.getWorldEditor().save(player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()), RegionGUI.getInstance().getDataFolder() + "/schematics", regName.toLowerCase(), true);
+            ApiOstrov.getWorldEditor().save(player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()), regName.toLowerCase());
         }
         
         

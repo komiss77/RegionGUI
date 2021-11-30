@@ -1,7 +1,6 @@
 package net.crytec.RegionGUI.menus;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import java.util.ArrayList;
 import java.util.List;
 import net.crytec.RegionGUI.Language;
 import net.crytec.RegionGUI.RegionGUI;
@@ -10,6 +9,7 @@ import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.PreviewBlockManager;
 import net.crytec.RegionGUI.manager.TemplateManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,9 +18,9 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
-import ru.komiss77.Managers.PM;
-import ru.komiss77.Managers.WE;
-import ru.komiss77.Objects.Oplayer;
+import ru.komiss77.modules.games.GM;
+import ru.komiss77.modules.player.Oplayer;
+import ru.komiss77.modules.player.PM;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
@@ -143,14 +143,14 @@ public class LandBuyMenu implements InventoryProvider {
                 } else {
                     
                     itemBuilder.addLore("§6ЛКМ §f- предпросмотр на местности");
-                    itemBuilder.addLore( WE.hasJob(player) ? "§cДождитесь окончания операции!" : "§6ПКМ §f- создать регион");
+                    itemBuilder.addLore( ApiOstrov.getWorldEditor().hasJob(player) ? "§cДождитесь окончания операции!" : "§6ПКМ §f- создать регион");
                     
                     inventoryContents.add(ClickableItem.of(itemBuilder.build(), e -> {
                         
                         if (e.getClick() == ClickType.RIGHT) { //пкм - покупка
                             
                             player.closeInventory();
-                            if (WE.hasJob(player))  {
+                            if (ApiOstrov.getWorldEditor().hasJob(player))  {
                                 player.sendMessage("§cДождитесь окончания операции!");
                                 return;
                             }
@@ -159,8 +159,9 @@ public class LandBuyMenu implements InventoryProvider {
                                 //создание привата
                             new PlotBuilder(player, template).build();
                             player.resetTitle();
-
-
+                            
+                            ApiOstrov.addCustomStat(player, GM.thisServerGame.name()+"_region", 1);
+//Bukkit.broadcastMessage("create "+GM.thisServerGame.name()+"_region");
                         } else if (e.getClick() == ClickType.LEFT) { //лкм - предпросмотр
 
                             //new RegionPreview(player, template.getSize() + 1);

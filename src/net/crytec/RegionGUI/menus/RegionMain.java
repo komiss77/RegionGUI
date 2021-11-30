@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ru.komiss77.Managers.WE;
+import ru.komiss77.ApiOstrov;
 import ru.komiss77.Ostrov;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
@@ -71,9 +71,9 @@ implements InventoryProvider {
                 new ItemBuilder(Material.TNT)
                         .name(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION.toString())
                         .lore(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION_DESCRIPTION.getDescriptionArray())
-                        .addLore( WE.hasJob(player) ? "§cДождитесь окончания операции!" : "§4Шифт+ПКМ §f- удалить")
+                        .addLore( ApiOstrov.getWorldEditor().hasJob(player) ? "§cДождитесь окончания операции!" : "§4Шифт+ПКМ §f- удалить")
                         .build(), e -> {
-                            if ( e.getClick()==ClickType.SHIFT_RIGHT && !WE.hasJob(player) ) {
+                            if ( e.getClick()==ClickType.SHIFT_RIGHT && !ApiOstrov.getWorldEditor().hasJob(player) ) {
                                 player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
                                 Inventory inventory = SmartInventory.builder().provider(new RegionDeleteConfirm(this.region)).title(Language.INTERFACE_DELETE_TITLE.toString()).size(1).build().open(player);
                             }

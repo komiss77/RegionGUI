@@ -106,7 +106,7 @@ public class FlagSetting implements Comparable<FlagSetting> {
                     break;
                     
                 case BOOLEAN:
-                    if ( region.getFlag((Flag)flag) ) {
+                    if ( (boolean)region.getFlag(flag) ) {
                         if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = ColorUtils.changeColor(menuEntry, DyeColor.PINK);
                     } else {
                         if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = ColorUtils.changeColor(menuEntry, DyeColor.LIME);
@@ -235,10 +235,10 @@ public class FlagSetting implements Comparable<FlagSetting> {
 //System.out.println( "getCurrentValue flag="+getFlag().getName()+" inputType="+inputType  );
         switch (inputType) {
             case BOOLEAN: 
-                return region.getFlag((Flag)flag) ? "§2Да":"§4Нет";
+                return (boolean)region.getFlag(flag) ? "§2Да":"§4Нет";
 
             case STATE: 
-                return region.getFlag((Flag)flag) == StateFlag.State.ALLOW ? "§2Да":"§4Нет";
+                return region.getFlag(flag) == StateFlag.State.ALLOW ? "§2Да":"§4Нет";
             
             case DOUBLE: 
                 //return F.name(new StringBuilder().append((double)region.getFlag((Flag)flag)).toString());

@@ -47,7 +47,7 @@ public class RegionSelectMenu implements InventoryProvider
             
             ItemStack itemStack = new ItemBuilder(Material.BOOK)
                     .name("§7Регион §6"+number)
-                    .lore("§7Тип региона: "+template.getDisplayname())
+                    .lore("§7Тип региона: "+(template==null ? "не определён" : template.getDisplayname()))
                     .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
                     .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
                     .lore("ЛКМ - перейти к управлению")

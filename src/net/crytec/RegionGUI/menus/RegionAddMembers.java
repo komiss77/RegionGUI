@@ -15,6 +15,8 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ru.komiss77.ApiOstrov;
+import ru.komiss77.modules.games.GM;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.PlayerChatInput;
 
@@ -57,7 +59,7 @@ public class RegionAddMembers implements InventoryProvider
                     final ItemStack head = new ItemBuilder(Material.PLAYER_HEAD)
                             .name("§f" + v.getName())
                             .lore("§7ЛКМ - добавить пользователем")
-                            .setSkullOwner(v.getName())
+                            //.setSkullOwner(v.getName())
                             .build();
                     //final SkullMeta skullmeta = (SkullMeta)head.getItemMeta();
                     //skullmeta.hasOwner();
@@ -75,7 +77,7 @@ public class RegionAddMembers implements InventoryProvider
                         contents.getHost().open( player, pagination.getPage() );
                         player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 2,2);
                         //player.sendMessage(Language.INTERFACE_REMOVE_SUCESSFULL.toChatString().replaceAll("%name%", name));
-
+                        ApiOstrov.reachCustomStat(player, GM.thisServerGame.name()+"_member", domain.size());
                     }));            
                     
                 }
@@ -111,9 +113,8 @@ public class RegionAddMembers implements InventoryProvider
                         domain.setPlayerDomain(playerDomain);
                         region.setMembers(domain);
                         region.setDirty(true);
-
-                        this.reopen(player, contents);
-
+                        reopen(player, contents);
+                        ApiOstrov.reachCustomStat(player, GM.thisServerGame.name()+"_member", domain.size());
             });
 
         }));

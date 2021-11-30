@@ -12,7 +12,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -102,8 +101,9 @@ public class RegionUtils
     public static List <ProtectedRegion> getPlayerOwnedRegions (final Player bukkitplayer, final World world) {
         final LocalPlayer lp = WorldGuardPlugin.inst().wrapPlayer(bukkitplayer);
         final List <ProtectedRegion> playerRegions = new ArrayList<>();
+        final String start = lp.getName().toLowerCase()+"-rgui-";
         for (final ProtectedRegion rg : getRegionManager(world).getRegions().values()) {
-            if (rg.isOwner(lp) && rg.getId().startsWith(lp.getName()+"-rgui-")) {
+            if (rg.isOwner(lp) || rg.getId().startsWith(start)) {
                 playerRegions.add(rg);
             }
         }
@@ -122,7 +122,8 @@ public class RegionUtils
         final LocalPlayer lp = WorldGuardPlugin.inst().wrapPlayer(bukkitplayer);
         final List <ProtectedRegion> playerRegions = new ArrayList<>();
         for (final ProtectedRegion rg : getRegionManager(world).getRegions().values()) {
-            if (rg.isMember(lp) && rg.getId().startsWith(lp.getName()+"-rgui-")) {
+            //if (rg.isMember(lp) && rg.getId().startsWith(lp.getName()+"-rgui-")) {
+            if (rg.isMember(lp)) {
                 playerRegions.add(rg);
             }
         }
@@ -140,7 +141,7 @@ public class RegionUtils
 
     public static String getCreateTime (final ProtectedRegion region) {
         if (isValidRegionId(region.getId()))  {
-            return ApiOstrov.dateFromStamp( Long.valueOf(region.getId().split("-")[3]));
+            return ApiOstrov.dateFromStamp( Integer.valueOf(region.getId().split("-")[3]));
         } else {
             return "";
         }

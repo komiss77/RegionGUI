@@ -74,12 +74,14 @@ public class LandHomeMenu implements InventoryProvider
                         .name("§7Регион §6"+number)
                         .lore("§fВы владелец.")
                         .lore("")
-                        .lore("§7Тип региона: "+template.getDisplayname())
+                        .lore("§7Тип региона: "+(template==null ? "не определён" : template.getDisplayname()))
                         .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
                         .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
                         .lore("")
-                        .lore("ЛКМ - телепорт в регион")
+                        .lore(region.getFlag((Flag)Flags.TELE_LOC) != null ? "ЛКМ - телепорт в регион" : "")
                         .lore("")
+                        .lore("§7Примерная локация региона:")
+                        .lore(region.getMaximumPoint().getBlockX()+","+region.getMaximumPoint().getBlockY()+","+region.getMaximumPoint().getBlockZ())
                         //.lore(regionButton)
                         .build(), e -> {
                             
@@ -119,12 +121,14 @@ public class LandHomeMenu implements InventoryProvider
                         .name("§7Регион §6"+number)
                         .lore("§fВы пользователь.")
                         .lore("")
-                        .lore("§7Тип региона: "+template.getDisplayname())
+                        .lore("§7Тип региона: "+(template==null ? "не определён" : template.getDisplayname()))
                         .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
                         .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
                         .lore("")
-                        .lore("ЛКМ - телепорт в регион")
+                        .lore(region.getFlag((Flag)Flags.TELE_LOC) != null ? "ЛКМ - телепорт в регион" : "")
                         .lore("")
+                        .lore("§7Примерная локация региона:")
+                        .lore(region.getMaximumPoint().getBlockX()+","+region.getMaximumPoint().getBlockY()+","+region.getMaximumPoint().getBlockZ())
                         //.lore(regionButton)
                         .build(), e -> {
                             

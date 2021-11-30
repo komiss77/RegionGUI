@@ -18,6 +18,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.manager.PreviewBlockManager;
+import ru.komiss77.ApiOstrov;
 
 
 
@@ -70,7 +71,7 @@ public class PreviewBlock {
                     return;
                 }
                 
-                p.sendTitle("", "§7Shift - остановить показ ("+count+"§7)", 0, 21, 0);
+                ApiOstrov.sendTitle(p, "", "§7Shift - остановить показ ("+count+"§7)", 0, 21, 0);
                 count--;
                 
                 if (p.getLocation().getBlockX()!=last_x || p.getLocation().getBlockZ()!=last_z) {
@@ -150,7 +151,7 @@ public class PreviewBlock {
         if (p!=null) {
             resetLine(p);
             p.resetTitle();
-            if (endTitle) p.sendTitle("", "§7Предпросмотр закончен.", 0, 30, 0);
+            if (endTitle) ApiOstrov.sendTitle(p, "", "§7Предпросмотр закончен.", 0, 30, 0);
         }
         if (PreviewBlockManager.on_wiev.containsKey(p.getName())) {
             PreviewBlockManager.on_wiev.remove(p.getName());

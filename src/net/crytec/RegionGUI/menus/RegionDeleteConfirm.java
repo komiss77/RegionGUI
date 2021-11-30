@@ -12,7 +12,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
-import ru.komiss77.Managers.WE;
+import ru.komiss77.modules.world.Schematic;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
@@ -58,8 +58,9 @@ public class RegionDeleteConfirm implements InventoryProvider {
 
             if (RegionGUI.getInstance().getConfig().getBoolean("regenOnDelete", true)) {
                 
-                
-                WE.paste(
+                final Schematic sch = ApiOstrov.getWorldEditor().getSchematic(player, region.getId(), true);
+                ApiOstrov.getWorldEditor().paste (player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), sch, true);
+               /* ApiOstrov.getWorldEditor().paste(
                     player,
                     BukkitAdapter.adapt( player.getWorld(), region.getMinimumPoint() ),
                     RegionGUI.getInstance().getDataFolder() + "/schematics",
@@ -71,7 +72,7 @@ public class RegionDeleteConfirm implements InventoryProvider {
                         //RegionUtils.saveRegions(player.getWorld());
                     },
                     WE.scipOnPasteDefault
-                );
+                );*/
             
 
                 
