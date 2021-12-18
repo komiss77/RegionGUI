@@ -1,6 +1,5 @@
 package net.crytec.RegionGUI.data;
 
-import com.google.common.collect.Maps;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -116,7 +115,7 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
     
     @Override
     public Map<String, Object> serialize() {
-        final HashMap hashMap = Maps.newHashMap();
+        final HashMap<String, Object> hashMap = new HashMap<>();//Maps.newHashMap();
         hashMap.put("name", this.name);
         hashMap.put("gui.displayname", this.displayname);
         hashMap.put("gui.icon", this.icon.toString());

@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
 import net.crytec.RegionGUI.RegionGUI;
-import ru.komiss77.utils.PlayerChatInput;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -28,6 +27,8 @@ import org.bukkit.plugin.Plugin;
 import ru.komiss77.ApiOstrov;
 import ru.komiss77.utils.ColorUtils;
 import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.PlayerInput;
+import ru.komiss77.utils.inventory.InputButton;
 import ru.komiss77.version.AnvilGUI;
 
 
@@ -160,10 +161,10 @@ public class FlagSetting implements Comparable<FlagSetting> {
 
                         case SET:
                             player.sendMessage("§fНаберите в чате новое значение для флага и нажмите Enter");
-                            PlayerChatInput.get(player, value -> {
+                            PlayerInput.get(InputButton.InputType.CHAT, player, value -> {
                                 setFlag(player, region, this.flag, (String)value);
                                 Bukkit.getScheduler().runTaskLater((Plugin)RegionGUI.getInstance(), () -> contents.getHost().getProvider().reopen(player, contents), 1L);
-                            });
+                            }, "");
                             break;
 
                     }

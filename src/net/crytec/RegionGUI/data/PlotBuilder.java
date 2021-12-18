@@ -110,7 +110,7 @@ public class PlotBuilder
         
         if (RegionGUI.getInstance().getConfig().getBoolean("regenOnDelete", true)) {
             //ApiOstrov.getWorldEditor().save(player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()), RegionGUI.getInstance().getDataFolder() + "/schematics", regName.toLowerCase(), true);
-            ApiOstrov.getWorldEditor().save(player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()), regName.toLowerCase());
+            ApiOstrov.getWorldEditor().save(player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()), regName.toLowerCase(), "");
         }
         
         

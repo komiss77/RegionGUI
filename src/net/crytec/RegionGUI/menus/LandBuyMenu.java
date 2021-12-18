@@ -60,7 +60,7 @@ public class LandBuyMenu implements InventoryProvider {
         
         int totalRegion = playerRegions.size();
         
-        int totatRegionLimit = op.getBigestPermValue("region.limit.total");
+        int totatRegionLimit = PM.getBigestPermValue(op, "region.limit.total");
         if (totatRegionLimit<1) totatRegionLimit = 1; //один приват всегда можно, раз уж есть плагин на сервере!
         
 
@@ -101,7 +101,7 @@ public class LandBuyMenu implements InventoryProvider {
             
             for (final Template template : templateList) { //перебираем все заготовки
 
-                int currentTemplateLimit = op.getBigestPermValue("region.limit."+template.getName());
+                int currentTemplateLimit = PM.getBigestPermValue(op, "region.limit."+template.getName());
                 if (currentTemplateLimit<1) currentTemplateLimit = 1;
 
                 //подсчёт приватов такого типа

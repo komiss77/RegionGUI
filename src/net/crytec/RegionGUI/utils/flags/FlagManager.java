@@ -1,14 +1,15 @@
 package net.crytec.RegionGUI.utils.flags;
 
-import com.google.common.collect.Lists;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.LocationFlag;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import net.crytec.RegionGUI.RegionGUI;
 import org.bukkit.ChatColor;
@@ -19,16 +20,18 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class FlagManager {
     
     
-    private final LinkedList<FlagSetting> settings;
-    private final LinkedList<FlagSetting> flags;
+    private final List<FlagSetting> settings = new ArrayList<>();
+    private final List<FlagSetting> flags = new ArrayList<>();;
+    //private final LinkedList<FlagSetting> settings;
+    //private final LinkedList<FlagSetting> flags;
     private final YamlConfiguration flagConfig;
     private final Set<String> forbiddenFlags;
     
     
     
     public FlagManager(final RegionGUI plugin) {
-        settings = Lists.newLinkedList();//(LinkedList<FlagSetting>)Lists.newLinkedList();
-        flags = Lists.newLinkedList();//(LinkedList<FlagSetting>)Lists.newLinkedList();
+        //settings = Lists.newLinkedList();//(LinkedList<FlagSetting>)Lists.newLinkedList();
+        //flags = Lists.newLinkedList();//(LinkedList<FlagSetting>)Lists.newLinkedList();
         
         forbiddenFlags = new HashSet<>();//(ArrayList<String>)Lists.newArrayList()).add("receive-chat");
         forbiddenFlags.add("allowed-cmds");
@@ -107,7 +110,7 @@ public class FlagManager {
         flags.add(new FlagSetting(idenfifier, flag, icon, displayname));
     }
     
-    public LinkedList<FlagSetting> getFlagMap() {
+    public List<FlagSetting> getFlagMap() {
         return flags;
     }
 }

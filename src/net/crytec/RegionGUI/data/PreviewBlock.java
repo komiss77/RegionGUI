@@ -59,7 +59,7 @@ public class PreviewBlock {
             @Override
             public void run() {
                 
-                final Player p = Bukkit.getPlayer(playerName);
+                final Player p = Bukkit.getPlayerExact(playerName);
                 
                 if (p==null || !p.isOnline()) {
                     this.cancel();

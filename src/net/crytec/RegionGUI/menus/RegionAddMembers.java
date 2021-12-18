@@ -18,7 +18,8 @@ import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
 import ru.komiss77.modules.games.GM;
 import ru.komiss77.utils.ItemBuilder;
-import ru.komiss77.utils.PlayerChatInput;
+import ru.komiss77.utils.PlayerInput;
+import ru.komiss77.utils.inventory.InputButton;
 
 
 
@@ -106,7 +107,7 @@ public class RegionAddMembers implements InventoryProvider
             
             player.closeInventory();
             player.sendMessage(Language.REGION_MESSAGE_CHATADDMEMBER.toChatString());
-            PlayerChatInput.get(player, addName -> {
+            PlayerInput.get(InputButton.InputType.CHAT, player, addName -> {
                 
 
                         playerDomain.addPlayer(addName);
@@ -115,7 +116,7 @@ public class RegionAddMembers implements InventoryProvider
                         region.setDirty(true);
                         reopen(player, contents);
                         ApiOstrov.reachCustomStat(player, GM.thisServerGame.name()+"_member", domain.size());
-            });
+            }, "");
 
         }));
         
