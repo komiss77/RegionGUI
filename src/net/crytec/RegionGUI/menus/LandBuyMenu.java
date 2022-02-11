@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
+import ru.komiss77.Perm;
 import ru.komiss77.modules.games.GM;
 import ru.komiss77.modules.player.Oplayer;
 import ru.komiss77.modules.player.PM;
@@ -60,7 +61,7 @@ public class LandBuyMenu implements InventoryProvider {
         
         int totalRegion = playerRegions.size();
         
-        int totatRegionLimit = PM.getBigestPermValue(op, "region.limit.total");
+        int totatRegionLimit = Perm.getLimit(op, "region.total");//PM.getBigestPermValue(op, "region.limit.total");
         if (totatRegionLimit<1) totatRegionLimit = 1; //один приват всегда можно, раз уж есть плагин на сервере!
         
 
@@ -101,7 +102,7 @@ public class LandBuyMenu implements InventoryProvider {
             
             for (final Template template : templateList) { //перебираем все заготовки
 
-                int currentTemplateLimit = PM.getBigestPermValue(op, "region.limit."+template.getName());
+                int currentTemplateLimit =  Perm.getLimit(op, "region."+template.getName());//PM.getBigestPermValue(op, "region.limit."+template.getName());
                 if (currentTemplateLimit<1) currentTemplateLimit = 1;
 
                 //подсчёт приватов такого типа

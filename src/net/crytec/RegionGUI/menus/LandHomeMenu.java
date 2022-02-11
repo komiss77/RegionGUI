@@ -1,6 +1,7 @@
 package net.crytec.RegionGUI.menus;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -17,11 +18,14 @@ import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import ru.komiss77.ApiOstrov;
+import ru.komiss77.modules.world.Cuboid;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.ItemUtils;
 
@@ -78,10 +82,11 @@ public class LandHomeMenu implements InventoryProvider
                         .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
                         .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
                         .lore("")
-                        .lore(region.getFlag((Flag)Flags.TELE_LOC) != null ? "ЛКМ - телепорт в регион" : "")
-                        .lore("")
                         .lore("§7Примерная локация региона:")
-                        .lore(region.getMaximumPoint().getBlockX()+","+region.getMaximumPoint().getBlockY()+","+region.getMaximumPoint().getBlockZ())
+                        .lore("§6"+region.getMaximumPoint().getBlockX()+", "+region.getMaximumPoint().getBlockY()+", "+region.getMaximumPoint().getBlockZ())
+                        .lore("")
+                        .lore("ЛКМ - телепорт в регион")
+                        .lore("")
                         //.lore(regionButton)
                         .build(), e -> {
                             
@@ -92,8 +97,11 @@ public class LandHomeMenu implements InventoryProvider
                         player.teleport(location2);
                         
                     } else {
-                        
-                        player.sendMessage(Language.ERROR_NO_HOME_SET.toChatString());
+                        Location loc1 = BukkitAdapter.adapt(world, region.getMinimumPoint());
+                        Location loc2 = BukkitAdapter.adapt(world, region.getMaximumPoint());
+                        Cuboid cuboid = new Cuboid (loc1, loc2);
+                        ApiOstrov.teleportSave(player, cuboid.getCenter(loc1));
+                        //player.sendMessage(Language.ERROR_NO_HOME_SET.toChatString());
                         
                     }
                     
