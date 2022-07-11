@@ -9,7 +9,6 @@ import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.PreviewBlockManager;
 import net.crytec.RegionGUI.manager.TemplateManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,7 +17,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
-import ru.komiss77.Perm;
 import ru.komiss77.modules.games.GM;
 import ru.komiss77.modules.player.Oplayer;
 import ru.komiss77.modules.player.PM;
@@ -50,25 +48,43 @@ public class LandBuyMenu implements InventoryProvider {
         
         inventoryContents.fillRow(3, ClickableItem.empty(fill));
         
+        if (!RegionGUI.getInstance().getConfig().getStringList("enabled_worlds").contains(player.getWorld().getName())) {
+            inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER)
+                    .name("§4Отключено")
+                    .lore("§4В этом мире")
+                    .lore("§4нельзя создавать")
+                    .lore("§4новые приваты!")
+                    .build() )
+            );
+            return;
+        }
+        
         final Oplayer op = PM.getOplayer(player);
         if (op==null) {
             RegionGUI.log_err("§c[ERROR] нет экземпляра Oplayer для "+player.getName());
             return;
         }
         
+
         
         final List <ProtectedRegion> playerRegions = RegionUtils.getPlayerOwnedRegions(player);
         
         int totalRegion = playerRegions.size();
         
-        int totatRegionLimit = Perm.getLimit(op, "region.total");//PM.getBigestPermValue(op, "region.limit.total");
+        int totatRegionLimit = ApiOstrov.getLimit(op, "region.total");//PM.getBigestPermValue(op, "region.limit.total");
         if (totatRegionLimit<1) totatRegionLimit = 1; //один приват всегда можно, раз уж есть плагин на сервере!
         
 
 
         if (!playerRegions.isEmpty()) {
             inventoryContents.set(4, 2, ClickableItem.of( new ItemBuilder(Material.GRAY_BED).name("§aТП в регион").build(), e -> {
-                SmartInventory.builder().id("home-" + player.getName()).provider(new LandHomeMenu()).size(5, 9).title(Language.INTERFACE_HOME_TITLE.toString()).build().open(player);
+                SmartInventory.builder()
+                        .id("home-" + player.getName())
+                        .provider(new LandHomeMenu())
+                        .size(5, 9)
+                        .title(Language.INTERFACE_HOME_TITLE.toString())
+                        .build()
+                        .open(player);
                 player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
             }));
 
@@ -102,7 +118,7 @@ public class LandBuyMenu implements InventoryProvider {
             
             for (final Template template : templateList) { //перебираем все заготовки
 
-                int currentTemplateLimit =  Perm.getLimit(op, "region."+template.getName());//PM.getBigestPermValue(op, "region.limit."+template.getName());
+                int currentTemplateLimit =  ApiOstrov.getLimit(op, "region."+template.getName());//PM.getBigestPermValue(op, "region.limit."+template.getName());
                 if (currentTemplateLimit<1) currentTemplateLimit = 1;
 
                 //подсчёт приватов такого типа

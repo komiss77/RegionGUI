@@ -37,6 +37,7 @@ public class TemplateManager implements Listener
     
     public static void registerTemplate(final Template template) {
         templates.put(template.getName(), template);
+        save(template);
     }
     
 
@@ -95,7 +96,7 @@ public class TemplateManager implements Listener
         }
     }
     
-    public static void saveAll() {
+    /*public static void saveAll() {
         for (final Template template : templates.values()) {
             try {
                 final File file = new File(templateFolder, String.valueOf(template.getName()) + ".template");
@@ -110,5 +111,22 @@ public class TemplateManager implements Listener
                 RegionGUI.log_err("Не удалось сохранить заготовку "+template.getName()+" : "+ex.getMessage());
             }
         }
+    }*/
+    
+    public static void save(final Template template) {
+        try {
+            final File file = new File(templateFolder, String.valueOf(template.getName()) + ".template");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            final YamlConfiguration loadConfiguration = YamlConfiguration.loadConfiguration(file);
+            loadConfiguration.set("data", (Object)template);
+            loadConfiguration.save(file);
+        } catch (IOException ex) {
+            RegionGUI.log_err("Не удалось сохранить заготовку "+template.getName()+" : "+ex.getMessage());
+        }
     }
+    
+    
+    
 }

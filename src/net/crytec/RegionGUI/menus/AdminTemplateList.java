@@ -59,8 +59,7 @@ public class AdminTemplateList implements InventoryProvider
                     return null;
                 } else {
                     TemplateManager.registerTemplate(new Template(player2.getWorld(), templateName) );
-                    TemplateManager.saveAll();
-                    this.reopen(player, contents);
+                    reopen(player, contents);
                     return null;
                 }
                 

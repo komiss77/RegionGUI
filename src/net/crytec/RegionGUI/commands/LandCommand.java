@@ -72,17 +72,17 @@ public class LandCommand implements CommandExecutor, TabCompleter {
    @Override
     public boolean onCommand ( CommandSender se, Command comandd, String cmd, String[] a) {
         
-        if ( !(se instanceof Player) ) { 
+        if ( !(se instanceof Player) ) {
             se.sendMessage("§4Это не консольная команда!"); 
             return false; 
         }
         
         final Player player = (Player) se;
         
-        if (!RegionGUI.getInstance().getConfig().getStringList("enabled_worlds").contains(player.getWorld().getName())) {
-            player.sendMessage(Language.ERROR_WORLD_DISABLED.toChatString());
-            return false;
-        }
+        //if (!RegionGUI.getInstance().getConfig().getStringList("enabled_worlds").contains(player.getWorld().getName())) {
+        //    player.sendMessage(Language.ERROR_WORLD_DISABLED.toChatString());
+        //    return false;
+        //}
         
         if (a.length>=1) {
             if (a[0].equalsIgnoreCase("home")) {

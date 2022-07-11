@@ -24,8 +24,8 @@ public class CommadClaimListener implements Listener {
                 //e.getMessage().startsWith("//wand")
             ) {
             if (!ApiOstrov.isLocalBuilder(e.getPlayer(), false)) {
-                e.setCancelled(true);
-                e.getPlayer().performCommand("land");
+                e.setMessage("land");//e.setCancelled(true);
+                //e.getPlayer().performCommand("land");
             }
         }
        

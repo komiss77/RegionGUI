@@ -74,7 +74,7 @@ public final class RegionGUI extends JavaPlugin
     @Override
     public void onDisable() {
 
-        TemplateManager.saveAll();
+        //TemplateManager.saveAll();
 
     }
     

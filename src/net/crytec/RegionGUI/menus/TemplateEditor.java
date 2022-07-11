@@ -25,14 +25,14 @@ import ru.komiss77.version.AnvilGUI;
 public class TemplateEditor implements InventoryProvider
 {
     private static final ItemStack filler;
-    private final Template claim;
+    private final Template template;
     
     static {
         filler = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build();
     }
     
     public TemplateEditor(final Template claim) {
-        this.claim = claim;
+        this.template = claim;
     }
     
     
@@ -43,14 +43,14 @@ public class TemplateEditor implements InventoryProvider
         contents.fillRow(4, ClickableItem.empty(TemplateEditor.filler));
         
         
-        contents.set(SlotPos.of(0, 4), ClickableItem.of(new ItemBuilder(this.claim.getIcon())
+        contents.set(SlotPos.of(0, 4), ClickableItem.of(new ItemBuilder(this.template.getIcon())
                 .name("§7Установить иконку")
                 .lore("§7Ткните сюда предметом из инвентаря")
                 .lore("§7для смены иконки")
                 .build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.LEFT && inventoryClickEvent.getCursor() != null && inventoryClickEvent.getCursor().getType() != Material.AIR) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                this.claim.setIcon(inventoryClickEvent.getCursor().getType());
+                this.template.setIcon(inventoryClickEvent.getCursor().getType());
                 inventoryClickEvent.getView().getBottomInventory().addItem(new ItemStack[] { inventoryClickEvent.getCursor() });
                 inventoryClickEvent.getView().setCursor(new ItemStack(Material.AIR));
                 this.reopen(player, contents);
@@ -61,10 +61,10 @@ public class TemplateEditor implements InventoryProvider
         
         contents.set(SlotPos.of(1, 0), new InputButton(new ItemBuilder(Material.NAME_TAG)
                 .name("§7Отображаемое название")
-                .lore("§7Текущее: §6" + this.claim.getDisplayname())
-                .build(), claim.getDisplayname(), displayname -> {
+                .lore("§7Текущее: §6" + this.template.getDisplayname())
+                .build(), template.getDisplayname(), displayname -> {
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-            this.claim.setDisplayname(displayname);
+            this.template.setDisplayname(displayname);
             SmartInventory.builder().provider(new AdminTemplateList()).size(6).title("§8Редактор заготовок [" + player.getWorld().getName() + "]").build().open(player);
            // return;
         }));
@@ -81,22 +81,22 @@ public class TemplateEditor implements InventoryProvider
         contents.set(SlotPos.of(2, 0), ClickableItem.of(new ItemBuilder(Material.BOOK)
                 .name("§7Описание")
                 .lore("§7Текущее:")
-                .lore( this.claim.getDescription() )
+                .lore( this.template.getDescription() )
                 .lore("")
                 .lore("§aЛКМ §7добавить строку")
                 .lore("§aПКМ §7удалить последнюю строку.")
                 .build(), inventoryClickEvent2 -> {
 
                         if ( inventoryClickEvent2.getClick() == ClickType.RIGHT) {
-                        if (!claim.getDescription().isEmpty()) {
-                            claim.getDescription().remove(claim.getDescription().size() - 1);
+                        if (!template.getDescription().isEmpty()) {
+                            template.getDescription().remove(template.getDescription().size() - 1);
                             reopen(player, contents);
                         }
 
                     } else {
                             
                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            claim.getDescription().add(ChatColor.translateAlternateColorCodes('&', value));
+                            template.getDescription().add(ChatColor.translateAlternateColorCodes('&', value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -123,17 +123,17 @@ public class TemplateEditor implements InventoryProvider
         //Сообщение, когда нет права
         contents.set(SlotPos.of(1, 1), ClickableItem.of(new ItemBuilder(Material.BLAZE_POWDER)
                 .name("§7Право для покупки")
-                .lore( claim.getPermission().isEmpty() ? "§8Не требуется" : "§f" + claim.getPermission())
+                .lore( template.getPermission().isEmpty() ? "§8Не требуется" : "§f" + template.getPermission())
                 .lore("")
                 .lore("§aЛКМ §7установить право")
                 .lore("§aПКМ §7удалить право")
                 .build(), clickEvent -> {
                     if (clickEvent.getClick() == ClickType.RIGHT) {
-                        claim.setPermission("");
+                        template.setPermission("");
                         reopen(player, contents);
                     } else {
                         AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "region.template.xxx", (player2, value) -> {
-                            claim.setPermission(ChatColor.stripColor(value));
+                            template.setPermission(ChatColor.stripColor(value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -158,19 +158,19 @@ public class TemplateEditor implements InventoryProvider
                 .lore("§eбудет эта надпись.")
                 .lore("")
                 .lore("§7Текущее:")
-                .lore(claim.getNoPermDescription())
+                .lore(template.getNoPermDescription())
                 .lore("")
                 .lore("§aЛКМ §7добавить строку")
                 .lore("§aПКМ §7удалить последнюю строку.")
                 .build(), inventoryClickEvent3 -> {
                     if (inventoryClickEvent3.getClick() == ClickType.RIGHT) {
-                        if (!claim.getNoPermDescription().isEmpty()) {
-                            claim.getNoPermDescription().remove(claim.getNoPermDescription().size() - 1);
+                        if (!template.getNoPermDescription().isEmpty()) {
+                            template.getNoPermDescription().remove(template.getNoPermDescription().size() - 1);
                             reopen(player, contents);
                         }
                     } else {
                         AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            claim.getNoPermDescription().add(ChatColor.translateAlternateColorCodes('&', value));
+                            template.getNoPermDescription().add(ChatColor.translateAlternateColorCodes('&', value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -186,8 +186,8 @@ public class TemplateEditor implements InventoryProvider
         //Цена
         contents.set(SlotPos.of(1, 2), new InputButton(new ItemBuilder(Material.GOLD_NUGGET)
                 .name("§7Цена")
-                .lore("§7Сейчас: §6" + this.claim.getPrice()+" §7лони")
-                .build(), String.valueOf(this.claim.getPrice()), s4 -> {
+                .lore("§7Сейчас: §6" + this.template.getPrice()+" §7лони")
+                .build(), String.valueOf(this.template.getPrice()), s4 -> {
                     if (!ApiOstrov.isInteger(s4)) {
                         player.sendMessage("§cВведите целое число!");
                         this.reopen(player, contents);
@@ -195,7 +195,7 @@ public class TemplateEditor implements InventoryProvider
                     }
                     else {
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                        this.claim.setPrice(Integer.parseInt(s4));
+                        this.template.setPrice(Integer.parseInt(s4));
                         this.reopen(player, contents);
                         //return;
                     }
@@ -209,15 +209,15 @@ public class TemplateEditor implements InventoryProvider
                 .name("§7Возврат денег")
                 .lore("§7Данная сумма будет §aполучена")
                 .lore("§7игроком после удаления региона.")
-                .lore("§7Сейчас: §6" + this.claim.getRefund())
-                .build(), String.valueOf(this.claim.getRefund()), s5 -> {
+                .lore("§7Сейчас: §6" + this.template.getRefund())
+                .build(), String.valueOf(this.template.getRefund()), s5 -> {
                     if (!ApiOstrov.isInteger(s5)) {
                         player.sendMessage("§cВведите целое число!");
                         this.reopen(player, contents);
                        // return;
                     } else {
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                        claim.setRefund(Integer.parseInt(s5));
+                        template.setRefund(Integer.parseInt(s5));
                         this.reopen(player, contents);
                         //return;
                     }
@@ -229,10 +229,10 @@ public class TemplateEditor implements InventoryProvider
         //Размер
         contents.set(SlotPos.of(1, 3), new InputButton(new ItemBuilder(Material.BEACON)
                 .name("§7Размер")
-                .lore("§7Сейчас: §6" + this.claim.getSize())
+                .lore("§7Сейчас: §6" + this.template.getSize())
                 .lore("§7Длинна каждой стороны")
                 .lore("§7квадратного основания.")
-                .build(), String.valueOf(this.claim.getSize()), s6 -> {
+                .build(), String.valueOf(this.template.getSize()), s6 -> {
                     if (!ApiOstrov.isInteger(s6)) {
                         player.sendMessage("§cВведите целое число!");
                         this.reopen(player, contents);
@@ -240,7 +240,7 @@ public class TemplateEditor implements InventoryProvider
                     }
                     else {
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                        this.claim.setSize(Integer.parseInt(s6));
+                        this.template.setSize(Integer.parseInt(s6));
                         this.reopen(player, contents);
                         //return;
                     }
@@ -259,21 +259,21 @@ public class TemplateEditor implements InventoryProvider
                 .lore("§e%region% §7- название WG региона")
                 .lore("§e%world% §7- название мира")
                 .lore("")
-                .lore( claim.getRunCommands().isEmpty() ? "§8Сейчас команд нет.":"§7Текущие команды:")
-                .lore(claim.getRunCommands())
+                .lore( template.getRunCommands().isEmpty() ? "§8Сейчас команд нет.":"§7Текущие команды:")
+                .lore(template.getRunCommands())
                 .lore("")
                 .lore("§aЛКМ §7добавить строку")
                 .lore("§aПКМ §7удалить последнюю строку.")
                 .build(), inventoryClickEvent4 -> {
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     if (inventoryClickEvent4.isRightClick()) {
-                        if (!claim.getRunCommands().isEmpty()) {
-                            this.claim.getRunCommands().remove(this.claim.getRunCommands().size() - 1);
+                        if (!template.getRunCommands().isEmpty()) {
+                            this.template.getRunCommands().remove(this.template.getRunCommands().size() - 1);
                             this.reopen(player, contents);
                         }
                     } else {
                         AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            claim.getRunCommands().add(ChatColor.stripColor(value));
+                            template.getRunCommands().add(ChatColor.stripColor(value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -293,10 +293,10 @@ public class TemplateEditor implements InventoryProvider
         //Автопостройка ограждения
         contents.set(SlotPos.of(1, 4), ClickableItem.of(new ItemBuilder(Material.OAK_FENCE)
                 .name("§7Автопостройка ограждения")
-                .lore("§7Сейчас: " + (claim.isGenerateBorder() ? "да":"нет")   )
+                .lore("§7Сейчас: " + (template.isGenerateBorder() ? "да":"нет")   )
                 .build(), p2 -> {
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                    this.claim.setGenerateBorder(!this.claim.isGenerateBorder());
+                    this.template.setGenerateBorder(!this.template.isGenerateBorder());
                     this.reopen(player, contents);
                     //return;
                 }
@@ -305,7 +305,7 @@ public class TemplateEditor implements InventoryProvider
         
         
         //Материал ограждения
-        contents.set(SlotPos.of(2, 4), ClickableItem.of(new ItemBuilder(this.claim.getBorderMaterial())
+        contents.set(SlotPos.of(2, 4), ClickableItem.of(new ItemBuilder(this.template.getBorderMaterial())
                 .name("§7Материал ограждения")
                 .lore("§7Ткните сюда предметом из инвентаря")
                 .lore("§7для установки материала.")
@@ -316,7 +316,7 @@ public class TemplateEditor implements InventoryProvider
                             this.reopen(player, contents);
                         } else {
                             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                            this.claim.setBorderMaterial(inventoryClickEvent5.getCursor().getType());
+                            this.template.setBorderMaterial(inventoryClickEvent5.getCursor().getType());
                             inventoryClickEvent5.getView().getBottomInventory().addItem(new ItemStack[] { inventoryClickEvent5.getCursor() });
                             inventoryClickEvent5.getView().setCursor(new ItemStack(Material.AIR));
                             this.reopen(player, contents);
@@ -337,7 +337,7 @@ public class TemplateEditor implements InventoryProvider
                     if (result) {
                         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 0.5f, 1.15f);
                         SmartInventory.builder().provider((InventoryProvider)new AdminTemplateList()).size(6).title("§8Редактор заготовок [" + player.getWorld().getName() + "]").build().open(player);
-                        TemplateManager.deleteTemplate(this.claim);
+                        TemplateManager.deleteTemplate(this.template);
                     }
                     else {
                         this.reopen(player, contents);
@@ -353,7 +353,7 @@ public class TemplateEditor implements InventoryProvider
         
         //сохранить
         contents.set(SlotPos.of(4, 4), ClickableItem.of(new ItemBuilder(Material.EMERALD).name("§2Сохранить заготовку").build(), p1 -> {
-            TemplateManager.saveAll();
+            TemplateManager.save(template);
             SmartInventory.builder().provider((InventoryProvider)new AdminTemplateList()).size(6).title("§8Редактор заготовок [" + player.getWorld().getName() + "]").build().open(player);
         }));
         

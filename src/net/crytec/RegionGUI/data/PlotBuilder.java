@@ -55,7 +55,7 @@ public class PlotBuilder
         
         if (blockY>30) blockY = 30; 
         
-        final int size = this.claimTemplate.getSize();
+        //final int size = this.claimTemplate.getSize();
 //System.out.println("claimTemplate size="+size);        
         if (this.claimTemplate.getPermission() != null && !this.claimTemplate.getPermission().isEmpty() && !this.player.hasPermission(this.claimTemplate.getPermission())) {
             this.player.sendMessage(Language.ERROR_NO_PERMISSION.toChatString().replaceAll("%permission%", this.claimTemplate.getPermission()));

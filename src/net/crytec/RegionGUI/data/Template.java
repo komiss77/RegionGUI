@@ -47,7 +47,7 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
         this.icon = Material.OAK_SLAB;
         this.description = Arrays.asList("§7Небольшой регион");
         this.size = 15;
-        this.height = 256;
+        this.height = 319;//256;
         this.depth = 10;
         this.price = 0;
         this.refund = 0;
@@ -64,7 +64,7 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
         this.icon = Material.OAK_SLAB;
         this.description = Arrays.asList("§7Небольшой регион");
         this.size = 15;
-        this.height = 256;
+        this.height = 319;//256;
         this.depth = 10;
         this.price = 0;
         this.refund = 0;
@@ -122,7 +122,7 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
         hashMap.put("gui.description", this.description);
         hashMap.put("gui.noPermDescription", this.noPermDescription);
         hashMap.put("data.size", this.size);
-        hashMap.put("data.heigth", this.height);
+        hashMap.put("data.heigth", height==256 ? 319 : height);
         hashMap.put("data.depth", this.depth);
         hashMap.put("data.price", this.price);
         hashMap.put("data.refund", this.refund);
@@ -157,7 +157,8 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
         template.description = ((List<String>)map.get("gui.description"));
         template.noPermDescription = ((List<String>)map.get("gui.noPermDescription"));
         template.setSize((int)map.get("data.size"));
-        template.setHeight((int)map.get("data.heigth"));
+        final int h = (int)map.get("data.heigth");
+        template.setHeight(h==256 ? 319 : h);
         template.setDepth((int)map.get("data.depth"));
         template.setPrice((int)map.get("data.price"));
         template.setRefund((int)map.get("data.refund"));
@@ -218,11 +219,11 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
     }
     
     public int getHeight() {
-        return this.height<256 ? this.height : 256;
+        return height<319 ? height : 319;
     }
     
     public void setHeight(final int height) {
-        this.height = height>256 ? 256 : height;
+        this.height = height>319 ? 319 : height;
     }
     
     public int getDepth() {
@@ -318,7 +319,7 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
         final Location high =  getMinimumPoint(loc).add(size, 0, size);
         int blockY = loc.getBlockY();
         blockY+=height;
-        if (blockY>256) blockY = 256;
+        if (blockY>319) blockY = 319;
         high.setY(blockY);
         return high;
     }
