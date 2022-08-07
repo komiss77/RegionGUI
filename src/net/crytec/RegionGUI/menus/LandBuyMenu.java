@@ -66,13 +66,18 @@ public class LandBuyMenu implements InventoryProvider {
         }
         
 
+        int totatRegionLimit;// 
+       
+        
+        if (ApiOstrov.isLocalBuilder(player)) {
+            totatRegionLimit = 77;
+        } else {
+            totatRegionLimit = ApiOstrov.getLimit(op, "region.total");//PM.getBigestPermValue(op, "region.limit.total");
+            if (totatRegionLimit<1) totatRegionLimit = 1; //один приват всегда можно, раз уж есть плагин на сервере!
+        }
         
         final List <ProtectedRegion> playerRegions = RegionUtils.getPlayerOwnedRegions(player);
-        
-        int totalRegion = playerRegions.size();
-        
-        int totatRegionLimit = ApiOstrov.getLimit(op, "region.total");//PM.getBigestPermValue(op, "region.limit.total");
-        if (totatRegionLimit<1) totatRegionLimit = 1; //один приват всегда можно, раз уж есть плагин на сервере!
+        final int totalRegion = playerRegions.size();
         
 
 
@@ -106,7 +111,7 @@ public class LandBuyMenu implements InventoryProvider {
             return;
         }
 
-        if (totalRegion >= totatRegionLimit) {
+        if ( playerRegions.size() >= totatRegionLimit) {
             
             inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER)
                     .name("§4Создание новых недоступно")

@@ -61,7 +61,13 @@ public class PlotBuilder
             this.player.sendMessage(Language.ERROR_NO_PERMISSION.toChatString().replaceAll("%permission%", this.claimTemplate.getPermission()));
             return;
         }
+        final int price = ApiOstrov.isLocalBuilder(player) ? 0 : claimTemplate.getPrice();
+        //if (!RegionGUI.econ.withdrawPlayer((OfflinePlayer)this.player.getPlayer(), (double)price).transactionSuccess()) {
         
+        if ( ApiOstrov.moneyGetBalance(player.getName()) < price) {
+            this.player.sendMessage(Language.ERROR_NO_MONEY.toChatString());
+            return;
+        }        
         //final int halfSize = (int)Math.round(size / 2.0);
         final Vector top = claimTemplate.getMaximumPoint(loc).toVector();//new Vector(down.getBlockX() + size, blockY + claimTemplate.getHeight(), down.getBlockZ() + size); //на 1 меньше, т.к. включая
         final Vector down = claimTemplate.getMinimumPoint(loc).toVector();//new Vector(blockX - halfSize, blockY - claimTemplate.getDepth(), blockZ - halfSize); //находим нижний угол
@@ -92,12 +98,7 @@ public class PlotBuilder
         
 //System.out.println("claimTemplate size="+size+" region "+region.getMinimumPoint()+"  "+region.getMaximumPoint());        
         
-        final int price = this.claimTemplate.getPrice();
-        //if (!RegionGUI.econ.withdrawPlayer((OfflinePlayer)this.player.getPlayer(), (double)price).transactionSuccess()) {
-        if ( ApiOstrov.moneyGetBalance(player.getName()) < price) {
-            this.player.sendMessage(Language.ERROR_NO_MONEY.toChatString());
-            return;
-        }
+
         ApiOstrov.moneyChange(player.getName(), -price, "Покупка региона");
         //this.player.sendMessage(Language.REGION_CREATE_MONEY.toChatString().replace("%money%", new StringBuilder().append(price).toString()).replace("%currencyname%", RegionGUI.econ.currencyNameSingular()));
         region.setDirty(true);
