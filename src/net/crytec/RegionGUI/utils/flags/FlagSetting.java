@@ -130,7 +130,7 @@ public class FlagSetting implements Comparable<FlagSetting> {
         
         if (hasPerm) {
             
-            return new ClickableItem (menuEntry, e -> {
+            return ClickableItem.of (menuEntry, e -> {
 
                 if (e.getClick() == ClickType.RIGHT && region.getFlags().containsKey(flag)) {
 
@@ -174,7 +174,7 @@ public class FlagSetting implements Comparable<FlagSetting> {
         
         } else {
             
-            return new ClickableItem (menuEntry,  p0 -> {} );
+            return ClickableItem.of (menuEntry,  p0 -> {} );
             
         }
     }

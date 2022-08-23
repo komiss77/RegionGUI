@@ -250,7 +250,7 @@ public class TemplateEditor implements InventoryProvider
         
         
         //Команды
-        contents.set(SlotPos.of(1, 5), new ClickableItem(new ItemBuilder(Material.COMMAND_BLOCK)
+        contents.set(SlotPos.of(1, 5), ClickableItem.of(new ItemBuilder(Material.COMMAND_BLOCK)
                 .name("§7Команды")
                 .lore("§7Команды, выполняемые после покупки региона.")
                 .lore("§7Для выполнения от консоли добавьте <server> в начале.")

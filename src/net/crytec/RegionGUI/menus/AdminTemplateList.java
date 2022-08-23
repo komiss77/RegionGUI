@@ -46,7 +46,7 @@ public class AdminTemplateList implements InventoryProvider
             }));
         }
         
-        contents.set(SlotPos.of(5, 4), new ClickableItem(new ItemBuilder(Material.EMERALD).name("§2Создание заготовки").build(), p2 -> {
+        contents.set(SlotPos.of(5, 4), ClickableItem.from(new ItemBuilder(Material.EMERALD).name("§2Создание заготовки").build(), p2 -> {
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
             
             new AnvilGUI(RegionGUI.getInstance(), player, "template", (player2, templateName) -> {
