@@ -14,6 +14,7 @@ import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.ConfirmationGUI;
 import ru.komiss77.utils.inventory.InputButton;
+import ru.komiss77.utils.inventory.InputButton.InputType;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
 import ru.komiss77.utils.inventory.SlotPos;
@@ -59,15 +60,16 @@ public class TemplateEditor implements InventoryProvider
         }));
         
         
-        contents.set(SlotPos.of(1, 0), new InputButton(new ItemBuilder(Material.NAME_TAG)
-                .name("§7Отображаемое название")
-                .lore("§7Текущее: §6" + this.template.getDisplayname())
-                .build(), template.getDisplayname(), displayname -> {
-            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-            this.template.setDisplayname(displayname);
-            SmartInventory.builder().provider(new AdminTemplateList()).size(6).title("§8Редактор заготовок [" + player.getWorld().getName() + "]").build().open(player);
-           // return;
-        }));
+        contents.set(SlotPos.of(1, 0), new InputButton(InputType.ANVILL, new ItemBuilder(Material.NAME_TAG)
+            .name("§7Отображаемое название")
+            .lore("§7Текущее: §6" + this.template.getDisplayname())
+            .build(), template.getDisplayname(), dn -> {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+                this.template.setDisplayname(dn);
+                SmartInventory.builder().provider(new AdminTemplateList()).size(6)
+                .title("§8Редактор заготовок [" + player.getWorld().getName() + "]").build().open(player);
+               // return;
+            }));
         
         
         
@@ -250,7 +252,7 @@ public class TemplateEditor implements InventoryProvider
         
         
         //Команды
-        contents.set(SlotPos.of(1, 5), new ClickableItem(new ItemBuilder(Material.COMMAND_BLOCK)
+        contents.set(SlotPos.of(1, 5), ClickableItem.of(new ItemBuilder(Material.COMMAND_BLOCK)
                 .name("§7Команды")
                 .lore("§7Команды, выполняемые после покупки региона.")
                 .lore("§7Для выполнения от консоли добавьте <server> в начале.")

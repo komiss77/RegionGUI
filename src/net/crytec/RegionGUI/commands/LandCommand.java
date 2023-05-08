@@ -1,14 +1,26 @@
 package net.crytec.RegionGUI.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 import net.crytec.RegionGUI.Language;
 import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.RegionUtils;
@@ -20,12 +32,9 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
+import ru.komiss77.ApiOstrov;
+import ru.komiss77.enums.Game;
+import ru.komiss77.modules.games.GM;
 import ru.komiss77.utils.inventory.SmartInventory;
 
 
@@ -33,7 +42,8 @@ import ru.komiss77.utils.inventory.SmartInventory;
 //@CommandAlias("land")
 public class LandCommand implements CommandExecutor, TabCompleter {
     
-    public static List<String> commands = Arrays.asList( "home", "list");
+    public static final List<String> commands = Arrays.asList( "home", "list");
+    public static final int claimArea = 2000;
 
     public LandCommand() {
     }
@@ -120,19 +130,24 @@ public class LandCommand implements CommandExecutor, TabCompleter {
         
         final LocalPlayer lp = WorldGuardPlugin.inst().wrapPlayer(player);
         final RegionManager rm = RegionUtils.getRegionManager(player.getWorld());
-        final ApplicableRegionSet applicableRegionSet = rm.getApplicableRegions(BukkitAdapter.asBlockVector(player.getLocation()));
+        final BlockVector3 bv = BukkitAdapter.asBlockVector(player.getLocation());
+        final ApplicableRegionSet applicableRegionSet = rm.getApplicableRegions(bv);
         
         
         
         
         
         if (applicableRegionSet.size() == 0) { //нет приватов в точке нахождения, открываем меню покупки - добавить тп в свои регионы
-            
-            
-            //if (!player.hasPermission("region.claim")) {
-            //    player.sendMessage(Language.ERROR_NO_PERMISSION.toChatString());
-            //    return;
-            //}
+        	if (GM.thisServerGame == Game.DA) {
+            	final Location spl = player.getWorld().getSpawnLocation();
+            	final int dst = Math.max(Math.abs(bv.getX() - spl.getBlockX()), Math.abs(bv.getZ() - spl.getBlockZ()));
+            	if (dst > claimArea && !ApiOstrov.isLocalBuilder(player, true)) {
+            		player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 0.8f);
+                    player.sendMessage("§cПривыты можно создавать только в §6" + claimArea + " §cблоках от спавна. \nТвоя дистанция - §6" + dst + " §cблоков. Тп на спавн - §6/spawn");
+                    return;
+            	}
+        	}
+        	
             SmartInventory.builder().id("regiongui.claim")
                     .provider(new LandBuyMenu(RegionGUI.getInstance()))
                     .size(5, 9)
