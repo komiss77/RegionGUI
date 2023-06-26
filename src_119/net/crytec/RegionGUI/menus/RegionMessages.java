@@ -40,11 +40,11 @@ public class RegionMessages implements InventoryProvider
         
         contents.set(SlotPos.of(1, 2), ClickableItem.of( new ItemBuilder(Material.OAK_SIGN)
                 .name("§eПриветствие в чате")
-                .addLore("§7Сейчас:")
-                .addLore(region.getFlags().containsKey(Flags.GREET_MESSAGE) ? region.getFlag(Flags.GREET_MESSAGE) : "§8не установлено" )
-                .addLore("")
-                .addLore("§6ЛКМ §7- изменить")
-                .addLore("§6ПКМ §7- удалить")
+                .lore("§7Сейчас:")
+                .lore(region.getFlags().containsKey(Flags.GREET_MESSAGE) ? region.getFlag(Flags.GREET_MESSAGE) : "§8не установлено" )
+                .lore("")
+                .lore("§6ЛКМ §7- изменить")
+                .lore("§6ПКМ §7- удалить")
                 .build(), inventoryClickEvent -> {
                     
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
@@ -75,11 +75,11 @@ public class RegionMessages implements InventoryProvider
         //.name("§eТитры при входе")  "Здравствуйте!"
         contents.set(SlotPos.of(1, 3), ClickableItem.of( new ItemBuilder(Material.OAK_SIGN)
                 .name("§eТитры при входе")
-                .addLore("§7Сейчас:")
-                .addLore(region.getFlags().containsKey(Flags.GREET_TITLE) ? region.getFlag(Flags.GREET_TITLE) : "§8не установлено" )
-                .addLore("")
-                .addLore("§6ЛКМ §7- изменить")
-                .addLore("§6ПКМ §7- удалить")
+                .lore("§7Сейчас:")
+                .lore(region.getFlags().containsKey(Flags.GREET_TITLE) ? region.getFlag(Flags.GREET_TITLE) : "§8не установлено" )
+                .lore("")
+                .lore("§6ЛКМ §7- изменить")
+                .lore("§6ПКМ §7- удалить")
                 .build(), inventoryClickEvent -> {
                     
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
@@ -114,11 +114,11 @@ public class RegionMessages implements InventoryProvider
         //.name("§eПрощание в чате")    "Вы покинули приват "+player.getName()
         contents.set(SlotPos.of(1, 5), ClickableItem.of( new ItemBuilder(Material.OAK_SIGN)
                 .name("§eПрощание в чате")
-                .addLore("§7Сейчас:")
-                .addLore(region.getFlags().containsKey(Flags.FAREWELL_MESSAGE) ? region.getFlag(Flags.FAREWELL_MESSAGE) : "§8не установлено" )
-                .addLore("")
-                .addLore("§6ЛКМ §7- изменить")
-                .addLore("§6ПКМ §7- удалить")
+                .lore("§7Сейчас:")
+                .lore(region.getFlags().containsKey(Flags.FAREWELL_MESSAGE) ? region.getFlag(Flags.FAREWELL_MESSAGE) : "§8не установлено" )
+                .lore("")
+                .lore("§6ЛКМ §7- изменить")
+                .lore("§6ПКМ §7- удалить")
                 .build(), inventoryClickEvent -> {
                     
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
@@ -150,11 +150,11 @@ public class RegionMessages implements InventoryProvider
         //.name("§eТитры при выходе")   "До свидания!"
         contents.set(SlotPos.of(1, 6), ClickableItem.of( new ItemBuilder(Material.OAK_SIGN)
                 .name("§eТитры при выходе")
-                .addLore("§7Сейчас:")
-                .addLore(region.getFlags().containsKey(Flags.FAREWELL_TITLE) ? region.getFlag(Flags.FAREWELL_TITLE) : "§8не установлено" )
-                .addLore("")
-                .addLore("§6ЛКМ §7- изменить")
-                .addLore("§6ПКМ §7- удалить")
+                .lore("§7Сейчас:")
+                .lore(region.getFlags().containsKey(Flags.FAREWELL_TITLE) ? region.getFlag(Flags.FAREWELL_TITLE) : "§8не установлено" )
+                .lore("")
+                .lore("§6ЛКМ §7- изменить")
+                .lore("§6ПКМ §7- удалить")
                 .build(), inventoryClickEvent -> {
                     
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);

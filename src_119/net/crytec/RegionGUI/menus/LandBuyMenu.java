@@ -51,9 +51,9 @@ public class LandBuyMenu implements InventoryProvider {
         if (!RegionGUI.getInstance().getConfig().getStringList("enabled_worlds").contains(player.getWorld().getName())) {
             inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER)
                     .name("§4Отключено")
-                    .addLore("§4В этом мире")
-                    .addLore("§4нельзя создавать")
-                    .addLore("§4новые приваты!")
+                    .lore("§4В этом мире")
+                    .lore("§4нельзя создавать")
+                    .lore("§4новые приваты!")
                     .build() )
             );
             return;
@@ -107,7 +107,7 @@ public class LandBuyMenu implements InventoryProvider {
         //получаем список заготовок для данного мира
         final List <Template> templateList =TemplateManager.getTemplates(player.getWorld());
         if (templateList == null || templateList.isEmpty()) {
-            inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER).name("§4Не вариантов покупки").addLore("§cДля этого мира нет заготовок региона для покупки!","§c").build() ) );
+            inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER).name("§4Не вариантов покупки").lore("§cДля этого мира нет заготовок региона для покупки!","§c").build() ) );
             return;
         }
 
@@ -115,7 +115,7 @@ public class LandBuyMenu implements InventoryProvider {
             
             inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER)
                     .name("§4Создание новых недоступно")
-                    .addLore("§cВаш глобальный лимит: "+totatRegionLimit,"§c")
+                    .lore("§cВаш глобальный лимит: "+totatRegionLimit,"§c")
                     .build() )
             );
             
@@ -148,12 +148,12 @@ public class LandBuyMenu implements InventoryProvider {
                 itemBuilder.addLore("§7Цена: §b"+(template.getPrice()==0?"бесплатно":template.getPrice()+" §7лони."));
                 itemBuilder.addLore("");
                 
-                //itemBuilder.addLore(lore);
+                //itemBuilder.lore(lore);
 
                 //если нет права на эту заготовку, не кликабельное и добавляем сообщение 
                 if ( !template.getPermission().isEmpty() && !player.hasPermission(template.getPermission())) {
 
-                    //itemBuilder.addLore("");
+                    //itemBuilder.lore("");
                     itemBuilder.addLore(template.getNoPermDescription());
                     inventoryContents.add(ClickableItem.empty(itemBuilder.build()));
 
@@ -182,7 +182,7 @@ public class LandBuyMenu implements InventoryProvider {
                             new PlotBuilder(player, template).build();
                             player.resetTitle();
                             
-                            ApiOstrov.addCustomStat(player, GM.GAME.name()+"_region", 1);
+                            ApiOstrov.addCustomStat(player, GM.thisServerGame.name()+"_region", 1);
 //Bukkit.broadcastMessage("create "+GM.thisServerGame.name()+"_region");
                         } else if (e.getClick() == ClickType.LEFT) { //лкм - предпросмотр
 

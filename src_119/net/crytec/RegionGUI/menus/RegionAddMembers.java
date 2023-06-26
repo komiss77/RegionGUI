@@ -59,7 +59,7 @@ public class RegionAddMembers implements InventoryProvider
                     
                     final ItemStack head = new ItemBuilder(Material.PLAYER_HEAD)
                             .name("§f" + v.getName())
-                            .addLore("§7ЛКМ - добавить пользователем")
+                            .lore("§7ЛКМ - добавить пользователем")
                             //.setSkullOwner(v.getName())
                             .build();
                     //final SkullMeta skullmeta = (SkullMeta)head.getItemMeta();
@@ -78,7 +78,7 @@ public class RegionAddMembers implements InventoryProvider
                         contents.getHost().open( player, pagination.getPage() );
                         player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 2,2);
                         //player.sendMessage(Language.INTERFACE_REMOVE_SUCESSFULL.toChatString().replaceAll("%name%", name));
-                        ApiOstrov.reachCustomStat(player, GM.GAME.name()+"_member", domain.size());
+                        ApiOstrov.reachCustomStat(player, GM.thisServerGame.name()+"_member", domain.size());
                     }));            
                     
                 }
@@ -115,7 +115,7 @@ public class RegionAddMembers implements InventoryProvider
                         region.setMembers(domain);
                         region.setDirty(true);
                         reopen(player, contents);
-                        ApiOstrov.reachCustomStat(player, GM.GAME.name()+"_member", domain.size());
+                        ApiOstrov.reachCustomStat(player, GM.thisServerGame.name()+"_member", domain.size());
             }, "");
 
         }));
@@ -147,7 +147,7 @@ public class RegionAddMembers implements InventoryProvider
         while (iterator.hasNext()) {
             final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer((UUID)iterator.next());
             final String s2 = offlinePlayer.hasPlayedBefore() ? offlinePlayer.getName() : "Unknown Name";
-            final ItemStack build = new ItemBuilder(Material.PLAYER_HEAD).name("§f" + s2).addLore(Language.INTERFACE_REMOVE_DESC.toString().replaceAll("%name%", s2)).build();
+            final ItemStack build = new ItemBuilder(Material.PLAYER_HEAD).name("§f" + s2).lore(Language.INTERFACE_REMOVE_DESC.toString().replaceAll("%name%", s2)).build();
             
             if (offlinePlayer.hasPlayedBefore()) {
                 final ItemStack itemStack = build;

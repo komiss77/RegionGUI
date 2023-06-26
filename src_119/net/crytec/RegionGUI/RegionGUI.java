@@ -57,8 +57,8 @@ public final class RegionGUI extends JavaPlugin
         
         flagmanager = new FlagManager(this);
         
-        new TemplateManager(this);
-        new PreviewBlockManager();
+        TemplateManager templateManager = new TemplateManager(this);
+        PreviewBlockManager pbm = new PreviewBlockManager();
         
         instance.getCommand("land").setExecutor(new LandCommand());
         instance.getCommand("landadmin").setExecutor(new LandAdmin());

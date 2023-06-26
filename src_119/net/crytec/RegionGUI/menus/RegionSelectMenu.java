@@ -47,10 +47,10 @@ public class RegionSelectMenu implements InventoryProvider
             
             ItemStack itemStack = new ItemBuilder(Material.BOOK)
                     .name("§7Регион §6"+number)
-                    .addLore("§7Тип региона: "+(template==null ? "не определён" : template.getDisplayname()))
-                    .addLore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
-                    .addLore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
-                    .addLore("ЛКМ - перейти к управлению")
+                    .lore("§7Тип региона: "+(template==null ? "не определён" : template.getDisplayname()))
+                    .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
+                    .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
+                    .lore("ЛКМ - перейти к управлению")
                     .build();
             number++;
             
@@ -75,7 +75,7 @@ public class RegionSelectMenu implements InventoryProvider
         while (iterator.hasNext()) {
             final String string = ChatColor.GREEN + iterator.next().getRegionID();
             final ClaimEntry claim;
-            list.add(ClickableItem.of(new ItemBuilder(Material.BOOK).name(string).addLore(Language.INTERFACE_SELECT_DESCRIPTION.toString().replace("%region%", string)).build(), p2 -> SmartInventory.builder().provider((InventoryProvider)new RegionManageInterface(claim)).size(3).title(Language.INTERFACE_MANAGE_TITLE.toString()).build().open(player)));
+            list.add(ClickableItem.of(new ItemBuilder(Material.BOOK).name(string).lore(Language.INTERFACE_SELECT_DESCRIPTION.toString().replace("%region%", string)).build(), p2 -> SmartInventory.builder().provider((InventoryProvider)new RegionManageInterface(claim)).size(3).title(Language.INTERFACE_MANAGE_TITLE.toString()).build().open(player)));
         }
         pagination.setItems((ClickableItem[])list.toArray(new ClickableItem[list.size()]));
         pagination.setItemsPerPage(18);
@@ -93,7 +93,7 @@ public class RegionSelectMenu implements InventoryProvider
          ClaimEntry var5 = (ClaimEntry)var6.next();
          String var7 = ChatColor.GREEN + var5.getRegionID();
          String var8 = Language.INTERFACE_SELECT_DESCRIPTION.toString().replace("%region%", var7);
-         ItemStack var9 = (new ItemBuilder(Material.BOOK)).name(var7).addLore(var8).build();
+         ItemStack var9 = (new ItemBuilder(Material.BOOK)).name(var7).lore(var8).build();
          var4.add(ClickableItem.of(var9, (var2x) -> {
             SmartInventory.builder().provider(new RegionManageInterface(var5)).size(3).title(Language.INTERFACE_MANAGE_TITLE.toString()).build().open(var1);
          }));

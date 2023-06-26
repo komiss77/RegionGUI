@@ -14,7 +14,6 @@ import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.ConfirmationGUI;
 import ru.komiss77.utils.inventory.InputButton;
-import ru.komiss77.utils.inventory.InputButton.InputType;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
 import ru.komiss77.utils.inventory.SlotPos;
@@ -46,8 +45,8 @@ public class TemplateEditor implements InventoryProvider
         
         contents.set(SlotPos.of(0, 4), ClickableItem.of(new ItemBuilder(this.template.getIcon())
                 .name("§7Установить иконку")
-                .addLore("§7Ткните сюда предметом из инвентаря")
-                .addLore("§7для смены иконки")
+                .lore("§7Ткните сюда предметом из инвентаря")
+                .lore("§7для смены иконки")
                 .build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.LEFT && inventoryClickEvent.getCursor() != null && inventoryClickEvent.getCursor().getType() != Material.AIR) {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
@@ -60,16 +59,15 @@ public class TemplateEditor implements InventoryProvider
         }));
         
         
-        contents.set(SlotPos.of(1, 0), new InputButton(InputType.ANVILL, new ItemBuilder(Material.NAME_TAG)
-            .name("§7Отображаемое название")
-            .addLore("§7Текущее: §6" + this.template.getDisplayname())
-            .build(), template.getDisplayname(), dn -> {
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
-                this.template.setDisplayname(dn);
-                SmartInventory.builder().provider(new AdminTemplateList()).size(6)
-                .title("§8Редактор заготовок [" + player.getWorld().getName() + "]").build().open(player);
-               // return;
-            }));
+        contents.set(SlotPos.of(1, 0), new InputButton(new ItemBuilder(Material.NAME_TAG)
+                .name("§7Отображаемое название")
+                .lore("§7Текущее: §6" + this.template.getDisplayname())
+                .build(), template.getDisplayname(), displayname -> {
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
+            this.template.setDisplayname(displayname);
+            SmartInventory.builder().provider(new AdminTemplateList()).size(6).title("§8Редактор заготовок [" + player.getWorld().getName() + "]").build().open(player);
+           // return;
+        }));
         
         
         
@@ -82,11 +80,11 @@ public class TemplateEditor implements InventoryProvider
         //Описание
         contents.set(SlotPos.of(2, 0), ClickableItem.of(new ItemBuilder(Material.BOOK)
                 .name("§7Описание")
-                .addLore("§7Текущее:")
-                .addLore( this.template.getDescription() )
-                .addLore("")
-                .addLore("§aЛКМ §7добавить строку")
-                .addLore("§aПКМ §7удалить последнюю строку.")
+                .lore("§7Текущее:")
+                .lore( this.template.getDescription() )
+                .lore("")
+                .lore("§aЛКМ §7добавить строку")
+                .lore("§aПКМ §7удалить последнюю строку.")
                 .build(), inventoryClickEvent2 -> {
 
                         if ( inventoryClickEvent2.getClick() == ClickType.RIGHT) {
@@ -125,10 +123,10 @@ public class TemplateEditor implements InventoryProvider
         //Сообщение, когда нет права
         contents.set(SlotPos.of(1, 1), ClickableItem.of(new ItemBuilder(Material.BLAZE_POWDER)
                 .name("§7Право для покупки")
-                .addLore( template.getPermission().isEmpty() ? "§8Не требуется" : "§f" + template.getPermission())
-                .addLore("")
-                .addLore("§aЛКМ §7установить право")
-                .addLore("§aПКМ §7удалить право")
+                .lore( template.getPermission().isEmpty() ? "§8Не требуется" : "§f" + template.getPermission())
+                .lore("")
+                .lore("§aЛКМ §7установить право")
+                .lore("§aПКМ §7удалить право")
                 .build(), clickEvent -> {
                     if (clickEvent.getClick() == ClickType.RIGHT) {
                         template.setPermission("");
@@ -155,15 +153,15 @@ public class TemplateEditor implements InventoryProvider
         //Сообщение, когда нет права
         contents.set(SlotPos.of(2, 1), ClickableItem.of(new ItemBuilder(Material.REDSTONE_TORCH).
                 name("§7Сообщение, когда нет права")
-                .addLore("§eЕсли нет права, указанного выше,")
-                .addLore("§eна иконке выбора заготовки")
-                .addLore("§eбудет эта надпись.")
-                .addLore("")
-                .addLore("§7Текущее:")
-                .addLore(template.getNoPermDescription())
-                .addLore("")
-                .addLore("§aЛКМ §7добавить строку")
-                .addLore("§aПКМ §7удалить последнюю строку.")
+                .lore("§eЕсли нет права, указанного выше,")
+                .lore("§eна иконке выбора заготовки")
+                .lore("§eбудет эта надпись.")
+                .lore("")
+                .lore("§7Текущее:")
+                .lore(template.getNoPermDescription())
+                .lore("")
+                .lore("§aЛКМ §7добавить строку")
+                .lore("§aПКМ §7удалить последнюю строку.")
                 .build(), inventoryClickEvent3 -> {
                     if (inventoryClickEvent3.getClick() == ClickType.RIGHT) {
                         if (!template.getNoPermDescription().isEmpty()) {
@@ -186,15 +184,16 @@ public class TemplateEditor implements InventoryProvider
         
         
         //Цена
-        contents.set(SlotPos.of(1, 2), new InputButton(InputType.ANVILL, new ItemBuilder(Material.GOLD_NUGGET)
+        contents.set(SlotPos.of(1, 2), new InputButton(new ItemBuilder(Material.GOLD_NUGGET)
                 .name("§7Цена")
-                .addLore("§7Сейчас: §6" + this.template.getPrice()+" §7лони")
+                .lore("§7Сейчас: §6" + this.template.getPrice()+" §7лони")
                 .build(), String.valueOf(this.template.getPrice()), s4 -> {
                     if (!ApiOstrov.isInteger(s4)) {
                         player.sendMessage("§cВведите целое число!");
                         this.reopen(player, contents);
                         //return;
-                    } else {
+                    }
+                    else {
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                         this.template.setPrice(Integer.parseInt(s4));
                         this.reopen(player, contents);
@@ -206,11 +205,11 @@ public class TemplateEditor implements InventoryProvider
         
         
         //Возврат денег
-        contents.set(SlotPos.of(2, 2), new InputButton(InputType.ANVILL,new ItemBuilder(Material.GOLD_NUGGET)
+        contents.set(SlotPos.of(2, 2), new InputButton(new ItemBuilder(Material.GOLD_NUGGET)
                 .name("§7Возврат денег")
-                .addLore("§7Данная сумма будет §aполучена")
-                .addLore("§7игроком после удаления региона.")
-                .addLore("§7Сейчас: §6" + this.template.getRefund())
+                .lore("§7Данная сумма будет §aполучена")
+                .lore("§7игроком после удаления региона.")
+                .lore("§7Сейчас: §6" + this.template.getRefund())
                 .build(), String.valueOf(this.template.getRefund()), s5 -> {
                     if (!ApiOstrov.isInteger(s5)) {
                         player.sendMessage("§cВведите целое число!");
@@ -228,11 +227,11 @@ public class TemplateEditor implements InventoryProvider
         
         
         //Размер
-        contents.set(SlotPos.of(1, 3), new InputButton(InputType.ANVILL, new ItemBuilder(Material.BEACON)
+        contents.set(SlotPos.of(1, 3), new InputButton(new ItemBuilder(Material.BEACON)
                 .name("§7Размер")
-                .addLore("§7Сейчас: §6" + this.template.getSize())
-                .addLore("§7Длинна каждой стороны")
-                .addLore("§7квадратного основания.")
+                .lore("§7Сейчас: §6" + this.template.getSize())
+                .lore("§7Длинна каждой стороны")
+                .lore("§7квадратного основания.")
                 .build(), String.valueOf(this.template.getSize()), s6 -> {
                     if (!ApiOstrov.isInteger(s6)) {
                         player.sendMessage("§cВведите целое число!");
@@ -253,18 +252,18 @@ public class TemplateEditor implements InventoryProvider
         //Команды
         contents.set(SlotPos.of(1, 5), ClickableItem.of(new ItemBuilder(Material.COMMAND_BLOCK)
                 .name("§7Команды")
-                .addLore("§7Команды, выполняемые после покупки региона.")
-                .addLore("§7Для выполнения от консоли добавьте <server> в начале.")
-                .addLore("§7Заполнители:")
-                .addLore("§e%player% §7- ник покупателя")
-                .addLore("§e%region% §7- название WG региона")
-                .addLore("§e%world% §7- название мира")
-                .addLore("")
-                .addLore( template.getRunCommands().isEmpty() ? "§8Сейчас команд нет.":"§7Текущие команды:")
-                .addLore(template.getRunCommands())
-                .addLore("")
-                .addLore("§aЛКМ §7добавить строку")
-                .addLore("§aПКМ §7удалить последнюю строку.")
+                .lore("§7Команды, выполняемые после покупки региона.")
+                .lore("§7Для выполнения от консоли добавьте <server> в начале.")
+                .lore("§7Заполнители:")
+                .lore("§e%player% §7- ник покупателя")
+                .lore("§e%region% §7- название WG региона")
+                .lore("§e%world% §7- название мира")
+                .lore("")
+                .lore( template.getRunCommands().isEmpty() ? "§8Сейчас команд нет.":"§7Текущие команды:")
+                .lore(template.getRunCommands())
+                .lore("")
+                .lore("§aЛКМ §7добавить строку")
+                .lore("§aПКМ §7удалить последнюю строку.")
                 .build(), inventoryClickEvent4 -> {
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     if (inventoryClickEvent4.isRightClick()) {
@@ -294,7 +293,7 @@ public class TemplateEditor implements InventoryProvider
         //Автопостройка ограждения
         contents.set(SlotPos.of(1, 4), ClickableItem.of(new ItemBuilder(Material.OAK_FENCE)
                 .name("§7Автопостройка ограждения")
-                .addLore("§7Сейчас: " + (template.isGenerateBorder() ? "да":"нет")   )
+                .lore("§7Сейчас: " + (template.isGenerateBorder() ? "да":"нет")   )
                 .build(), p2 -> {
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1);
                     this.template.setGenerateBorder(!this.template.isGenerateBorder());
@@ -308,8 +307,8 @@ public class TemplateEditor implements InventoryProvider
         //Материал ограждения
         contents.set(SlotPos.of(2, 4), ClickableItem.of(new ItemBuilder(this.template.getBorderMaterial())
                 .name("§7Материал ограждения")
-                .addLore("§7Ткните сюда предметом из инвентаря")
-                .addLore("§7для установки материала.")
+                .lore("§7Ткните сюда предметом из инвентаря")
+                .lore("§7для установки материала.")
                 .build(), inventoryClickEvent5 -> {
                     if (inventoryClickEvent5.getClick() == ClickType.LEFT && inventoryClickEvent5.getCursor() != null && inventoryClickEvent5.getCursor().getType() != Material.AIR) {
                         if (!inventoryClickEvent5.getCursor().getType().isBlock()) {
@@ -332,8 +331,8 @@ public class TemplateEditor implements InventoryProvider
         //удалить заготовку
         contents.set(SlotPos.of(4, 8), ClickableItem.of(new ItemBuilder(Material.TNT)
                 .name("§4Удалить заготовку")
-                .addLore("§7После удаления заготовку не будет")
-                .addLore("§7доступна для покупки игроками.")
+                .lore("§7После удаления заготовку не будет")
+                .lore("§7доступна для покупки игроками.")
                 .build(), p2 -> ConfirmationGUI.open( player, "§4Подтверждение", result -> {
                     if (result) {
                         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 0.5f, 1.15f);
@@ -429,7 +428,7 @@ implements InventoryProvider {
         inventoryContents.fillRow(4, ClickableItem.empty((ItemStack)filler));
         
         
-        inventoryContents.set(SlotPos.of((int)0, (int)4), ClickableItem.of((ItemStack)new ItemBuilder(this.claim.getIcon()).name("\u00a77Set list icon").addLore("\u00a77Click with an Item on your").addLore("\u00a77curser to set the list icon").build(), inventoryClickEvent -> {
+        inventoryContents.set(SlotPos.of((int)0, (int)4), ClickableItem.of((ItemStack)new ItemBuilder(this.claim.getIcon()).name("\u00a77Set list icon").lore("\u00a77Click with an Item on your").lore("\u00a77curser to set the list icon").build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.LEFT && inventoryClickEvent.getCursor() != null && inventoryClickEvent.getCursor().getType() != Material.AIR) {
                 UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
                 this.claim.setIcon(inventoryClickEvent.getCursor().getType());
@@ -440,14 +439,14 @@ implements InventoryProvider {
         }));
         
         
-        inventoryContents.set(SlotPos.of((int)1, (int)0), (ClickableItem)new InputButton(new ItemBuilder(Material.NAME_TAG).name("\u00a77Template").addLore("\u00a77Current name: \u00a76" + this.claim.getDisplayname()).build(), "Name..", string -> {
+        inventoryContents.set(SlotPos.of((int)1, (int)0), (ClickableItem)new InputButton(new ItemBuilder(Material.NAME_TAG).name("\u00a77Template").lore("\u00a77Current name: \u00a76" + this.claim.getDisplayname()).build(), "Name..", string -> {
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
             this.claim.setDisplayname((String)string);
             SmartInventory.builder().provider((InventoryProvider)new AdminTemplateList()).size(6).title("\u00a78Template Editor [" + player.getWorld().getName() + "]").build().open(player);
         }));
         
         
-        inventoryContents.set(SlotPos.of((int)2, (int)0), ClickableItem.of((ItemStack)new ItemBuilder(Material.BOOK).name("\u00a77Description").addLore("\u00a77Current description:").addLore(this.claim.getDescription().stream().map(string -> ChatColor.translateAlternateColorCodes((char)'&', (String)string)).collect(Collectors.toList())).addLore("").addLore("\u00a7aЛКМ \u00a77to add a new line").addLore("\u00a7aПКМ \u00a77to delete the last line.").build(), inventoryClickEvent -> {
+        inventoryContents.set(SlotPos.of((int)2, (int)0), ClickableItem.of((ItemStack)new ItemBuilder(Material.BOOK).name("\u00a77Description").lore("\u00a77Current description:").lore(this.claim.getDescription().stream().map(string -> ChatColor.translateAlternateColorCodes((char)'&', (String)string)).collect(Collectors.toList())).lore("").lore("\u00a7aЛКМ \u00a77to add a new line").lore("\u00a7aПКМ \u00a77to delete the last line.").build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.RIGHT) {
                 if (this.claim.getDescription().size() <= 0) {
                     return;
@@ -474,12 +473,12 @@ implements InventoryProvider {
         
         
         
-        inventoryContents.set(SlotPos.of((int)1, (int)1), (ClickableItem)new InputButton(new ItemBuilder(Material.BLAZE_POWDER).name("\u00a77Set Permission").addLore("\u00a77Current Permission: \u00a76" + this.claim.getPermission()).build(), "permission..", string -> {
+        inventoryContents.set(SlotPos.of((int)1, (int)1), (ClickableItem)new InputButton(new ItemBuilder(Material.BLAZE_POWDER).name("\u00a77Set Permission").lore("\u00a77Current Permission: \u00a76" + this.claim.getPermission()).build(), "permission..", string -> {
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
             this.claim.setPermission((String)string);
             this.reopen(player, inventoryContents);
         }));
-        inventoryContents.set(SlotPos.of((int)2, (int)1), ClickableItem.of((ItemStack)new ItemBuilder(Material.REDSTONE_TORCH).name("\u00a77Set 'No Permission' description").addLore("\u00a7eThis lines will be added below").addLore("\u00a7ethe claim description in /land").addLore("").addLore("\u00a77Current:").addLore(this.claim.getNoPermDescription()).addLore("\u00a7aЛКМ \u00a77to add a new line").addLore("\u00a7aПКМ \u00a77to delete the last line.").build(), inventoryClickEvent -> {
+        inventoryContents.set(SlotPos.of((int)2, (int)1), ClickableItem.of((ItemStack)new ItemBuilder(Material.REDSTONE_TORCH).name("\u00a77Set 'No Permission' description").lore("\u00a7eThis lines will be added below").lore("\u00a7ethe claim description in /land").lore("").lore("\u00a77Current:").lore(this.claim.getNoPermDescription()).lore("\u00a7aЛКМ \u00a77to add a new line").lore("\u00a7aПКМ \u00a77to delete the last line.").build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.RIGHT) {
                 if (this.claim.getDescription().size() <= 0) {
                     return;
@@ -502,7 +501,7 @@ implements InventoryProvider {
         
         
         
-        inventoryContents.set(SlotPos.of((int)1, (int)2), (ClickableItem)new InputButton(new ItemBuilder(Material.GOLD_NUGGET).name("\u00a77Price").addLore("\u00a77Current Price: \u00a76" + this.claim.getPrice()).build(), String.valueOf(this.claim.getPrice()), string -> {
+        inventoryContents.set(SlotPos.of((int)1, (int)2), (ClickableItem)new InputButton(new ItemBuilder(Material.GOLD_NUGGET).name("\u00a77Price").lore("\u00a77Current Price: \u00a76" + this.claim.getPrice()).build(), String.valueOf(this.claim.getPrice()), string -> {
             if (!UtilMath.isInt((String)string)) {
                 player.sendMessage("\u00a7cError: \u00a77The given input is not a valid integer!");
                 this.reopen(player, inventoryContents);
@@ -512,7 +511,7 @@ implements InventoryProvider {
             this.claim.setPrice(Integer.parseInt(string));
             this.reopen(player, inventoryContents);
         }));
-        inventoryContents.set(SlotPos.of((int)2, (int)2), (ClickableItem)new InputButton(new ItemBuilder(Material.GOLD_NUGGET).name("\u00a77Refund").addLore("\u00a77This amount will be \u00a7aadded\u00a77 to").addLore("\u00a77the players balance on deletion").addLore("\u00a77Current Refund: \u00a76" + this.claim.getRefund()).build(), String.valueOf(this.claim.getRefund()), string -> {
+        inventoryContents.set(SlotPos.of((int)2, (int)2), (ClickableItem)new InputButton(new ItemBuilder(Material.GOLD_NUGGET).name("\u00a77Refund").lore("\u00a77This amount will be \u00a7aadded\u00a77 to").lore("\u00a77the players balance on deletion").lore("\u00a77Current Refund: \u00a76" + this.claim.getRefund()).build(), String.valueOf(this.claim.getRefund()), string -> {
             if (!UtilMath.isInt((String)string)) {
                 player.sendMessage("\u00a7cError: \u00a77The given input is not a valid integer!");
                 this.reopen(player, inventoryContents);
@@ -522,7 +521,7 @@ implements InventoryProvider {
             this.claim.setRefund(Integer.parseInt(string));
             this.reopen(player, inventoryContents);
         }));
-        inventoryContents.set(SlotPos.of((int)1, (int)3), (ClickableItem)new InputButton(new ItemBuilder(Material.BEACON).name("\u00a77Set Size").addLore("\u00a77Current Size: \u00a76" + this.claim.getSize()).addLore("\u00a77Increasing the size \u00a7c\u00a7lwill not\u00a77 update").addLore("\u00a77already claimed/existing regions.").addLore("\u00a77This does only affect new regions").build(), String.valueOf(this.claim.getSize()), string -> {
+        inventoryContents.set(SlotPos.of((int)1, (int)3), (ClickableItem)new InputButton(new ItemBuilder(Material.BEACON).name("\u00a77Set Size").lore("\u00a77Current Size: \u00a76" + this.claim.getSize()).lore("\u00a77Increasing the size \u00a7c\u00a7lwill not\u00a77 update").lore("\u00a77already claimed/existing regions.").lore("\u00a77This does only affect new regions").build(), String.valueOf(this.claim.getSize()), string -> {
             if (!UtilMath.isInt((String)string)) {
                 player.sendMessage("\u00a7cError: \u00a77The given input is not a valid integer!");
                 this.reopen(player, inventoryContents);
@@ -532,7 +531,7 @@ implements InventoryProvider {
             this.claim.setSize(Integer.parseInt(string));
             this.reopen(player, inventoryContents);
         }));
-        inventoryContents.set(SlotPos.of((int)1, (int)5), new ClickableItem(new ItemBuilder(Material.COMMAND_BLOCK).name("\u00a77Commands").addLore("\u00a77This is a set of commands that will be").addLore("\u00a77executed by the \u00a7a\u00a7lplayer\u00a77 after").addLore("\u00a77a successfull purchase.").addLore("\u00a77You may use this to set default flags or").addLore("\u00a77whatever you want.").addLore("\u00a77Valid placeholders:").addLore("\u00a7e%player% \u00a77- The players name").addLore("\u00a7e%region% \u00a77- The purchased region").addLore("\u00a7e%world% \u00a77- The worldname").addLore("").addLore("\u00a77To run a command from the console,").addLore("\u00a77simply put \u00a7e<server>\u00a77 in front").addLore("").addLore("\u00a77ПКМ to \u00a7cdelete\u00a77 the last command in the list.").addLore("\u00a77Current Commands:").addLore(this.claim.getRunCommands()).build(), inventoryClickEvent -> {
+        inventoryContents.set(SlotPos.of((int)1, (int)5), new ClickableItem(new ItemBuilder(Material.COMMAND_BLOCK).name("\u00a77Commands").lore("\u00a77This is a set of commands that will be").lore("\u00a77executed by the \u00a7a\u00a7lplayer\u00a77 after").lore("\u00a77a successfull purchase.").lore("\u00a77You may use this to set default flags or").lore("\u00a77whatever you want.").lore("\u00a77Valid placeholders:").lore("\u00a7e%player% \u00a77- The players name").lore("\u00a7e%region% \u00a77- The purchased region").lore("\u00a7e%world% \u00a77- The worldname").lore("").lore("\u00a77To run a command from the console,").lore("\u00a77simply put \u00a7e<server>\u00a77 in front").lore("").lore("\u00a77ПКМ to \u00a7cdelete\u00a77 the last command in the list.").lore("\u00a77Current Commands:").lore(this.claim.getRunCommands()).build(), inventoryClickEvent -> {
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
             if (inventoryClickEvent.isRightClick()) {
                 if (this.claim.getRunCommands().size() == 0) {
@@ -549,12 +548,12 @@ implements InventoryProvider {
                 this.reopen(player, inventoryContents);
             });
         }));
-        inventoryContents.set(SlotPos.of((int)1, (int)4), ClickableItem.of((ItemStack)new ItemBuilder(Material.OAK_FENCE).name("\u00a77Enable Border").addLore("\u00a77Currently enabled: " + F.tf((boolean)this.claim.isGenerateBorder())).build(), inventoryClickEvent -> {
+        inventoryContents.set(SlotPos.of((int)1, (int)4), ClickableItem.of((ItemStack)new ItemBuilder(Material.OAK_FENCE).name("\u00a77Enable Border").lore("\u00a77Currently enabled: " + F.tf((boolean)this.claim.isGenerateBorder())).build(), inventoryClickEvent -> {
             UtilPlayer.playSound((Player)player, (Sound)Sound.UI_BUTTON_CLICK, (float)0.5f, (float)1.0f);
             this.claim.setGenerateBorder(!this.claim.isGenerateBorder());
             this.reopen(player, inventoryContents);
         }));
-        inventoryContents.set(SlotPos.of((int)2, (int)4), ClickableItem.of((ItemStack)new ItemBuilder(this.claim.getBorderMaterial()).name("\u00a77Set Border Material").addLore("\u00a77Click with an Item on your").addLore("\u00a77curser to set the border material").build(), inventoryClickEvent -> {
+        inventoryContents.set(SlotPos.of((int)2, (int)4), ClickableItem.of((ItemStack)new ItemBuilder(this.claim.getBorderMaterial()).name("\u00a77Set Border Material").lore("\u00a77Click with an Item on your").lore("\u00a77curser to set the border material").build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.LEFT && inventoryClickEvent.getCursor() != null && inventoryClickEvent.getCursor().getType() != Material.AIR) {
                 if (!inventoryClickEvent.getCursor().getType().isBlock()) {
                     player.sendMessage("\u00a7cERROR: \u00a77The given material is not a placeable block.");
@@ -568,7 +567,7 @@ implements InventoryProvider {
                 this.reopen(player, inventoryContents);
             }
         }));
-        inventoryContents.set(SlotPos.of((int)4, (int)8), ClickableItem.of((ItemStack)new ItemBuilder(Material.TNT).name("\u00a74Delete template").addLore("\u00a77Deleting this template will remove it").addLore("\u00a77from all players that have already").addLore("\u00a77purchased it.").build(), inventoryClickEvent -> ConfirmationGUI.open((Player)player, (String)"\u00a74Confirm to delete template", bl -> {
+        inventoryContents.set(SlotPos.of((int)4, (int)8), ClickableItem.of((ItemStack)new ItemBuilder(Material.TNT).name("\u00a74Delete template").lore("\u00a77Deleting this template will remove it").lore("\u00a77from all players that have already").lore("\u00a77purchased it.").build(), inventoryClickEvent -> ConfirmationGUI.open((Player)player, (String)"\u00a74Confirm to delete template", bl -> {
             if (bl.booleanValue()) {
                 UtilPlayer.playSound((Player)player, (Sound)Sound.ENTITY_GENERIC_EXPLODE, (float)0.5f, (float)1.15f);
                 SmartInventory.builder().provider((InventoryProvider)new AdminTemplateList()).size(6).title("\u00a78Template Editor [" + player.getWorld().getName() + "]").build().open(player);

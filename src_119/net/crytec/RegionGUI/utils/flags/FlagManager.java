@@ -1,22 +1,20 @@
 package net.crytec.RegionGUI.utils.flags;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.LocationFlag;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
+import net.crytec.RegionGUI.RegionGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.LocationFlag;
-
-import net.crytec.RegionGUI.RegionGUI;
 
 
 public class FlagManager {
@@ -62,7 +60,7 @@ public class FlagManager {
         Material icon;
         
         
-        for (final Flag<?> flag : WorldGuard.getInstance().getFlagRegistry().getAll()) {
+        for (final Flag flag : WorldGuard.getInstance().getFlagRegistry().getAll()) {
             if (forbiddenFlags.contains(flag.getName())) continue;
             if (flag instanceof LocationFlag) continue;
 
@@ -73,7 +71,7 @@ public class FlagManager {
                 if (!flagConfig.getBoolean(flagPath + "enabled")) continue;
                 icon = Material.matchMaterial( flagConfig.getString(flagPath + "icon"));
                 if (icon==null) icon = Material.LIGHT_GRAY_DYE;
-                addFlags(flag.getName(), flag, icon, ChatColor.translateAlternateColorCodes('&', flagConfig.getString(flagPath + "name")));
+                addFlags(flag.getName(), (Flag<?>)flag, icon, ChatColor.translateAlternateColorCodes('&', flagConfig.getString(flagPath + "name")));
                 
             } else {
                 
@@ -81,7 +79,7 @@ public class FlagManager {
                 flagConfig.set(flagPath + "enabled", true);
                 flagConfig.set(flagPath + "icon", Material.LIGHT_GRAY_DYE.toString());
                 newFlag = true;
-                addFlags(flag.getName(), flag, Material.LIGHT_GRAY_DYE, "§7" + flag.getName());
+                addFlags(flag.getName(), (Flag<?>)flag, Material.LIGHT_GRAY_DYE, "§7" + flag.getName());
                
             }
             

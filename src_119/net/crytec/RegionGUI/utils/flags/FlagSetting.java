@@ -1,16 +1,5 @@
 package net.crytec.RegionGUI.utils.flags;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.protection.flags.BooleanFlag;
 import com.sk89q.worldguard.protection.flags.DoubleFlag;
@@ -22,16 +11,25 @@ import com.sk89q.worldguard.protection.flags.SetFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import java.util.Set;
+import java.util.stream.Collectors;
+import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InventoryContent;
 import net.crytec.RegionGUI.RegionGUI;
+import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import ru.komiss77.ApiOstrov;
-import ru.komiss77.Ostrov;
 import ru.komiss77.utils.ColorUtils;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.PlayerInput;
-import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InputButton;
-import ru.komiss77.utils.inventory.InputButton.InputType;
-import ru.komiss77.utils.inventory.InventoryContent;
+import ru.komiss77.version.AnvilGUI;
 
 
 
@@ -87,11 +85,11 @@ public class FlagSetting implements Comparable<FlagSetting> {
             .name("§7" + displayname)
             .setItemFlag(ItemFlag.HIDE_ATTRIBUTES)
             .setItemFlag(ItemFlag.HIDE_ENCHANTS)
-            .addLore("")
-            .addLore(getCurrentValue(region))
-            .addLore("")
-            .addLore(hasPerm ? "§6ЛКМ§7-изменить состояние" : "§cнет права менять")
-            .addLore(hasPerm && region.getFlags().containsKey(flag) ? "§6ПКМ§7-сброс (сделать по умолчанию)": "")
+            .lore("")
+            .lore(getCurrentValue(region))
+            .lore("")
+            .lore(hasPerm ? "§6ЛКМ§7-изменить состояние" : "§cнет права менять")
+            .lore(hasPerm && region.getFlags().containsKey(flag) ? "§6ПКМ§7-сброс (сделать по умолчанию)": "")
             .build();
         
         if (region.getFlags().containsKey(flag)) {
@@ -132,26 +130,33 @@ public class FlagSetting implements Comparable<FlagSetting> {
         
         if (hasPerm) {
             
-            return ClickableItem.of(menuEntry, e -> {
+            return ClickableItem.of (menuEntry, e -> {
 
                 if (e.getClick() == ClickType.RIGHT && region.getFlags().containsKey(flag)) {
 
                     region.setFlag(flag, null);
                     contents.getHost().getProvider().reopen(player, contents);
 
+                } else if (inputType == FlagInputType.STATE || inputType == FlagInputType.BOOLEAN) {
+
+                    switchState(region);
+                    contents.getHost().getProvider().reopen(player, contents);
+
                 } else {
+
+                    player.closeInventory();
+
                     switch (inputType) {
-                        case DOUBLE, INTEGER, STRING:
-                            player.closeInventory();
-                        	new InputButton(InputType.ANVILL,
-                                        new ItemStack(Material.STONE),
-                                        "Flag",
-                                        f -> {
-                                            setFlag(player, region, this.flag, f);
-                                            Ostrov.sync(() -> contents.getHost().getProvider().reopen(player, contents), 1);
-                        	//}).run(new InventoryClickEvent(player.getOpenInventory(), SlotType.CONTAINER, 0, ClickType.LEFT, InventoryAction.PICKUP_ALL));
-                                        }
-                                );
+
+                        case DOUBLE:
+                        case INTEGER:
+                        case STRING:
+                            AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, this.suggestValue(region), (player2, value) -> {
+                                setFlag(player, region, this.flag, value);
+                                Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.getHost().getProvider().reopen(player, contents), 1L);
+                                return null;
+
+                            });
                             break;
 
                         case SET:
@@ -161,20 +166,15 @@ public class FlagSetting implements Comparable<FlagSetting> {
                                 Bukkit.getScheduler().runTaskLater((Plugin)RegionGUI.getInstance(), () -> contents.getHost().getProvider().reopen(player, contents), 1L);
                             }, "");
                             break;
-					case BOOLEAN, STATE:
-	                    switchState(region);
-	                    contents.getHost().getProvider().reopen(player, contents);
-						break;
-					default:
-						break;
 
                     }
+
                 }
             });
         
         } else {
             
-            return ClickableItem.empty(menuEntry);
+            return ClickableItem.of (menuEntry,  p0 -> {} );
             
         }
     }
@@ -189,13 +189,13 @@ public class FlagSetting implements Comparable<FlagSetting> {
     private void switchState(final ProtectedRegion region) {
         if (inputType == FlagInputType.STATE) {
             
-            final StateFlag stateFlag = (StateFlag) flag;
+            final StateFlag stateFlag = (StateFlag)flag;
             if (region.getFlags().containsKey(flag)) {
                 if (region.getFlag(stateFlag) == StateFlag.State.DENY) {
                     region.setFlag(stateFlag, StateFlag.State.ALLOW);
                     //player.sendMessage(Language.FLAG_ALLOWED.toString().replace("%flag%", this.getName()));
                 } else {
-                    region.setFlag(stateFlag, StateFlag.State.DENY);
+                    region.setFlag((Flag)stateFlag, StateFlag.State.DENY);
                     //player.sendMessage(Language.FLAG_DENIED.toString().replace("%flag%", this.getName()));
                 }
             } else {
@@ -204,7 +204,7 @@ public class FlagSetting implements Comparable<FlagSetting> {
             }
             
         } else {
-            final BooleanFlag booleanFlag = (BooleanFlag) flag;
+            final BooleanFlag booleanFlag = (BooleanFlag)flag;
             if (region.getFlags().containsKey(flag)) {
                 if (!(boolean)region.getFlag(booleanFlag)) {
                     region.setFlag(booleanFlag, true);
@@ -228,8 +228,8 @@ public class FlagSetting implements Comparable<FlagSetting> {
     
     
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	public String getCurrentValue(final ProtectedRegion region) {
+    
+    public String getCurrentValue(final ProtectedRegion region) {
         if (!region.getFlags().containsKey(flag)) {
             return "§8Неактивен";
         }
@@ -255,8 +255,8 @@ public class FlagSetting implements Comparable<FlagSetting> {
             
             case SET: 
                 //return F.format((Iterable)region.getFlag(flag), ",", "none");
-                SetFlag<?> var2 = (SetFlag<?>)flag;
-                return (String) ((Set) region.getFlag(var2)).stream().collect(Collectors.joining(",", "[", "]"));
+                SetFlag var2 = (SetFlag)flag;
+                return (String)((Set)region.getFlag(var2)).stream().collect(Collectors.joining(",", "[", "]"));
             
             case OTHER:
             default:

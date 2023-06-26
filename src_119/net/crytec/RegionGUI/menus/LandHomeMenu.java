@@ -1,6 +1,7 @@
 package net.crytec.RegionGUI.menus;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -75,18 +76,18 @@ public class LandHomeMenu implements InventoryProvider
                 
                 arrayList.add(ClickableItem.of(new ItemBuilder(Material.GRAY_BED)
                         .name("§7Регион §6"+number)
-                        .addLore("§fВы владелец.")
-                        .addLore("")
-                        .addLore("§7Тип региона: "+(template==null ? "не определён" : template.getDisplayname()))
-                        .addLore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
-                        .addLore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
-                        .addLore("")
-                        .addLore("§7Примерная локация региона:")
-                        .addLore("§6"+region.getMaximumPoint().getBlockX()+", "+region.getMaximumPoint().getBlockY()+", "+region.getMaximumPoint().getBlockZ())
-                        .addLore("")
-                        .addLore("ЛКМ - телепорт в регион")
-                        .addLore("")
-                        //.addLore(regionButton)
+                        .lore("§fВы владелец.")
+                        .lore("")
+                        .lore("§7Тип региона: "+(template==null ? "не определён" : template.getDisplayname()))
+                        .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
+                        .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
+                        .lore("")
+                        .lore("§7Примерная локация региона:")
+                        .lore("§6"+region.getMaximumPoint().getBlockX()+", "+region.getMaximumPoint().getBlockY()+", "+region.getMaximumPoint().getBlockZ())
+                        .lore("")
+                        .lore("ЛКМ - телепорт в регион")
+                        .lore("")
+                        //.lore(regionButton)
                         .build(), e -> {
                             
                     if (region.getFlag((Flag)Flags.TELE_LOC) != null) {
@@ -99,7 +100,7 @@ public class LandHomeMenu implements InventoryProvider
                         Location loc1 = BukkitAdapter.adapt(world, region.getMinimumPoint());
                         Location loc2 = BukkitAdapter.adapt(world, region.getMaximumPoint());
                         Cuboid cuboid = new Cuboid (loc1, loc2);
-                        ApiOstrov.teleportSave(player, cuboid.getCenter(loc1), false);
+                        ApiOstrov.teleportSave(player, cuboid.getCenter(loc1));
                         //player.sendMessage(Language.ERROR_NO_HOME_SET.toChatString());
                         
                     }
@@ -126,17 +127,17 @@ public class LandHomeMenu implements InventoryProvider
                 
                 arrayList.add(ClickableItem.of(new ItemBuilder(Material.GRAY_BED)
                         .name("§7Регион §6"+number)
-                        .addLore("§fВы пользователь.")
-                        .addLore("")
-                        .addLore("§7Тип региона: "+(template==null ? "не определён" : template.getDisplayname()))
-                        .addLore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
-                        .addLore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
-                        .addLore("")
-                        .addLore(region.getFlag((Flag)Flags.TELE_LOC) != null ? "ЛКМ - телепорт в регион" : "")
-                        .addLore("")
-                        .addLore("§7Примерная локация региона:")
-                        .addLore(region.getMaximumPoint().getBlockX()+","+region.getMaximumPoint().getBlockY()+","+region.getMaximumPoint().getBlockZ())
-                        //.addLore(regionButton)
+                        .lore("§fВы пользователь.")
+                        .lore("")
+                        .lore("§7Тип региона: "+(template==null ? "не определён" : template.getDisplayname()))
+                        .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
+                        .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
+                        .lore("")
+                        .lore(region.getFlag((Flag)Flags.TELE_LOC) != null ? "ЛКМ - телепорт в регион" : "")
+                        .lore("")
+                        .lore("§7Примерная локация региона:")
+                        .lore(region.getMaximumPoint().getBlockX()+","+region.getMaximumPoint().getBlockY()+","+region.getMaximumPoint().getBlockZ())
+                        //.lore(regionButton)
                         .build(), e -> {
                             
                     if (region.getFlag((Flag)Flags.TELE_LOC) != null) {
@@ -161,7 +162,7 @@ public class LandHomeMenu implements InventoryProvider
         }
         
         if (rgList.isEmpty()) {
-            inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER).name("§4Нет регионов!").addLore( ItemUtils.genLore(null, "Не найдено ни одного вашего региона в каком-либо мире!", "§c") ).build() ) );
+            inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER).name("§4Нет регионов!").lore( ItemUtils.Gen_lore(null, "Не найдено ни одного вашего региона в каком-либо мире!", "§c") ).build() ) );
             //player.sendMessage("§cНе найдено ни одного вашего региона в каком-либо мире!");
             //return;
         }
@@ -216,7 +217,7 @@ public class LandHomeMenu implements InventoryProvider
                 
                 
                 final ProtectedRegion protectedRegion;
-                list.add(ClickableItem.of(new ItemBuilder(Material.GRAY_BED).name(claimEntry.getRegionID()).addLore((List)list2).build(), p2 -> {
+                list.add(ClickableItem.of(new ItemBuilder(Material.GRAY_BED).name(claimEntry.getRegionID()).lore((List)list2).build(), p2 -> {
                     if (protectedRegion.getFlag((Flag)Flags.TELE_LOC) != null) {
                         player.teleport(BukkitAdapter.adapt((Location)protectedRegion.getFlag((Flag)Flags.TELE_LOC)));
                     }
