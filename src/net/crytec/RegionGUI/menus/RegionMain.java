@@ -15,13 +15,13 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
-import ru.komiss77.Ostrov;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
 import ru.komiss77.utils.inventory.SlotPos;
 import ru.komiss77.utils.inventory.SmartInventory;
+import ru.komiss77.version.VM;
 
 
 
@@ -141,7 +141,7 @@ implements InventoryProvider {
                 -> {
             player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
             
-            Ostrov.VM.getNmsServer().BorderDisplay(
+            VM.getNmsServer().BorderDisplay(
                 player, 
                 BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), 
                 BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()),

@@ -59,7 +59,8 @@ public class RegionDeleteConfirm implements InventoryProvider {
             if (RegionGUI.getInstance().getConfig().getBoolean("regenOnDelete", true)) {
                 
                 final Schematic sch = ApiOstrov.getWorldEditor().getSchematic(player, region.getId(), true);
-                ApiOstrov.getWorldEditor().paste (player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), sch, true);
+                //ApiOstrov.getWorldEditor().paste (player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), sch, true);
+                ApiOstrov.getWorldEditor().paste (player, sch, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), Schematic.Rotate.r0, true);
                /* ApiOstrov.getWorldEditor().paste(
                     player,
                     BukkitAdapter.adapt( player.getWorld(), region.getMinimumPoint() ),
