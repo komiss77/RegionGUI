@@ -2,12 +2,14 @@ package net.crytec.RegionGUI.utils.flags;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -143,15 +145,12 @@ public class FlagSetting implements Comparable<FlagSetting> {
                     switch (inputType) {
                         case DOUBLE, INTEGER, STRING:
                             player.closeInventory();
-                        	new InputButton(InputType.ANVILL,
-                                        new ItemStack(Material.STONE),
-                                        "Flag",
-                                        f -> {
-                                            setFlag(player, region, this.flag, f);
-                                            Ostrov.sync(() -> contents.getHost().getProvider().reopen(player, contents), 1);
-                        	//}).run(new InventoryClickEvent(player.getOpenInventory(), SlotType.CONTAINER, 0, ClickType.LEFT, InventoryAction.PICKUP_ALL));
-                                        }
-                                );
+                        	new InputButton(InputType.ANVILL, new ItemStack(Material.STONE), "Flag", f -> {
+                                setFlag(player, region, this.flag, f);
+                                Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.getHost().getProvider().reopen(player, contents), 1L);
+                                //Ostrov.sync(() -> contents.getHost().getProvider().reopen(player, contents), 1);
+                        	//}).run(new InventoryClickEvent(player.getOpenInventory(), SlotType.CONTAINER, 0, ClickType.LEFT, InventoryAction.PICKUP_ALL)
+                                });
                             break;
 
                         case SET:

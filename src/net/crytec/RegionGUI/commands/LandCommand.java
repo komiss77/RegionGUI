@@ -3,7 +3,6 @@ package net.crytec.RegionGUI.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -12,7 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.LocalPlayer;
@@ -20,7 +18,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-
 import net.crytec.RegionGUI.Language;
 import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.RegionUtils;
@@ -43,7 +40,7 @@ import ru.komiss77.utils.inventory.SmartInventory;
 public class LandCommand implements CommandExecutor, TabCompleter {
     
     public static final List<String> commands = Arrays.asList( "home", "list");
-    public static final int CLAIM_AREA = 2000;
+    public static final int claimArea = 2000;
 
     public LandCommand() {
     }
@@ -141,9 +138,9 @@ public class LandCommand implements CommandExecutor, TabCompleter {
         	if (GM.GAME == Game.DA) {
             	final Location spl = player.getWorld().getSpawnLocation();
             	final int dst = Math.max(Math.abs(bv.getX() - spl.getBlockX()), Math.abs(bv.getZ() - spl.getBlockZ()));
-            	if (dst > CLAIM_AREA && !ApiOstrov.isLocalBuilder(player, true)) {
+            	if (dst > claimArea && !ApiOstrov.isLocalBuilder(player, true)) {
             		player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 0.8f);
-                    player.sendMessage("§cПривыты можно создавать только в §6" + CLAIM_AREA + " §cблоках от спавна. \nТвоя дистанция - §6" + dst + " §cблоков. Тп на спавн - §6/spawn");
+                    player.sendMessage("§cПривыты можно создавать только в §6" + claimArea + " §cблоках от спавна. \nТвоя дистанция - §6" + dst + " §cблоков. Тп на спавн - §6/spawn");
                     return;
             	}
         	}
