@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.Template;
@@ -12,18 +11,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
+import ru.komiss77.Ostrov;
+import ru.komiss77.objects.CaseInsensitiveMap;
 
 
 
 public class TemplateManager implements Listener
 {
    // private static RegionGUI plugin;
-    private static LinkedHashMap<String, Template> templates;
+    private static CaseInsensitiveMap <Template> templates;
     private static File templateFolder;
     
     
     public TemplateManager(final RegionGUI plugin) {
-        templates = new LinkedHashMap<>();//LinkedHashMap<UUID, RegionClaim>)Maps.newLinkedHashMap();
+        templates = new CaseInsensitiveMap<>();//LinkedHashMap<UUID, RegionClaim>)Maps.newLinkedHashMap();
        // ClaimManager.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(TemplateManager.this, plugin);
         templateFolder = new File(plugin.getDataFolder(), "templates");
@@ -53,8 +54,9 @@ public class TemplateManager implements Listener
    }
     
     public static Template getByName(final String name) {
-        if (name.isEmpty() || !templates.containsKey(name.toLowerCase())) return null;
-        return templates.get(name.toLowerCase());
+//Ostrov.log_warn("getByName name="+name+" get="+templates.get(name));
+        //if (name.isEmpty() || !templates.containsKey(name.toLowerCase())) return null;
+        return templates.get(name);
     }
     
     public static void deleteTemplate(final Template template) {

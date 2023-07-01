@@ -20,6 +20,7 @@ import ru.komiss77.ApiOstrov;
 import ru.komiss77.modules.games.GM;
 import ru.komiss77.modules.player.Oplayer;
 import ru.komiss77.modules.player.PM;
+import ru.komiss77.modules.world.WE;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
@@ -165,14 +166,14 @@ public class LandBuyMenu implements InventoryProvider {
                 } else {
                     
                     itemBuilder.addLore("§6ЛКМ §f- предпросмотр на местности");
-                    itemBuilder.addLore( ApiOstrov.getWorldEditor().hasJob(player) ? "§cДождитесь окончания операции!" : "§6ПКМ §f- создать регион");
+                    itemBuilder.addLore( WE.hasJob(player) ? "§cДождитесь окончания операции!" : "§6ПКМ §f- создать регион");
                     
                     inventoryContents.add(ClickableItem.of(itemBuilder.build(), e -> {
                         
                         if (e.getClick() == ClickType.RIGHT) { //пкм - покупка
                             
                             player.closeInventory();
-                            if (ApiOstrov.getWorldEditor().hasJob(player))  {
+                            if (WE.hasJob(player))  {
                                 player.sendMessage("§cДождитесь окончания операции!");
                                 return;
                             }
