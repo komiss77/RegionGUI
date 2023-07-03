@@ -7,9 +7,6 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -26,10 +23,9 @@ import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.crytec.RegionGUI.RegionGUI;
 import ru.komiss77.ApiOstrov;
-import ru.komiss77.Ostrov;
-import ru.komiss77.utils.ColorUtils;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.PlayerInput;
+import ru.komiss77.utils.TCUtils;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InputButton;
 import ru.komiss77.utils.inventory.InputButton.InputType;
@@ -104,28 +100,28 @@ public class FlagSetting implements Comparable<FlagSetting> {
                 
                 case STATE:
                     if ( region.getFlag(flag) == StateFlag.State.DENY) {
-                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = ColorUtils.changeColor(menuEntry, DyeColor.PINK);
+                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.PINK);
                     } else {
-                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = ColorUtils.changeColor(menuEntry, DyeColor.LIME);
+                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.LIME);
                     }
                     break;
                     
                 case BOOLEAN:
                     if ( (boolean)region.getFlag(flag) ) {
-                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = ColorUtils.changeColor(menuEntry, DyeColor.PINK);
+                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.PINK);
                     } else {
-                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = ColorUtils.changeColor(menuEntry, DyeColor.LIME);
+                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.LIME);
                     }
                     break;
                     
                 default:
-                    if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = ColorUtils.changeColor(menuEntry, DyeColor.BLUE);
+                    if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.BLUE);
                     break;
             }
             
         } else {
             
-            if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = ColorUtils.changeColor(menuEntry, DyeColor.GRAY);
+            if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.GRAY);
             
         }
         
