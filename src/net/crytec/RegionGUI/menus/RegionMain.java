@@ -14,8 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import ru.komiss77.ApiOstrov;
 import ru.komiss77.modules.world.WE;
+import ru.komiss77.modules.world.XYZ;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
@@ -144,8 +144,8 @@ implements InventoryProvider {
             
             VM.getNmsServer().BorderDisplay(
                 player, 
-                BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), 
-                BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()),
+                new XYZ (BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint())), 
+                new XYZ (BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint())),
                 true);
             
             //BorderDisplay borderDisplay = new BorderDisplay(

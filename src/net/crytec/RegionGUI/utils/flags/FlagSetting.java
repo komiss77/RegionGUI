@@ -100,28 +100,28 @@ public class FlagSetting implements Comparable<FlagSetting> {
                 
                 case STATE:
                     if ( region.getFlag(flag) == StateFlag.State.DENY) {
-                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.PINK);
+                        if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.PINK);
                     } else {
-                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.LIME);
+                        if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.LIME);
                     }
                     break;
                     
                 case BOOLEAN:
                     if ( (boolean)region.getFlag(flag) ) {
-                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.PINK);
+                        if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.PINK);
                     } else {
-                        if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.LIME);
+                        if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.LIME);
                     }
                     break;
                     
                 default:
-                    if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.BLUE);
+                    if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.BLUE);
                     break;
             }
             
         } else {
             
-            if (ApiOstrov.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.GRAY);
+            if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.GRAY);
             
         }
         

@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
 import ru.komiss77.modules.world.Schematic;
 import ru.komiss77.modules.world.WE;
+import ru.komiss77.modules.world.XYZ;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
@@ -61,7 +62,7 @@ public class RegionDeleteConfirm implements InventoryProvider {
                 
                 final Schematic sch = WE.getSchematic(player, region.getId(), true);
                 //ApiOstrov.getWorldEditor().paste (player, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), sch, true);
-                WE.paste (player, sch, BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()), Schematic.Rotate.r0, true);
+                WE.paste (player, sch, new XYZ (BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint())), Schematic.Rotate.r0, true);
                /* ApiOstrov.getWorldEditor().paste(
                     player,
                     BukkitAdapter.adapt( player.getWorld(), region.getMinimumPoint() ),
