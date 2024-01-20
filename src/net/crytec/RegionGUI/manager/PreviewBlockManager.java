@@ -32,8 +32,9 @@ public class PreviewBlockManager implements Listener {
     }
     
     public static void stopPrewiev(final Player player) {
-        if (PreviewBlockManager.on_wiev.containsKey(player.getName())) {
-            PreviewBlockManager.on_wiev.get(player.getName()).stop(player, false); //из on_wiev удаляет там
+        final PreviewBlock pb = on_wiev.remove(player.getName());
+        if (pb != null) {
+            pb.stop(player, false); //из on_wiev удаляет там
             //PreviewBlockManager.on_wiev.remove(player.getName());
         }
     }

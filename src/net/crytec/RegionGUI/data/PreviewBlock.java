@@ -62,16 +62,18 @@ public class PreviewBlock {
                 final Player p = Bukkit.getPlayerExact(playerName);
                 
                 if (p==null || !p.isOnline()) {
+                    PreviewBlockManager.on_wiev.remove(playerName);
                     this.cancel();
                     return;
                 }
                 
                 if (p.isDead() || !worldName.equals(p.getWorld().getName()) || count<=0 || p.isSneaking()) {
                     stop(p, true);
+                    PreviewBlockManager.on_wiev.remove(playerName);
                     return;
                 }
                 
-                ApiOstrov.sendTitle(p, "", "§7Shift - остановить показ ("+count+"§7)", 0, 21, 0);
+                ApiOstrov.sendTitleDirect(p, "", "§7Shift - остановить показ ("+count+"§7)", 0, 21, 0);
                 count--;
                 
                 if (p.getLocation().getBlockX()!=last_x || p.getLocation().getBlockZ()!=last_z) {
@@ -147,15 +149,17 @@ public class PreviewBlock {
     
     
     public void stop(final Player p, boolean endTitle) {
-        if(render!=null) render.cancel();
+        if(render!=null) {
+            render.cancel();
+        }
         if (p!=null) {
             resetLine(p);
             p.resetTitle();
             if (endTitle) ApiOstrov.sendTitle(p, "", "§7Предпросмотр закончен.", 0, 30, 0);
         }
-        if (PreviewBlockManager.on_wiev.containsKey(p.getName())) {
-            PreviewBlockManager.on_wiev.remove(p.getName());
-        }
+        //if (PreviewBlockManager.on_wiev.containsKey(p.getName())) {
+            //PreviewBlockManager.on_wiev.remove(p.getName());
+        //}
 
     }
    
