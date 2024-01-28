@@ -1,10 +1,10 @@
 package net.crytec.RegionGUI;
 
 import java.util.stream.Collectors;
-import org.bukkit.ChatColor;
 import java.util.Arrays;
 import org.bukkit.configuration.file.YamlConfiguration;
 import java.util.List;
+import ru.komiss77.utils.TCUtils;
 
 public enum Language
 {
@@ -128,17 +128,17 @@ public enum Language
     @Override
     public String toString() {
         if (this == Language.TITLE) {
-            return String.valueOf(ChatColor.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def))) + " ";
+            return String.valueOf(TCUtils.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def))) + " ";
         }
-        return ChatColor.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def));
+        return TCUtils.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def));
     }
     
     public String toChatString() {
-        return String.valueOf(Language.TITLE.toString()) + ChatColor.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def));
+        return String.valueOf(Language.TITLE.toString()) + TCUtils.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def));
     }
     
     public List<String> getDescriptionArray() {
-        return (List<String>)Language.LANG.getStringList(this.path).stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList());
+        return (List<String>)Language.LANG.getStringList(this.path).stream().map(s -> TCUtils.translateAlternateColorCodes('&', s)).collect(Collectors.toList());
     }
     
     public boolean isArray() {

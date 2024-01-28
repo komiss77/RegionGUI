@@ -3,7 +3,6 @@ package net.crytec.RegionGUI.menus;
 import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -11,6 +10,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
 import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.TCUtils;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.ConfirmationGUI;
 import ru.komiss77.utils.inventory.InputButton;
@@ -98,7 +98,7 @@ public class TemplateEditor implements InventoryProvider
                     } else {
                             
                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            template.getDescription().add(ChatColor.translateAlternateColorCodes('&', value));
+                            template.getDescription().add(TCUtils.translateAlternateColorCodes('&', value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -135,7 +135,7 @@ public class TemplateEditor implements InventoryProvider
                         reopen(player, contents);
                     } else {
                         AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "region.template.xxx", (player2, value) -> {
-                            template.setPermission(ChatColor.stripColor(value));
+                            template.setPermission(TCUtils.stripColor(value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -172,7 +172,7 @@ public class TemplateEditor implements InventoryProvider
                         }
                     } else {
                         AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            template.getNoPermDescription().add(ChatColor.translateAlternateColorCodes('&', value));
+                            template.getNoPermDescription().add(TCUtils.translateAlternateColorCodes('&', value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -274,7 +274,7 @@ public class TemplateEditor implements InventoryProvider
                         }
                     } else {
                         AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            template.getRunCommands().add(ChatColor.stripColor(value));
+                            template.getRunCommands().add(TCUtils.stripColor(value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -447,7 +447,7 @@ implements InventoryProvider {
         }));
         
         
-        inventoryContents.set(SlotPos.of((int)2, (int)0), ClickableItem.of((ItemStack)new ItemBuilder(Material.BOOK).name("\u00a77Description").addLore("\u00a77Current description:").addLore(this.claim.getDescription().stream().map(string -> ChatColor.translateAlternateColorCodes((char)'&', (String)string)).collect(Collectors.toList())).addLore("").addLore("\u00a7aЛКМ \u00a77to add a new line").addLore("\u00a7aПКМ \u00a77to delete the last line.").build(), inventoryClickEvent -> {
+        inventoryContents.set(SlotPos.of((int)2, (int)0), ClickableItem.of((ItemStack)new ItemBuilder(Material.BOOK).name("\u00a77Description").addLore("\u00a77Current description:").addLore(this.claim.getDescription().stream().map(string -> TCUtils.translateAlternateColorCodes((char)'&', (String)string)).collect(Collectors.toList())).addLore("").addLore("\u00a7aЛКМ \u00a77to add a new line").addLore("\u00a7aПКМ \u00a77to delete the last line.").build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.RIGHT) {
                 if (this.claim.getDescription().size() <= 0) {
                     return;
@@ -495,7 +495,7 @@ implements InventoryProvider {
                     Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, inventoryContents));
                     return;
                 }
-                this.claim.getNoPermDescription().add(ChatColor.translateAlternateColorCodes((char)'&', (String)string));
+                this.claim.getNoPermDescription().add(TCUtils.translateAlternateColorCodes((char)'&', (String)string));
                 Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, inventoryContents));
             });
         }));

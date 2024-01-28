@@ -17,6 +17,7 @@ import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -24,6 +25,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
+import ru.komiss77.modules.DelayTeleport;
+import ru.komiss77.modules.player.Oplayer;
 import ru.komiss77.modules.world.Cuboid;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.ItemUtils;
@@ -93,13 +96,14 @@ public class LandHomeMenu implements InventoryProvider
                         
                         com.sk89q.worldedit.util.Location location = (com.sk89q.worldedit.util.Location)region.getFlag((Flag)Flags.TELE_LOC);
                         org.bukkit.Location location2 = BukkitAdapter.adapt((com.sk89q.worldedit.util.Location)location);
-                        player.teleport(location2);
+                        DelayTeleport.tp(player, location2, 5, "Вы вернулись в свой регион.", true, true, DyeColor.LIGHT_BLUE);//player.teleport(location2);
                         
                     } else {
                         Location loc1 = BukkitAdapter.adapt(world, region.getMinimumPoint());
                         Location loc2 = BukkitAdapter.adapt(world, region.getMaximumPoint());
                         Cuboid cuboid = new Cuboid (loc1, loc2);
-                        ApiOstrov.teleportSave(player, cuboid.getCenter(loc1), false);
+                        DelayTeleport.tp(player, cuboid.getCenter(loc1), 5, "Вы вернулись в свой регион.", true, true, DyeColor.LIGHT_BLUE);//player.teleport(location2);
+                        //ApiOstrov.teleportSave(player, cuboid.getCenter(loc1), false);
                         //player.sendMessage(Language.ERROR_NO_HOME_SET.toChatString());
                         
                     }

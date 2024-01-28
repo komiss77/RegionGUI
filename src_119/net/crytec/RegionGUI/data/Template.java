@@ -83,15 +83,15 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
     }
     
    // public void setNoPermDescription(final List<String> list) {
-   //     this.noPermDescription = list.stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect((Collector<? super Object, ?, List<String>>)Collectors.toList());
+   //     this.noPermDescription = list.stream().map(s -> TCUtils.translateAlternateColorCodes('&', s)).collect((Collector<? super Object, ?, List<String>>)Collectors.toList());
   //  }
    public void setNoPermDescription(List <String> list) {
         this.noPermDescription.clear();
         for (String desc : list) {
-            this.description.add(ChatColor.translateAlternateColorCodes('&', desc));
+            this.description.add(TCUtils.translateAlternateColorCodes('&', desc));
         }
       //this.noPermDescription = (List)list.stream().map((str) -> {
-     //    return ChatColor.translateAlternateColorCodes('&', str);
+     //    return TCUtils.translateAlternateColorCodes('&', str);
      // }).collect(Collectors.toList());
    }  
    
@@ -199,10 +199,10 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
     public void setDescription(final List<String> newDescription) {
         description.clear();
         for (String desc:newDescription) {
-            description.add(ChatColor.translateAlternateColorCodes('&', desc));
+            description.add(TCUtils.translateAlternateColorCodes('&', desc));
         }
       //this.description = (List)list.stream().map((str) -> {
-      //   return ChatColor.translateAlternateColorCodes('&', str);
+      //   return TCUtils.translateAlternateColorCodes('&', str);
       //}).collect(Collectors.toList());
     }
     

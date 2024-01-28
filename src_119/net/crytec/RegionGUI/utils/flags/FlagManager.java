@@ -71,7 +71,7 @@ public class FlagManager {
                 if (!flagConfig.getBoolean(flagPath + "enabled")) continue;
                 icon = Material.matchMaterial( flagConfig.getString(flagPath + "icon"));
                 if (icon==null) icon = Material.LIGHT_GRAY_DYE;
-                addFlags(flag.getName(), (Flag<?>)flag, icon, ChatColor.translateAlternateColorCodes('&', flagConfig.getString(flagPath + "name")));
+                addFlags(flag.getName(), (Flag<?>)flag, icon, TCUtils.translateAlternateColorCodes('&', flagConfig.getString(flagPath + "name")));
                 
             } else {
                 

@@ -136,7 +136,7 @@ public class LandBuyMenu implements InventoryProvider {
                 
                 
                 final ItemBuilder itemBuilder = new ItemBuilder(template.getIcon());
-                itemBuilder.name(ChatColor.translateAlternateColorCodes('&', template.getDisplayname()));
+                itemBuilder.name(TCUtils.translateAlternateColorCodes('&', template.getDisplayname()));
                 itemBuilder.setItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 
                 //final ArrayList <String> lore = new ArrayList();

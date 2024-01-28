@@ -9,7 +9,6 @@ import net.crytec.RegionGUI.data.RegionUtils;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.PreviewBlockManager;
 import net.crytec.RegionGUI.manager.TemplateManager;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -22,6 +21,7 @@ import ru.komiss77.modules.player.Oplayer;
 import ru.komiss77.modules.player.PM;
 import ru.komiss77.modules.world.WE;
 import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.TCUtils;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
@@ -137,7 +137,7 @@ public class LandBuyMenu implements InventoryProvider {
                 
                 
                 final ItemBuilder itemBuilder = new ItemBuilder(template.getIcon());
-                itemBuilder.name(ChatColor.translateAlternateColorCodes('&', template.getDisplayname()));
+                itemBuilder.name(TCUtils.translateAlternateColorCodes('&', template.getDisplayname()));
                 itemBuilder.setItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 
                 //final ArrayList <String> lore = new ArrayList();
