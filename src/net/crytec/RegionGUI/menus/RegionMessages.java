@@ -3,17 +3,17 @@ package net.crytec.RegionGUI.menus;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.crytec.RegionGUI.Language;
-import net.crytec.RegionGUI.RegionGUI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.PlayerInput;
 import ru.komiss77.utils.inventory.ClickableItem;
+import ru.komiss77.utils.inventory.InputButton;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
 import ru.komiss77.utils.inventory.SlotPos;
-import ru.komiss77.version.AnvilGUI;
 
 
 
@@ -51,18 +51,15 @@ public class RegionMessages implements InventoryProvider
                     
                     if (inventoryClickEvent.getClick() == ClickType.LEFT) {
 
-                        new AnvilGUI(RegionGUI.getInstance(), player, "Вы вошли в приват "+player.getName(), (player2, welcome) -> {
-
-                            if(welcome.length()>40 ) {
+                        PlayerInput.get(InputButton.InputType.ANVILL, player, s -> {
+                            if(s.length()>40 ) {
                                 player.sendMessage("§cНе больше 40 символов!");
-                                return null;
                             } else {
-                                region.setFlag(Flags.GREET_MESSAGE, welcome);
-                                this.reopen(player, contents);
-                                return null;
+                                region.setFlag(Flags.GREET_MESSAGE, s);
+                                reopen(player, contents);
                             }
-
-                        });
+                        }, "Вы вошли в приват "+player.getName());
+                        
 
                     }  else if (inventoryClickEvent.getClick() == ClickType.RIGHT && region.getFlags().containsKey(Flags.GREET_MESSAGE)) {
 
@@ -86,18 +83,15 @@ public class RegionMessages implements InventoryProvider
                     
                     if (inventoryClickEvent.getClick() == ClickType.LEFT) {
 
-                        new AnvilGUI(RegionGUI.getInstance(), player, "Здравствуйте!", (player2, welcome) -> {
-
-                            if(welcome.length()>40 ) {
+                        PlayerInput.get(InputButton.InputType.ANVILL, player, s -> {
+                            if(s.length()>40 ) {
                                 player.sendMessage("§cНе больше 40 символов!");
-                                return null;
                             } else {
-                                region.setFlag(Flags.GREET_TITLE, welcome);
-                                this.reopen(player, contents);
-                                return null;
+                                region.setFlag(Flags.GREET_TITLE, s);
+                                reopen(player, contents);
                             }
+                        }, "Здравствуйте!");
 
-                        });
 
                     }  else if (inventoryClickEvent.getClick() == ClickType.RIGHT && region.getFlags().containsKey(Flags.GREET_TITLE)) {
 
@@ -125,18 +119,14 @@ public class RegionMessages implements InventoryProvider
                     
                     if (inventoryClickEvent.getClick() == ClickType.LEFT) {
 
-                        new AnvilGUI(RegionGUI.getInstance(), player, "Вы покинули приват "+player.getName(), (player2, welcome) -> {
-
-                            if(welcome.length()>40 ) {
+                        PlayerInput.get(InputButton.InputType.ANVILL, player, s -> {
+                            if(s.length()>40 ) {
                                 player.sendMessage("§cНе больше 40 символов!");
-                                return null;
                             } else {
-                                region.setFlag(Flags.FAREWELL_MESSAGE, welcome);
-                                this.reopen(player, contents);
-                                return null;
+                                region.setFlag(Flags.FAREWELL_MESSAGE, s);
+                                reopen(player, contents);
                             }
-
-                        });
+                        }, "Вы покинули приват "+player.getName());
 
                     }  else if (inventoryClickEvent.getClick() == ClickType.RIGHT && region.getFlags().containsKey(Flags.FAREWELL_MESSAGE)) {
 
@@ -161,18 +151,14 @@ public class RegionMessages implements InventoryProvider
                     
                     if (inventoryClickEvent.getClick() == ClickType.LEFT) {
 
-                        new AnvilGUI(RegionGUI.getInstance(), player, "До свидания!", (player2, welcome) -> {
-
-                            if(welcome.length()>40 ) {
+                        PlayerInput.get(InputButton.InputType.ANVILL, player, s -> {
+                            if(s.length()>40 ) {
                                 player.sendMessage("§cНе больше 40 символов!");
-                                return null;
                             } else {
-                                region.setFlag(Flags.FAREWELL_TITLE, welcome);
-                                this.reopen(player, contents);
-                                return null;
+                                region.setFlag(Flags.FAREWELL_TITLE, s);
+                                reopen(player, contents);
                             }
-
-                        });
+                        }, "До свидания!");
 
                     }  else if (inventoryClickEvent.getClick() == ClickType.RIGHT && region.getFlags().containsKey(Flags.FAREWELL_TITLE)) {
 

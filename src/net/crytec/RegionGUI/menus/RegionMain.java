@@ -17,12 +17,12 @@ import org.bukkit.inventory.ItemStack;
 import ru.komiss77.modules.world.WE;
 import ru.komiss77.modules.world.XYZ;
 import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.ParticlePlay;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
 import ru.komiss77.utils.inventory.SlotPos;
 import ru.komiss77.utils.inventory.SmartInventory;
-import ru.komiss77.version.VM;
 
 
 
@@ -142,7 +142,7 @@ implements InventoryProvider {
                 -> {
             player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
             
-            VM.getNmsServer().BorderDisplay(
+            ParticlePlay.BorderDisplay(
                 player, 
                 new XYZ (BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint())), 
                 new XYZ (BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint())),

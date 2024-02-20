@@ -1,6 +1,5 @@
 package net.crytec.RegionGUI.menus;
 
-import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
 import org.bukkit.Material;
@@ -10,6 +9,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
 import ru.komiss77.utils.ItemBuilder;
+import ru.komiss77.utils.PlayerInput;
 import ru.komiss77.utils.TCUtils;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.ConfirmationGUI;
@@ -19,7 +19,6 @@ import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
 import ru.komiss77.utils.inventory.SlotPos;
 import ru.komiss77.utils.inventory.SmartInventory;
-import ru.komiss77.version.AnvilGUI;
 
 
 
@@ -97,14 +96,12 @@ public class TemplateEditor implements InventoryProvider
 
                     } else {
                             
-                       AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            template.getDescription().add(TCUtils.translateAlternateColorCodes('&', value));
-                                //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
+                        PlayerInput.get(InputButton.InputType.ANVILL, player, s -> {
+                            template.getDescription().add(TCUtils.translateAlternateColorCodes('&', s));
                             reopen(player, contents);
-                            return null;
-                        });
+                        }, "строка..");
 
-                    }
+                        }
                 }
         ));
         
@@ -134,12 +131,11 @@ public class TemplateEditor implements InventoryProvider
                         template.setPermission("");
                         reopen(player, contents);
                     } else {
-                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "region.template.xxx", (player2, value) -> {
-                            template.setPermission(TCUtils.stripColor(value));
-                                //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
+                        
+                        PlayerInput.get(InputButton.InputType.ANVILL, player, s -> {
+                            template.setPermission(TCUtils.stripColor(s));
                             reopen(player, contents);
-                            return null;
-                        });
+                        }, "region.template.xxx");
 
                     }
                 }));
@@ -171,13 +167,11 @@ public class TemplateEditor implements InventoryProvider
                             reopen(player, contents);
                         }
                     } else {
-                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            template.getNoPermDescription().add(TCUtils.translateAlternateColorCodes('&', value));
-                                //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
+                        
+                        PlayerInput.get(InputButton.InputType.ANVILL, player, s -> {
+                            template.getNoPermDescription().add(TCUtils.translateAlternateColorCodes('&', s));
                             reopen(player, contents);
-                            return null;
-                        });
-
+                        }, "строка..");
 
                     }
                 }));
@@ -273,19 +267,11 @@ public class TemplateEditor implements InventoryProvider
                             this.reopen(player, contents);
                         }
                     } else {
-                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            template.getRunCommands().add(TCUtils.stripColor(value));
-                                //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
+                         PlayerInput.get(InputButton.InputType.ANVILL, player, s -> {
+                            template.getRunCommands().add(TCUtils.stripColor(s));
                             reopen(player, contents);
-                            return null;
-                        });
-                       /* player.closeInventory();
-                        player.sendMessage("§7Введите строку команды (§cбез§7 (/)): ");
-                        PhoenixAPI.get().getPlayerChatInput(player, s7 -> {
-                            this.claim.getRunCommands().add(s7);
-                            this.reopen(player, contents);
-                        });*/
-                        //return;
+                        }, "строка..");
+
                     }
                 }
         ));
