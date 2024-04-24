@@ -56,9 +56,8 @@ public class FlagManager {
         flagConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "flags.yml"));
         
         boolean newFlag = false;
-        Material icon;
         
-        
+        //Material icon;
         for (final Flag<?> flag : WorldGuard.getInstance().getFlagRegistry().getAll()) {
             if (forbiddenFlags.contains(flag.getName())) continue;
             if (flag instanceof LocationFlag) continue;
@@ -68,9 +67,9 @@ public class FlagManager {
             if (flagConfig.isSet("flags." + flag.getName() + ".name")) {
                 
                 if (!flagConfig.getBoolean(flagPath + "enabled")) continue;
-                icon = Material.matchMaterial( flagConfig.getString(flagPath + "icon"));
-                if (icon==null) icon = Material.LIGHT_GRAY_DYE;
-                addFlags(flag.getName(), flag, icon, TCUtils.translateAlternateColorCodes('&', flagConfig.getString(flagPath + "name")));
+                //icon = Material.matchMaterial( flagConfig.getString(flagPath + "icon"));
+                //if (icon==null) icon = Material.LIGHT_GRAY_DYE;
+                addFlags(flag.getName(), flag, TCUtils.translateAlternateColorCodes('&', flagConfig.getString(flagPath + "name")));
                 
             } else {
                 
@@ -78,7 +77,7 @@ public class FlagManager {
                 flagConfig.set(flagPath + "enabled", true);
                 flagConfig.set(flagPath + "icon", Material.LIGHT_GRAY_DYE.toString());
                 newFlag = true;
-                addFlags(flag.getName(), flag, Material.LIGHT_GRAY_DYE, "§7" + flag.getName());
+                addFlags(flag.getName(), flag, "§7" + flag.getName());
                
             }
             
@@ -105,8 +104,8 @@ public class FlagManager {
     
     }
     
-    public void addFlags(final String idenfifier, final Flag<?> flag, final Material icon, final String displayname) {
-        flags.add(new FlagSetting(idenfifier, flag, icon, displayname));
+    public void addFlags(final String idenfifier, final Flag<?> flag, final String displayname) {
+        flags.add(new FlagSetting(idenfifier, flag, displayname));
     }
     
     public List<FlagSetting> getFlagMap() {

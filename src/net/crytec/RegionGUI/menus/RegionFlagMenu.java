@@ -2,7 +2,6 @@ package net.crytec.RegionGUI.menus;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.LinkedList;
-import net.crytec.RegionGUI.Language;
 import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.utils.flags.FlagManager;
 import org.bukkit.Material;
@@ -20,29 +19,24 @@ import ru.komiss77.utils.inventory.SlotPos;
 
 
 
-public class RegionFlagMenu implements InventoryProvider
-{
+public class RegionFlagMenu implements InventoryProvider {
+    
     private static final ItemStack fill = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build();;
     private final FlagManager flagManager;
     private final ProtectedRegion region;
     
-
     
     public RegionFlagMenu(final ProtectedRegion region) {
         this.region = region;
         this.flagManager = RegionGUI.getInstance().getFlagManager();
     }
-    
-
-    
+        
     
     @Override
        public void init(Player player, InventoryContent inventoryContents) {
            
         //inventoryContents.fillRow(0, ClickableItem.empty(fill));
         inventoryContents.fillRow(4, ClickableItem.empty(fill));
-
-        
         player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
         
         

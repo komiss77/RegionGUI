@@ -129,7 +129,13 @@ implements InventoryProvider {
             inventoryContents.set(1, 5, ClickableItem.of( new ItemBuilder(Material.LIGHT_GRAY_BANNER).name(Language.INTERFACE_MANAGE_BUTTON_FLAG.toString()).build(), inventoryClickEvent 
                     -> {
                         player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
-                        SmartInventory.builder().id("regiongui.flagMenu").provider((InventoryProvider)new RegionFlagMenu(this.region)).size(5, 9).title(Language.FLAG_TITLE.toString()).build().open(player);
+                        SmartInventory.builder()
+                                .id("regiongui.flagMenu")
+                                .provider(new RegionFlagMenu(this.region))
+                                .size(5, 9)
+                                .title(Language.FLAG_TITLE.toString())
+                                .build()
+                                .open(player);
                     }
             ));
         //}
