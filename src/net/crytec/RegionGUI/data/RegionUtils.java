@@ -16,6 +16,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import ru.komiss77.ApiOstrov;
+import ru.komiss77.utils.TimeUtil;
 
 
 public class RegionUtils
@@ -141,7 +142,7 @@ public class RegionUtils
 
     public static String getCreateTime (final ProtectedRegion region) {
         if (isValidRegionId(region.getId()))  {
-            return ApiOstrov.dateFromStamp( Integer.valueOf(region.getId().split("-")[3]));
+            return TimeUtil.dateFromStamp( Integer.valueOf(region.getId().split("-")[3]));
         } else {
             return "";
         }

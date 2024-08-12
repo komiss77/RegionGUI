@@ -136,17 +136,17 @@ public class LandBuyMenu implements InventoryProvider {
                 
                 
                 final ItemBuilder itemBuilder = new ItemBuilder(template.getIcon());
-                itemBuilder.name(TCUtils.translateAlternateColorCodes('&', template.getDisplayname()));
+                itemBuilder.name(TCUtil.translateAlternateColorCodes('&', template.getDisplayname()));
                 itemBuilder.setItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 
                 //final ArrayList <String> lore = new ArrayList();
-                itemBuilder.addLore(template.getDescription());
-                itemBuilder.addLore("");
-                itemBuilder.addLore("§7Ваши регионы: §3"+(totalRegion==0?"не найдено":totalRegion)+(" §7(лимит: §5"+totatRegionLimit+"§7)"));
-                itemBuilder.addLore("§7Регионы данного типа: §3"+(currentTemplateCount==0?"не найдено":currentTemplateCount)+(" §7(лимит: §5"+currentTemplateLimit+"§7)"));
-                itemBuilder.addLore("§7Размеры: §e"+template.getSize()+"x"+template.getSize()+"§7, вниз §e"+template.getDepth()+"§7, вверх §e"+template.getHeight());
-                itemBuilder.addLore("§7Цена: §b"+(template.getPrice()==0?"бесплатно":template.getPrice()+" §7лони."));
-                itemBuilder.addLore("");
+                itemBuilder.lore(template.getDescription());
+                itemBuilder.lore("");
+                itemBuilder.lore("§7Ваши регионы: §3"+(totalRegion==0?"не найдено":totalRegion)+(" §7(лимит: §5"+totatRegionLimit+"§7)"));
+                itemBuilder.lore("§7Регионы данного типа: §3"+(currentTemplateCount==0?"не найдено":currentTemplateCount)+(" §7(лимит: §5"+currentTemplateLimit+"§7)"));
+                itemBuilder.lore("§7Размеры: §e"+template.getSize()+"x"+template.getSize()+"§7, вниз §e"+template.getDepth()+"§7, вверх §e"+template.getHeight());
+                itemBuilder.lore("§7Цена: §b"+(template.getPrice()==0?"бесплатно":template.getPrice()+" §7лони."));
+                itemBuilder.lore("");
                 
                 //itemBuilder.lore(lore);
 
@@ -154,18 +154,18 @@ public class LandBuyMenu implements InventoryProvider {
                 if ( !template.getPermission().isEmpty() && !player.hasPermission(template.getPermission())) {
 
                     //itemBuilder.lore("");
-                    itemBuilder.addLore(template.getNoPermDescription());
+                    itemBuilder.lore(template.getNoPermDescription());
                     inventoryContents.add(ClickableItem.empty(itemBuilder.build()));
 
                 } else if (currentTemplateCount>=currentTemplateLimit) {
                     
-                    itemBuilder.addLore("§cЛимит регионов данного типа!");
+                    itemBuilder.lore("§cЛимит регионов данного типа!");
                     inventoryContents.add(ClickableItem.empty(itemBuilder.build()));
                     
                 } else {
                     
-                    itemBuilder.addLore("§6ЛКМ §f- предпросмотр на местности");
-                    itemBuilder.addLore( ApiOstrov.getWorldEditor().hasJob(player) ? "§cДождитесь окончания операции!" : "§6ПКМ §f- создать регион");
+                    itemBuilder.lore("§6ЛКМ §f- предпросмотр на местности");
+                    itemBuilder.lore( ApiOstrov.getWorldEditor().hasJob(player) ? "§cДождитесь окончания операции!" : "§6ПКМ §f- создать регион");
                     
                     inventoryContents.add(ClickableItem.of(itemBuilder.build(), e -> {
                         
@@ -192,7 +192,7 @@ public class LandBuyMenu implements InventoryProvider {
                             
                             player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
                             
-                            ApiOstrov.sendTitle(player, "§6Предпросмотр", "§aДля покупки ПКМ в меню");
+                            ScreenUtil.sendTitle(player, "§6Предпросмотр", "§aДля покупки ПКМ в меню");
                             //player.sendMessage("§6Предпросмотр региона");
                             player.sendMessage("§aДля покупки ПРАВЫЙ клик в меню покупки.");
                         }

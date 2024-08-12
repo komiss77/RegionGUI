@@ -34,9 +34,9 @@ public class AdminTemplateList implements InventoryProvider
         
         for (final Template template : list) {
             final ItemBuilder itemBuilder = new ItemBuilder((template.getIcon() == null) ? Material.OAK_FENCE : template.getIcon().getType());
-            itemBuilder.name(TCUtils.translateAlternateColorCodes('&', template.getName()));
+            itemBuilder.name(TCUtil.translateAlternateColorCodes('&', template.getName()));
             //final ArrayList <String> list2 = new ArrayList(template.getDescription());
-            //list2.replaceAll(s -> TCUtils.translateAlternateColorCodes('&', s));
+            //list2.replaceAll(s -> TCUtil.translateAlternateColorCodes('&', s));
             itemBuilder.lore(template.getDescription());
             //final RegionClaim claim;
             contents.add(ClickableItem.of(itemBuilder.build(), p2 -> {

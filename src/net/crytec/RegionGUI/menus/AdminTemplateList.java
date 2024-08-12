@@ -9,7 +9,7 @@ import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.data.Template;
 import net.crytec.RegionGUI.manager.TemplateManager;
 import ru.komiss77.utils.ItemBuilder;
-import ru.komiss77.utils.TCUtils;
+import ru.komiss77.utils.TCUtil;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InputButton;
 import ru.komiss77.utils.inventory.InputButton.InputType;
@@ -34,10 +34,10 @@ public class AdminTemplateList implements InventoryProvider
         
         for (final Template template : list) {
             final ItemBuilder itemBuilder = new ItemBuilder((template.getIcon() == null) ? Material.OAK_FENCE : template.getIcon().getType());
-            itemBuilder.name(TCUtils.translateAlternateColorCodes('&', template.getName()));
+            itemBuilder.name(TCUtil.translateAlternateColorCodes('&', template.getName()));
             //final ArrayList <String> list2 = new ArrayList(template.getDescription());
-            //list2.replaceAll(s -> TCUtils.translateAlternateColorCodes('&', s));
-            itemBuilder.addLore(template.getDescription());
+            //list2.replaceAll(s -> TCUtil.translateAlternateColorCodes('&', s));
+            itemBuilder.lore(template.getDescription());
             //final RegionClaim claim;
             contents.add(ClickableItem.of(itemBuilder.build(), e -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);

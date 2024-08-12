@@ -10,7 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import ru.komiss77.utils.BlockUtils;
+import ru.komiss77.utils.BlockUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -18,7 +18,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import net.crytec.RegionGUI.RegionGUI;
 import net.crytec.RegionGUI.manager.PreviewBlockManager;
-import ru.komiss77.ApiOstrov;
+import ru.komiss77.utils.ScreenUtil;
 
 
 
@@ -73,7 +73,7 @@ public class PreviewBlock {
                     return;
                 }
                 
-                ApiOstrov.sendTitleDirect(p, "", "§7Shift - остановить показ ("+count+"§7)", 0, 21, 0);
+                ScreenUtil.sendTitleDirect(p, "", "§7Shift - остановить показ ("+count+"§7)", 0, 21, 0);
                 count--;
                 
                 if (p.getLocation().getBlockX()!=last_x || p.getLocation().getBlockZ()!=last_z) {
@@ -109,7 +109,7 @@ public class PreviewBlock {
     private void setLine (final Player p) {
         
         toSetLine.clear();
-        for (final Block b: BlockUtils.getCuboidBorder(p.getWorld(), template.getMinimumPoint(p.getLocation().clone().add(0.5D, 0.0D, 0.5D)), template.getSize() )) {
+        for (final Block b: BlockUtil.getCuboidBorder(p.getWorld(), template.getMinimumPoint(p.getLocation().clone().add(0.5D, 0.0D, 0.5D)), template.getSize() )) {
             toSetLine.add(b.getLocation());
         }
         
@@ -155,7 +155,7 @@ public class PreviewBlock {
         if (p!=null) {
             resetLine(p);
             p.resetTitle();
-            if (endTitle) ApiOstrov.sendTitle(p, "", "§7Предпросмотр закончен.", 0, 30, 0);
+            if (endTitle) ScreenUtil.sendTitle(p, "", "§7Предпросмотр закончен.", 0, 30, 0);
         }
         //if (PreviewBlockManager.on_wiev.containsKey(p.getName())) {
             //PreviewBlockManager.on_wiev.remove(p.getName());

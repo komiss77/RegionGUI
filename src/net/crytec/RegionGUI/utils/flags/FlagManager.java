@@ -13,7 +13,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.LocationFlag;
 import net.crytec.RegionGUI.RegionGUI;
-import ru.komiss77.utils.TCUtils;
+import ru.komiss77.utils.TCUtil;
 
 
 public class FlagManager {
@@ -69,7 +69,7 @@ public class FlagManager {
                 if (!flagConfig.getBoolean(flagPath + "enabled")) continue;
                 //icon = Material.matchMaterial( flagConfig.getString(flagPath + "icon"));
                 //if (icon==null) icon = Material.LIGHT_GRAY_DYE;
-                addFlags(flag.getName(), flag, TCUtils.translateAlternateColorCodes('&', flagConfig.getString(flagPath + "name")));
+                addFlags(flag.getName(), flag, TCUtil.translateAlternateColorCodes('&', flagConfig.getString(flagPath + "name")));
                 
             } else {
                 

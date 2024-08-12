@@ -10,7 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.utils.ItemBuilder;
-import ru.komiss77.utils.ItemUtils;
+import ru.komiss77.utils.*;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
@@ -82,14 +82,14 @@ public class RegionFlagMenu implements InventoryProvider
         
         
         if (!pagination.isLast()) {
-            inventoryContents.set( 4, 6, ClickableItem.of( ItemUtils.nextPage, 
+            inventoryContents.set( 4, 6, ClickableItem.of( ItemUtil.nextPage, 
                     e -> inventoryContents.getHost().open( player, pagination.next().getPage()) )
             );
         }
         
         
         if (!pagination.isFirst()) {
-            inventoryContents.set( 4, 2, ClickableItem.of( ItemUtils.previosPage, 
+            inventoryContents.set( 4, 2, ClickableItem.of( ItemUtil.previosPage, 
                     e -> inventoryContents.getHost().open( player, pagination.previous().getPage()) )
             );
         }

@@ -71,7 +71,7 @@ implements InventoryProvider {
                 new ItemBuilder(Material.TNT)
                         .name(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION.toString())
                         .lore(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION_DESCRIPTION.getDescriptionArray())
-                        .addLore( ApiOstrov.getWorldEditor().hasJob(player) ? "§cДождитесь окончания операции!" : "§4Шифт+ПКМ §f- удалить")
+                        .lore( ApiOstrov.getWorldEditor().hasJob(player) ? "§cДождитесь окончания операции!" : "§4Шифт+ПКМ §f- удалить")
                         .build(), e -> {
                             if ( e.getClick()==ClickType.SHIFT_RIGHT && !ApiOstrov.getWorldEditor().hasJob(player) ) {
                                 player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);

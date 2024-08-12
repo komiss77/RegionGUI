@@ -16,7 +16,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 import ru.komiss77.utils.ItemBuilder;
-import ru.komiss77.utils.TCUtils;
+import ru.komiss77.utils.TCUtil;
 
 
 
@@ -83,15 +83,15 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
     }
     
    // public void setNoPermDescription(final List<String> list) {
-   //     this.noPermDescription = list.stream().map(s -> TCUtils.translateAlternateColorCodes('&', s)).collect((Collector<? super Object, ?, List<String>>)Collectors.toList());
+   //     this.noPermDescription = list.stream().map(s -> TCUtil.translateAlternateColorCodes('&', s)).collect((Collector<? super Object, ?, List<String>>)Collectors.toList());
   //  }
    public void setNoPermDescription(List <String> list) {
         this.noPermDescription.clear();
         for (String desc : list) {
-            this.description.add(TCUtils.translateAlternateColorCodes('&', desc));
+            this.description.add(TCUtil.translateAlternateColorCodes('&', desc));
         }
       //this.noPermDescription = (List)list.stream().map((str) -> {
-     //    return TCUtils.translateAlternateColorCodes('&', str);
+     //    return TCUtil.translateAlternateColorCodes('&', str);
      // }).collect(Collectors.toList());
    }  
    
@@ -199,10 +199,10 @@ public class Template implements ConfigurationSerializable, Comparable<Template>
     public void setDescription(final List<String> newDescription) {
         description.clear();
         for (String desc:newDescription) {
-            description.add(TCUtils.translateAlternateColorCodes('&', desc));
+            description.add(TCUtil.translateAlternateColorCodes('&', desc));
         }
       //this.description = (List)list.stream().map((str) -> {
-      //   return TCUtils.translateAlternateColorCodes('&', str);
+      //   return TCUtil.translateAlternateColorCodes('&', str);
       //}).collect(Collectors.toList());
     }
     

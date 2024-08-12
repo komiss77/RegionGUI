@@ -71,7 +71,7 @@ public class PreviewBlock {
                     return;
                 }
                 
-                ApiOstrov.sendTitle(p, "", "§7Shift - остановить показ ("+count+"§7)", 0, 21, 0);
+                ScreenUtil.sendTitle(p, "", "§7Shift - остановить показ ("+count+"§7)", 0, 21, 0);
                 count--;
                 
                 if (p.getLocation().getBlockX()!=last_x || p.getLocation().getBlockZ()!=last_z) {
@@ -151,7 +151,7 @@ public class PreviewBlock {
         if (p!=null) {
             resetLine(p);
             p.resetTitle();
-            if (endTitle) ApiOstrov.sendTitle(p, "", "§7Предпросмотр закончен.", 0, 30, 0);
+            if (endTitle) ScreenUtil.sendTitle(p, "", "§7Предпросмотр закончен.", 0, 30, 0);
         }
         if (PreviewBlockManager.on_wiev.containsKey(p.getName())) {
             PreviewBlockManager.on_wiev.remove(p.getName());

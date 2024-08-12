@@ -4,7 +4,7 @@ import java.util.stream.Collectors;
 import java.util.Arrays;
 import org.bukkit.configuration.file.YamlConfiguration;
 import java.util.List;
-import ru.komiss77.utils.TCUtils;
+import ru.komiss77.utils.TCUtil;
 
 public enum Language
 {
@@ -128,17 +128,17 @@ public enum Language
     @Override
     public String toString() {
         if (this == Language.TITLE) {
-            return String.valueOf(TCUtils.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def))) + " ";
+            return String.valueOf(TCUtil.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def))) + " ";
         }
-        return TCUtils.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def));
+        return TCUtil.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def));
     }
     
     public String toChatString() {
-        return String.valueOf(Language.TITLE.toString()) + TCUtils.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def));
+        return String.valueOf(Language.TITLE.toString()) + TCUtil.translateAlternateColorCodes('&', Language.LANG.getString(this.path, this.def));
     }
     
     public List<String> getDescriptionArray() {
-        return (List<String>)Language.LANG.getStringList(this.path).stream().map(s -> TCUtils.translateAlternateColorCodes('&', s)).collect(Collectors.toList());
+        return (List<String>)Language.LANG.getStringList(this.path).stream().map(s -> TCUtil.translateAlternateColorCodes('&', s)).collect(Collectors.toList());
     }
     
     public boolean isArray() {

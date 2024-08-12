@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.komiss77.modules.world.WE;
 import ru.komiss77.modules.world.XYZ;
 import ru.komiss77.utils.ItemBuilder;
-import ru.komiss77.utils.ParticlePlay;
+import ru.komiss77.utils.ParticleUtil;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InventoryContent;
 import ru.komiss77.utils.inventory.InventoryProvider;
@@ -54,13 +54,13 @@ implements InventoryProvider {
         //инфо о регионе
         inventoryContents.set(0, 4, ClickableItem.empty(new ItemBuilder(Material.FLOWER_BANNER_PATTERN)
                 .name("§6>> §7Информация §6<<")
-                .addLore(template==null ? "":"§7Тип :§6 "+template.getDisplayname())
-                .addLore(template==null ? "§8Для региона не найдено":"§7Основание :§6 "+template.getSize()+"x"+template.getSize())
-                .addLore(template==null ? "§8соответствующей заготовки.":"§7Высота :§6 "+template.getHeight())
-                .addLore(template==null ? "§8Регион не удалится,":"§7Подземная часть :§6 "+template.getDepth())
-                .addLore(template==null ? "§8но невозможно получить":"§7Стоимость :§6 "+template.getPrice())
-                .addLore(template==null ? "§8подробные данные о нём.":"§7Возврат после удаления :§6 "+template.getRefund())
-                .addLore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
+                .lore(template==null ? "":"§7Тип :§6 "+template.getDisplayname())
+                .lore(template==null ? "§8Для региона не найдено":"§7Основание :§6 "+template.getSize()+"x"+template.getSize())
+                .lore(template==null ? "§8соответствующей заготовки.":"§7Высота :§6 "+template.getHeight())
+                .lore(template==null ? "§8Регион не удалится,":"§7Подземная часть :§6 "+template.getDepth())
+                .lore(template==null ? "§8но невозможно получить":"§7Стоимость :§6 "+template.getPrice())
+                .lore(template==null ? "§8подробные данные о нём.":"§7Возврат после удаления :§6 "+template.getRefund())
+                .lore("§7Создан: §6"+(createTime.isEmpty()?"§8нет данных":createTime))
                 //.unsaveEnchantment(Enchantment.ARROW_INFINITE, 1)
                 //.setItemFlag(ItemFlag.HIDE_ENCHANTS)
                 .build()));
@@ -71,8 +71,8 @@ implements InventoryProvider {
         inventoryContents.set(0, 8, ClickableItem.of( 
                 new ItemBuilder(Material.TNT)
                         .name(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION.toString())
-                        .addLore(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION_DESCRIPTION.getDescriptionArray())
-                        .addLore( WE.hasJob(player) ? "§cДождитесь окончания операции!" : "§4Шифт+ПКМ §f- удалить")
+                        .lore(Language.INTERFACE_MANAGE_BUTTON_DELETEREGION_DESCRIPTION.getDescriptionArray())
+                        .lore( WE.hasJob(player) ? "§cДождитесь окончания операции!" : "§4Шифт+ПКМ §f- удалить")
                         .build(), e -> {
                             if ( e.getClick()==ClickType.SHIFT_RIGHT && !WE.hasJob(player) ) {
                                 player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
@@ -88,14 +88,14 @@ implements InventoryProvider {
         //кнопка юзеры
         inventoryContents.set(1, 1, ClickableItem.of( new ItemBuilder(Material.PLAYER_HEAD)
                 .name("§6>> Управление пользователями §6<<")
-                .addLore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
-                .addLore("")
-                .addLore("§6ЛКМ §f- просмотр / удаление")
-                .addLore("§6ПКМ §f- добавление")
-                .addLore("§7Для добавления через меню,")
-                .addLore("§7кандидат должен находиться")
-                .addLore("§7в вашем регионе, и быть не далее")
-                .addLore("§75 блоков от вас.")
+                .lore ("§7Пользователей"+(region.getMembers().getPlayerDomain().size()==0 ? " нет" : ": "+region.getMembers().getPlayerDomain().size()))
+                .lore("")
+                .lore("§6ЛКМ §f- просмотр / удаление")
+                .lore("§6ПКМ §f- добавление")
+                .lore("§7Для добавления через меню,")
+                .lore("§7кандидат должен находиться")
+                .lore("§7в вашем регионе, и быть не далее")
+                .lore("§75 блоков от вас.")
                 .build(), inventoryClickEvent 
                 -> {
                     if (inventoryClickEvent.getClick() == ClickType.LEFT) {
@@ -144,11 +144,11 @@ implements InventoryProvider {
             
             
         //показ границ
-        inventoryContents.set(1, 7, ClickableItem.of( new ItemBuilder(Material.EXPERIENCE_BOTTLE).name(Language.INTERFACE_MANAGE_BUTTON_SHOWBORDER.toString()).addLore(Language.INTERFACE_MANAGE_BUTTON_SHOWBORDER_DESCRIPTION.getDescriptionArray()).build(), inventoryClickEvent 
+        inventoryContents.set(1, 7, ClickableItem.of( new ItemBuilder(Material.EXPERIENCE_BOTTLE).name(Language.INTERFACE_MANAGE_BUTTON_SHOWBORDER.toString()).lore(Language.INTERFACE_MANAGE_BUTTON_SHOWBORDER_DESCRIPTION.getDescriptionArray()).build(), inventoryClickEvent 
                 -> {
             player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
             
-            ParticlePlay.BorderDisplay(
+            ParticleUtil.BorderDisplay(
                 player, 
                 new XYZ (BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint())), 
                 new XYZ (BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint())),
@@ -171,7 +171,7 @@ implements InventoryProvider {
     
     
         //установка точки ТП
-        inventoryContents.set( 2, 6, ClickableItem.of( new ItemBuilder(Material.ENDER_PEARL).name(Language.INTERFACE_HOME_BUTTON.toString()).addLore(Language.INTERFACE_HOME_BUTTON_DESC.getDescriptionArray()).build(), inventoryClickEvent 
+        inventoryContents.set( 2, 6, ClickableItem.of( new ItemBuilder(Material.ENDER_PEARL).name(Language.INTERFACE_HOME_BUTTON.toString()).lore(Language.INTERFACE_HOME_BUTTON_DESC.getDescriptionArray()).build(), inventoryClickEvent 
                 -> {
             player.playSound(player.getLocation(), Sound.BLOCK_COMPARATOR_CLICK, 5, 5);
             this.region.setFlag((Flag)Flags.TELE_LOC, BukkitAdapter.adapt(player.getLocation()));

@@ -1,8 +1,6 @@
 package net.crytec.RegionGUI.data;
 
-import java.util.ArrayDeque;
 import java.util.List;
-import java.util.Queue;
 import org.bukkit.block.Block;
 import org.bukkit.Effect;
 import org.bukkit.Bukkit;
@@ -11,7 +9,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.Material;
 import org.bukkit.World;
 import net.crytec.RegionGUI.RegionGUI;
-import ru.komiss77.utils.BlockUtils;
+import ru.komiss77.utils.BlockUtil;
 
 
 
@@ -23,7 +21,7 @@ public class Walls implements Runnable {
     private final List<Block> toFill;
     
     public Walls(final World world, final Material wallMat, final Location minpoint, final int size) {
-        this.toFill = BlockUtils.getCuboidBorder(world, minpoint, size);//new ArrayDeque<>();
+        this.toFill = BlockUtil.getCuboidBorder(world, minpoint, size);//new ArrayDeque<>();
         //minpoint.setY(0);
         
         /*toFill.add( new PairCoord(minpoint.getBlockX(), minpoint.getBlockZ()));

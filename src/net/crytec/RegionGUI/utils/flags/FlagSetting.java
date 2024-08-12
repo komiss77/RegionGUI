@@ -3,7 +3,6 @@ package net.crytec.RegionGUI.utils.flags;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -25,7 +24,6 @@ import net.crytec.RegionGUI.RegionGUI;
 import ru.komiss77.ApiOstrov;
 import ru.komiss77.utils.ItemBuilder;
 import ru.komiss77.utils.PlayerInput;
-import ru.komiss77.utils.TCUtils;
 import ru.komiss77.utils.inventory.ClickableItem;
 import ru.komiss77.utils.inventory.InputButton;
 import ru.komiss77.utils.inventory.InputButton.InputType;
@@ -81,29 +79,29 @@ public class FlagSetting implements Comparable<FlagSetting> {
 
                 case STATE -> {
                     if (region.getFlag(flag) == StateFlag.State.DENY) {
-                        mat = Material.RED_DYE; //Piif (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.PINK);
+                        mat = Material.RED_DYE; //Piif (TCUtil.canChangeColor(menuEntry.getType())) menuEntry = TCUtil.changeColor(menuEntry, DyeColor.PINK);
                     } else {
-                        mat = Material.LIME_DYE; //if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.LIME);
+                        mat = Material.LIME_DYE; //if (TCUtil.canChangeColor(menuEntry.getType())) menuEntry = TCUtil.changeColor(menuEntry, DyeColor.LIME);
                     }
                 }
 
                 case BOOLEAN -> {
                     if ((boolean) region.getFlag(flag)) {
-                        mat = Material.RED_DYE; //if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.PINK);
+                        mat = Material.RED_DYE; //if (TCUtil.canChangeColor(menuEntry.getType())) menuEntry = TCUtil.changeColor(menuEntry, DyeColor.PINK);
                     } else {
-                        mat = Material.LIME_DYE; //if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.LIME);
+                        mat = Material.LIME_DYE; //if (TCUtil.canChangeColor(menuEntry.getType())) menuEntry = TCUtil.changeColor(menuEntry, DyeColor.LIME);
                     }
                 }
 
                 default -> {
-                    mat = Material.CYAN_DYE; //if (TCUtils.canChangeColor(menuEntry.getType())) menuEntry = TCUtils.changeColor(menuEntry, DyeColor.BLUE);
+                    mat = Material.CYAN_DYE; //if (TCUtil.canChangeColor(menuEntry.getType())) menuEntry = TCUtil.changeColor(menuEntry, DyeColor.BLUE);
                 }
             }
 
         } else {
 
-           // if (TCUtils.canChangeColor(menuEntry.getType())) {
-          //      menuEntry = TCUtils.changeColor(menuEntry, DyeColor.GRAY);
+           // if (TCUtil.canChangeColor(menuEntry.getType())) {
+          //      menuEntry = TCUtil.changeColor(menuEntry, DyeColor.GRAY);
           //  }
 
         }
@@ -114,13 +112,12 @@ public class FlagSetting implements Comparable<FlagSetting> {
 
         ItemStack menuEntry = new ItemBuilder(mat)
                 .name("§7" + displayname)
-                .setItemFlag(ItemFlag.HIDE_ATTRIBUTES)
-                .setItemFlag(ItemFlag.HIDE_ENCHANTS)
-                .addLore("")
-                .addLore(getCurrentValue(region))
-                .addLore("")
-                .addLore(hasPerm ? "§6ЛКМ§7-изменить состояние" : "§cнет права менять")
-                .addLore(hasPerm && region.getFlags().containsKey(flag) ? "§6ПКМ§7-сброс (сделать по умолчанию)" : "")
+                .flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
+                .lore("")
+                .lore(getCurrentValue(region))
+                .lore("")
+                .lore(hasPerm ? "§6ЛКМ§7-изменить состояние" : "§cнет права менять")
+                .lore(hasPerm && region.getFlags().containsKey(flag) ? "§6ПКМ§7-сброс (сделать по умолчанию)" : "")
                 .build();
 
         if (hasPerm) {

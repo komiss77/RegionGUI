@@ -141,7 +141,7 @@ public class RegionUtils
 
     public static String getCreateTime (final ProtectedRegion region) {
         if (isValidRegionId(region.getId()))  {
-            return ApiOstrov.dateFromStamp( Integer.valueOf(region.getId().split("-")[3]));
+            return TimeUtil.dateFromStamp( Integer.valueOf(region.getId().split("-")[3]));
         } else {
             return "";
         }

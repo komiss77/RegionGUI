@@ -96,7 +96,7 @@ public class TemplateEditor implements InventoryProvider
                     } else {
                             
                        AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            template.getDescription().add(TCUtils.translateAlternateColorCodes('&', value));
+                            template.getDescription().add(TCUtil.translateAlternateColorCodes('&', value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -170,7 +170,7 @@ public class TemplateEditor implements InventoryProvider
                         }
                     } else {
                         AnvilGUI agui = new AnvilGUI(RegionGUI.getInstance(), player, "строка..", (player2, value) -> {
-                            template.getNoPermDescription().add(TCUtils.translateAlternateColorCodes('&', value));
+                            template.getNoPermDescription().add(TCUtil.translateAlternateColorCodes('&', value));
                                 //Bukkit.getScheduler().runTaskLater(RegionGUI.getInstance(), () -> contents.inventory().getProvider().reOpen(player, contents), 1L);
                             reopen(player, contents);
                             return null;
@@ -446,7 +446,7 @@ implements InventoryProvider {
         }));
         
         
-        inventoryContents.set(SlotPos.of((int)2, (int)0), ClickableItem.of((ItemStack)new ItemBuilder(Material.BOOK).name("\u00a77Description").lore("\u00a77Current description:").lore(this.claim.getDescription().stream().map(string -> TCUtils.translateAlternateColorCodes((char)'&', (String)string)).collect(Collectors.toList())).lore("").lore("\u00a7aЛКМ \u00a77to add a new line").lore("\u00a7aПКМ \u00a77to delete the last line.").build(), inventoryClickEvent -> {
+        inventoryContents.set(SlotPos.of((int)2, (int)0), ClickableItem.of((ItemStack)new ItemBuilder(Material.BOOK).name("\u00a77Description").lore("\u00a77Current description:").lore(this.claim.getDescription().stream().map(string -> TCUtil.translateAlternateColorCodes((char)'&', (String)string)).collect(Collectors.toList())).lore("").lore("\u00a7aЛКМ \u00a77to add a new line").lore("\u00a7aПКМ \u00a77to delete the last line.").build(), inventoryClickEvent -> {
             if (inventoryClickEvent.getClick() == ClickType.RIGHT) {
                 if (this.claim.getDescription().size() <= 0) {
                     return;
@@ -494,7 +494,7 @@ implements InventoryProvider {
                     Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, inventoryContents));
                     return;
                 }
-                this.claim.getNoPermDescription().add(TCUtils.translateAlternateColorCodes((char)'&', (String)string));
+                this.claim.getNoPermDescription().add(TCUtil.translateAlternateColorCodes((char)'&', (String)string));
                 Bukkit.getScheduler().runTask((Plugin)RegionGUI.getInstance(), () -> this.reopen(player, inventoryContents));
             });
         }));

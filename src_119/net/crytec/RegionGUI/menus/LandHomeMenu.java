@@ -27,7 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import ru.komiss77.ApiOstrov;
 import ru.komiss77.modules.world.Cuboid;
 import ru.komiss77.utils.ItemBuilder;
-import ru.komiss77.utils.ItemUtils;
+import ru.komiss77.utils.*;
 
 
 
@@ -162,7 +162,7 @@ public class LandHomeMenu implements InventoryProvider
         }
         
         if (rgList.isEmpty()) {
-            inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER).name("§4Нет регионов!").lore( ItemUtils.Gen_lore(null, "Не найдено ни одного вашего региона в каком-либо мире!", "§c") ).build() ) );
+            inventoryContents.add( ClickableItem.empty( new ItemBuilder(Material.BARRIER).name("§4Нет регионов!").lore( ItemUtil.Gen_lore(null, "Не найдено ни одного вашего региона в каком-либо мире!", "§c") ).build() ) );
             //player.sendMessage("§cНе найдено ни одного вашего региона в каком-либо мире!");
             //return;
         }
